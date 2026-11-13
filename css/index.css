@@ -1,0 +1,454 @@
+/* =====================================
+   Widget Editor — Base / Inspector Styles
+   ===================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+
+body {
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, sans-serif;
+  background: #f1f3f5;
+  overflow: hidden;
+}
+
+/* ── Editor Layout ── */
+.editor {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ── Canvas ── */
+.editor__canvas {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9ecef;
+  background-image: radial-gradient(circle, #ced4da 1px, transparent 1px);
+  background-size: 24px 24px;
+  overflow: auto;
+}
+
+/* ── Inspector ── */
+.inspector {
+  width: 300px;
+  min-width: 300px;
+  height: 100vh;
+  background: #ffffff;
+  border-left: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.inspector__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e9ecef;
+  flex-shrink: 0;
+}
+
+.inspector__title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #212529;
+}
+
+.inspector__close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #adb5bd;
+  cursor: pointer;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.inspector__close:hover {
+  color: #495057;
+}
+
+.inspector__body {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* ── Section ── */
+.inspector__section {
+  border-bottom: 1px solid #f1f3f5;
+}
+
+/* Section header with optional action button */
+.inspector__sec-head {
+  display: flex;
+  align-items: center;
+}
+
+.inspector__sec-toggle {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  color: #212529;
+  cursor: pointer;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+.inspector__sec-toggle:hover {
+  background: #f8f9fa;
+}
+
+.inspector__sec-add {
+  padding: 0 20px 0 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4263eb;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.inspector__sec-add:hover {
+  color: #3b5bdb;
+}
+
+.inspector__chevron {
+  width: 14px;
+  height: 14px;
+  color: #adb5bd;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.inspector__section.collapsed .inspector__chevron {
+  transform: rotate(180deg);
+}
+
+.inspector__section.collapsed .inspector__sec-body {
+  display: none;
+}
+
+.inspector__sec-body {
+  padding: 2px 20px 16px;
+}
+
+/* ── Card item rows (아이템 섹션) ── */
+.inspector__card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f8f9fa;
+}
+
+.inspector__card-item:last-child {
+  border-bottom: none;
+}
+
+.inspector__drag {
+  font-size: 14px;
+  color: #ced4da;
+  cursor: grab;
+  user-select: none;
+  letter-spacing: -1px;
+  padding-top: 7px;
+  flex-shrink: 0;
+}
+
+.inspector__card-fields {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.inspector__card-name-input,
+.inspector__card-role-input {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 6px 9px;
+  font-size: 13px;
+  color: #212529;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.inspector__card-name-input {
+  font-weight: 500;
+}
+
+.inspector__card-role-input {
+  color: #868e96;
+}
+
+.inspector__card-name-input:focus,
+.inspector__card-role-input:focus {
+  border-color: #4263eb;
+}
+
+.inspector__card-delete {
+  background: none;
+  border: none;
+  color: #ced4da;
+  cursor: pointer;
+  padding: 4px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  transition: color 0.15s;
+}
+
+.inspector__card-delete:hover {
+  color: #fa5252;
+}
+
+/* Drag & drop states */
+.inspector__card-item.dragging {
+  opacity: 0.35;
+}
+
+.inspector__card-item.drag-over-top {
+  box-shadow: inset 0 2px 0 #4263eb;
+}
+
+.inspector__card-item.drag-over-bottom {
+  box-shadow: inset 0 -2px 0 #4263eb;
+}
+
+/* ── Layout toggle ── */
+.inspector__layout-toggle {
+  display: flex;
+  gap: 8px;
+  padding: 2px 0 4px;
+}
+
+.inspector__layout-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  background: #fff;
+  font-size: 12px;
+  color: #868e96;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.inspector__layout-btn:hover {
+  border-color: #adb5bd;
+  color: #495057;
+}
+
+.inspector__layout-btn.active {
+  background: #f0f4ff;
+  border-color: #4263eb;
+  color: #4263eb;
+  font-weight: 500;
+}
+
+/* Grid inputs */
+.inspector__grid-inputs {
+  display: none;
+  margin-top: 12px;
+}
+
+.inspector__grid-inputs.visible {
+  display: block;
+}
+
+.inspector__grid-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.inspector__grid-row .inspector__num-row {
+  flex: 1;
+}
+
+.inspector__grid-sep {
+  font-size: 14px;
+  color: #adb5bd;
+  flex-shrink: 0;
+}
+
+/* ── Group label ── */
+.inspector__group-label {
+  margin-top: 18px;
+  padding-bottom: 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #495057;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid #f1f3f5;
+}
+
+.inspector__group-label:first-child {
+  margin-top: 4px;
+}
+
+/* ── Fields ── */
+.inspector__field {
+  margin-top: 12px;
+}
+
+.inspector__field-label {
+  display: block;
+  font-size: 12px;
+  color: #868e96;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.inspector__num-row {
+  display: flex;
+  align-items: center;
+  border: 1px solid #dee2e6;
+  border-radius: 7px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.inspector__num-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #212529;
+  background: transparent;
+}
+
+.inspector__unit {
+  font-size: 12px;
+  color: #adb5bd;
+  padding: 0 10px 0 0;
+  flex-shrink: 0;
+}
+
+/* Color row */
+.inspector__color-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 7px;
+  background: #fff;
+  padding: 0 10px;
+  height: 38px;
+}
+
+.inspector__swatch {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  background: #F9F9F9;
+}
+
+.inspector__color-native {
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  width: calc(100% + 12px);
+  height: calc(100% + 12px);
+  opacity: 0;
+  cursor: pointer;
+  border: none;
+  padding: 0;
+}
+
+.inspector__hex-input {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: #212529;
+  background: transparent;
+  min-width: 0;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  letter-spacing: 0.01em;
+}
+
+.inspector__opacity-input {
+  width: 32px;
+  border: none;
+  outline: none;
+  font-size: 13px;
+  color: #495057;
+  background: transparent;
+  text-align: right;
+}
+
+.inspector__pct {
+  font-size: 12px;
+  color: #adb5bd;
+  flex-shrink: 0;
+}
+
+/* ── Footer ── */
+.inspector__footer {
+  flex-shrink: 0;
+  padding: 14px 20px;
+  border-top: 1px solid #e9ecef;
+}
+
+.inspector__delete-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #868e96;
+  cursor: pointer;
+  border-radius: 7px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.inspector__delete-btn:hover {
+  background: #fff5f5;
+  color: #fa5252;
+}

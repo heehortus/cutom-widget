@@ -1,0 +1,290 @@
+/* =====================================
+   Banner Widget Styles
+   ===================================== */
+
+/* Banner canvas: add padding while keeping default center alignment */
+.editor__canvas--banner {
+  padding: 40px;
+}
+
+/* ── Banner Widget Container ── */
+.banner-widget {
+  display: flex;
+  width: 900px;
+  min-height: 420px;
+  border-radius: 20px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  --item-title-size: 24px;
+  --item-title-color: #262626;
+  --item-desc-size: 16px;
+  --item-desc-color: #767676;
+}
+
+/* ── Left Panel ── */
+.banner-widget__panel {
+  width: 300px;
+  min-width: 300px;
+  background: #12294a;
+  display: flex;
+  flex-direction: column;
+  padding: 36px 32px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.banner-widget__panel-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex: 1;
+}
+
+.banner-widget__panel-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.banner-widget__panel-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #ffffff;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+}
+
+.banner-widget__panel-desc {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.55);
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
+/* Arrow button */
+.banner-widget__panel-arrow {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  margin-top: 2px;
+}
+
+.banner-widget__panel-arrow svg {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.banner-widget__panel-arrow:hover svg {
+  transform: translateX(4px);
+}
+
+
+/* ── Right Info Panel ── */
+.banner-widget__info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 32px 0px;
+  min-width: 0;
+}
+
+.banner-widget__info-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-bottom: 24px;
+}
+
+.banner-widget__info-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #12294a;
+  letter-spacing: -0.025em;
+}
+
+/* View More button */
+.banner-widget__viewmore {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 600;
+  color: #002f92;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.banner-widget__viewmore-arrow {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  color: #002f92;
+}
+
+.banner-widget__viewmore:hover .banner-widget__viewmore-arrow {
+  transform: translateX(4px);
+}
+
+/* ── Carousel ── */
+.banner-widget__carousel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 0;
+}
+
+.banner-widget__carousel-wrap {
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.banner-widget__carousel-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.banner-widget__carousel-wrap.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.banner-widget__track {
+  display: flex;
+  gap: 16px;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* Carousel Item Card */
+.banner-item {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #f0f0f0;
+  background: #fff;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.banner-item:hover {
+  transform: translateY(-2px);
+}
+
+.banner-item__image {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #e9ecef 0%, #dee2e6 100%);
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Placeholder graphic inside image area */
+.banner-item__image::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.4) 0%, transparent 60%),
+    linear-gradient(135deg, #dee2e6 0%, #ced4da 100%);
+}
+
+.banner-item__body {
+  padding: 16px;
+}
+
+.banner-item__title {
+  font-size: var(--item-title-size, 24px);
+  font-weight: 700;
+  color: var(--item-title-color, #262626);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.banner-item__desc {
+  margin-top: 6px;
+  font-size: var(--item-desc-size, 16px);
+  font-weight: 400;
+  color: var(--item-desc-color, #767676);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Item entrance animation */
+@keyframes itemEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.banner-item.entering {
+  animation: itemEnter 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+
+/* ── Indicators ── */
+.banner-widget__indicators {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: #9d9d9d;
+  margin-top: 16px;
+  flex-shrink: 0;
+}
+
+.banner-indicator__thumb {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 2px;
+  background: #002f92;
+  transition: left 0.15s ease, width 0.15s ease;
+}
+
+/* ── Inspector: text inputs (banner-specific) ── */
+.inspector__text-input {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: #212529;
+  outline: none;
+  background: #fff;
+  transition: border-color 0.15s;
+}
+
+.inspector__text-input:focus {
+  border-color: #4263eb;
+}

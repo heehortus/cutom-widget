@@ -1,0 +1,115 @@
+/* =====================================
+   Card Widget Styles
+   ===================================== */
+
+/* Card list container — layout controlled by Inspector */
+.card-list {
+  display: flex;
+  gap: 20px;
+  padding: 40px;
+  align-items: flex-start;
+
+  /* CSS custom properties — set on container, inherited by all cards */
+  --name-size: 24px;
+  --name-color: rgba(249, 249, 249, 1);
+  --role-size: 16px;
+  --role-color: rgba(249, 249, 249, 1);
+  --hover-start: #4263eb;
+  --hover-end: #3b2fc9;
+  --card-width: 240px;
+  --card-height: 320px;
+}
+
+.card-list.layout-row {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.card-list.layout-column {
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-list.layout-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 3), 240px);
+  grid-template-rows: repeat(var(--grid-rows, 2), auto);
+  align-items: start;
+}
+
+/* Individual card */
+.card-widget {
+  position: relative;
+  width: var(--card-width, 240px);
+  height: var(--card-height, 320px);
+  border-radius: 16px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.2s;
+}
+
+/* Photo area */
+.card-widget__photo {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #4a4a4a 0%, #2c2c2c 50%, #111 100%);
+}
+
+/* Hover color overlay — fades in/out via opacity */
+.card-widget__photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, var(--hover-start, #4263eb) 0%, var(--hover-end, #3b2fc9) 100%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  z-index: 1;
+}
+
+.card-widget:hover .card-widget__photo::after {
+  opacity: 1;
+}
+
+/* Text overlay must stay above the color layer */
+.card-widget__overlay {
+  z-index: 2;
+}
+
+
+/* Bottom overlay */
+.card-widget__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px 22px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.72) 0%, transparent 100%);
+}
+
+.card-widget__name {
+  font-size: var(--name-size);
+  color: var(--name-color);
+  font-weight: 700;
+  margin-bottom: 4px;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+.card-widget__role {
+  font-size: var(--role-size);
+  color: var(--role-color);
+  font-weight: 400;
+  line-height: 1.4;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height 0.6s ease, opacity 0.6s ease, margin-top 0.6s ease;
+}
+
+.card-widget:hover .card-widget__role {
+  max-height: 3em;
+  opacity: 0.85;
+  margin-top: 4px;
+}

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Widget Editor</title>
+  <link rel="stylesheet" href="../css/index.css">
+  <link rel="stylesheet" href="../css/card.css">
+  <link rel="stylesheet" href="../css/banner.css">
+  <link rel="stylesheet" href="../css/app.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Widget Nav ── -->
+  <nav class="widget-nav">
+    <div class="widget-nav__header">Widgets</div>
+    <div class="widget-nav__list">
+
+      <button class="widget-nav__item active" data-widget="card" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">카드</span>
+      </button>
+
+      <button class="widget-nav__item" data-widget="banner" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">배너</span>
+      </button>
+
+    </div>
+  </nav>
+
+  <!-- ── Widget Views ── -->
+  <div class="widget-views">
+
+    <!-- ───────────── Card Widget View ───────────── -->
+    <div class="widget-view active" id="view-card">
+
+      <main class="editor__canvas">
+        <div class="card-list layout-row" id="cardList"></div>
+      </main>
+
+      <aside class="inspector" id="cardInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">카드 위젯</span>
+          <button class="inspector__close" id="cardInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 카드 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>카드</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__grid-row">
+                  <div class="inspector__num-row">
+                    <input class="inspector__num-input" type="number" id="cardWidth" value="240" min="80" max="600">
+                    <span class="inspector__unit">W</span>
+                  </div>
+                  <span class="inspector__grid-sep">×</span>
+                  <div class="inspector__num-row">
+                    <input class="inspector__num-input" type="number" id="cardHeight" value="320" min="80" max="800">
+                    <span class="inspector__unit">H</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+              <button class="inspector__sec-add" id="addCard" type="button">+ 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="cardItemList"></div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__layout-toggle">
+                <button class="inspector__layout-btn active" data-layout="row" type="button">
+                  <svg viewBox="0 0 20 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="14">
+                    <rect x="1" y="1" width="4" height="12" rx="1.5"/>
+                    <rect x="8" y="1" width="4" height="12" rx="1.5"/>
+                    <rect x="15" y="1" width="4" height="12" rx="1.5"/>
+                  </svg>
+                  가로
+                </button>
+                <button class="inspector__layout-btn" data-layout="column" type="button">
+                  <svg viewBox="0 0 14 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="20">
+                    <rect x="1" y="1" width="12" height="4" rx="1.5"/>
+                    <rect x="1" y="8" width="12" height="4" rx="1.5"/>
+                    <rect x="1" y="15" width="12" height="4" rx="1.5"/>
+                  </svg>
+                  세로
+                </button>
+                <button class="inspector__layout-btn" data-layout="grid" type="button">
+                  <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                    <rect x="1" y="1" width="6" height="6" rx="1"/>
+                    <rect x="10" y="1" width="6" height="6" rx="1"/>
+                    <rect x="1" y="10" width="6" height="6" rx="1"/>
+                    <rect x="10" y="10" width="6" height="6" rx="1"/>
+                  </svg>
+                  그리드
+                </button>
+              </div>
+              <div class="inspector__grid-inputs" id="gridInputs">
+                <label class="inspector__field-label">열 × 행</label>
+                <div class="inspector__grid-row">
+                  <div class="inspector__num-row">
+                    <input class="inspector__num-input" type="number" id="gridCols" value="3" min="1" max="10">
+                    <span class="inspector__unit">열</span>
+                  </div>
+                  <span class="inspector__grid-sep">×</span>
+                  <div class="inspector__num-row">
+                    <input class="inspector__num-input" type="number" id="gridRows" value="2" min="1" max="10">
+                    <span class="inspector__unit">행</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 배경 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>배경</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <p class="inspector__group-label">호버 컬러</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">시작</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hoverStartSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="hoverStartPicker" value="#4263eb">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hoverStartHex" value="#4263EB" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hoverStartOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">끝</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hoverEndSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="hoverEndPicker" value="#3b2fc9">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hoverEndHex" value="#3B2FC9" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hoverEndOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <p class="inspector__group-label">TITLE</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="nameFontSize" value="24" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="nameSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="nameColorPicker" value="#F9F9F9">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="nameColorHex" value="#F9F9F9" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="nameColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <p class="inspector__group-label">DESCRIPTION</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="roleFontSize" value="16" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="roleSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="roleColorPicker" value="#F9F9F9">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="roleColorHex" value="#F9F9F9" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="roleColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="cardDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-card -->
+
+    <!-- ───────────── Banner Widget View ───────────── -->
+    <div class="widget-view" id="view-banner">
+
+      <main class="editor__canvas editor__canvas--banner">
+        <div class="banner-widget" id="bannerWidget">
+
+          <!-- Left: Dark panel -->
+          <div class="banner-widget__panel">
+            <div class="banner-widget__panel-top">
+              <div class="banner-widget__panel-text">
+                <h2 class="banner-widget__panel-title" id="bannerTitleEl">BANNER TITLE</h2>
+                <p class="banner-widget__panel-desc" id="bannerDescEl">BANNER DESCRIPTION</p>
+              </div>
+              <button class="banner-widget__panel-arrow" type="button" aria-label="이동">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right: Info panel -->
+          <div class="banner-widget__info">
+            <div class="banner-widget__info-header">
+              <h2 class="banner-widget__info-title" id="sectionTitleEl">SECTION TITLE</h2>
+              <button class="banner-widget__viewmore" type="button">
+                <span id="viewMoreTextEl">View More</span>
+                <svg class="banner-widget__viewmore-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+                  <line x1="5" y1="12" x2="19" y2="12"/>
+                  <polyline points="12 5 19 12 12 19"/>
+                </svg>
+              </button>
+            </div>
+            <div class="banner-widget__carousel">
+              <div class="banner-widget__carousel-wrap">
+                <div class="banner-widget__track" id="carouselTrack"></div>
+              </div>
+              <div class="banner-widget__indicators" id="indicators"></div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+
+      <aside class="inspector" id="bannerInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">배너 위젯</span>
+          <button class="inspector__close" id="bannerInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+              <button class="inspector__sec-add" id="addItem" type="button">+ 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="bannerItemList"></div>
+          </div>
+
+          <!-- 콘텐츠 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>콘텐츠</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <p class="inspector__group-label">배너</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀</label>
+                <input type="text" class="inspector__text-input" id="bannerTitleInput" value="BANNER TITLE">
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">설명</label>
+                <input type="text" class="inspector__text-input" id="bannerDescInput" value="BANNER DESCRIPTION">
+              </div>
+              <p class="inspector__group-label">섹션</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀</label>
+                <input type="text" class="inspector__text-input" id="sectionTitleInput" value="SECTION TITLE">
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">버튼 텍스트</label>
+                <input type="text" class="inspector__text-input" id="viewMoreInput" value="View More">
+              </div>
+            </div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 너비</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="itemWidth" value="280" min="80" max="340">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="itemGap" value="16" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <p class="inspector__group-label">아이템 타이틀</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="itemTitleSize" value="24" min="8" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="itemTitleSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="itemTitleColorPicker" value="#262626">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="itemTitleColorHex" value="#262626" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="itemTitleColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <p class="inspector__group-label">아이템 설명</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="itemDescSize" value="16" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="itemDescSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="itemDescColorPicker" value="#767676">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="itemDescColorHex" value="#767676" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="itemDescColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="bannerDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-banner -->
+
+  </div><!-- /.widget-views -->
+
+</div><!-- /.app -->
+
+<script src="../js/widget.js"></script>
+<script src="../js/banner.js"></script>
+<script src="../js/app.js"></script>
+</body>
+</html>
