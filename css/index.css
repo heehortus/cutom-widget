@@ -161,7 +161,7 @@ body {
 /* ── Card item rows (아이템 섹션) ── */
 .inspector__card-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
   padding: 10px 0;
   border-bottom: 1px solid #f8f9fa;
@@ -172,13 +172,18 @@ body {
 }
 
 .inspector__drag {
-  font-size: 14px;
   color: #ced4da;
   cursor: grab;
   user-select: none;
-  letter-spacing: -1px;
-  padding-top: 7px;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.inspector__drag svg {
+  width: auto;
+  height: 16px;
 }
 
 .inspector__card-fields {
@@ -221,9 +226,13 @@ body {
   color: #ced4da;
   cursor: pointer;
   padding: 4px;
-  margin-top: 2px;
   flex-shrink: 0;
   transition: color 0.15s;
+}
+
+.inspector__card-delete svg {
+  width: 16px;
+  height: 16px;
 }
 
 .inspector__card-delete:hover {

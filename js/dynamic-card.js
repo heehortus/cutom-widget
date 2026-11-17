@@ -383,7 +383,14 @@
       row.dataset.id = item.id;
 
       row.innerHTML =
-        '<span class="inspector__drag">&#8942;&#8942;</span>' +
+        '<span class="inspector__drag">' +
+          '<svg viewBox="0 0 8 14" fill="currentColor" width="8" height="14"' +
+            ' xmlns="http://www.w3.org/2000/svg">' +
+            '<circle cx="2" cy="2"  r="1.2"/><circle cx="6" cy="2"  r="1.2"/>' +
+            '<circle cx="2" cy="7"  r="1.2"/><circle cx="6" cy="7"  r="1.2"/>' +
+            '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
+          '</svg>' +
+        '</span>' +
         '<div class="inspector__card-fields">' +
           '<input class="inspector__card-name-input" type="text"' +
             ' value="' + escAttr(item.title) + '" placeholder="카드 제목">' +

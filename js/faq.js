@@ -8,9 +8,9 @@
   /* ── State ── */
   var nextId = 4;
   var items = [
-    { id: 1, q: 'Power Absorption', a: 'Korean yarn is split evenly and stably, so it has higher bulkiness and better absorbency.\nYou can expect about 150% functional superiority compared to Chinese products.', open: true },
-    { id: 2, q: 'Lint free', a: 'Our fabric is designed to minimize lint and fiber shedding, keeping your environment clean.', open: false },
-    { id: 3, q: 'Long lasting', a: 'Built with premium materials that maintain quality and appearance through extended use.', open: false }
+    { id: 1, q: 'Power Absorption', a: 'Korean yarn is split evenly and stably, so it has higher bulkiness and better absorbency.\nYou can expect about 150% functional superiority compared to Chinese products.', open: true,  expanded: false },
+    { id: 2, q: 'Lint free', a: 'Our fabric is designed to minimize lint and fiber shedding, keeping your environment clean.', open: false, expanded: false },
+    { id: 3, q: 'Long lasting', a: 'Built with premium materials that maintain quality and appearance through extended use.', open: false, expanded: false }
   ];
 
   var dragSrcId = null;
@@ -110,16 +110,36 @@
 
     items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__card-item' + (item.expanded ? ' inspector__faq-item--expanded' : '');
       row.dataset.id = item.id;
 
       row.innerHTML =
-        '<span class="inspector__drag">&#8942;&#8942;</span>' +
+        '<span class="inspector__drag">' +
+          '<svg viewBox="0 0 8 14" fill="currentColor" width="8" height="14"' +
+            ' xmlns="http://www.w3.org/2000/svg">' +
+            '<circle cx="2" cy="2"  r="1.2"/><circle cx="6" cy="2"  r="1.2"/>' +
+            '<circle cx="2" cy="7"  r="1.2"/><circle cx="6" cy="7"  r="1.2"/>' +
+            '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
+          '</svg>' +
+        '</span>' +
         '<div class="inspector__card-fields">' +
-          '<input class="inspector__card-name-input" type="text"' +
-            ' value="' + escAttr(item.q) + '" placeholder="질문">' +
-          '<textarea class="inspector__card-role-input faq-answer-input"' +
-            ' placeholder="답변" rows="3">' + esc(item.a) + '</textarea>' +
+          '<div class="inspector__faq-row">' +
+            '<input class="inspector__card-name-input" type="text"' +
+              ' value="' + escAttr(item.q) + '" placeholder="질문">' +
+            '<button class="inspector__faq-toggle" type="button" aria-label="답변 편집">' +
+              '<svg class="inspector__faq-chevron" viewBox="0 0 16 16" fill="none"' +
+                ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                ' width="14" height="14">' +
+                '<polyline points="4,6 8,10 12,6"/>' +
+              '</svg>' +
+            '</button>' +
+          '</div>' +
+          '<div class="inspector__faq-body">' +
+            '<div class="inspector__faq-body-inner">' +
+              '<textarea class="inspector__card-role-input faq-answer-input"' +
+                ' placeholder="답변" rows="3">' + esc(item.a) + '</textarea>' +
+            '</div>' +
+          '</div>' +
         '</div>' +
         '<button class="inspector__card-delete" type="button" aria-label="삭제">' +
           '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor"' +
@@ -132,6 +152,13 @@
             '<line x1="9" y1="6" x2="9" y2="10"/>' +
           '</svg>' +
         '</button>';
+
+      /* Expand toggle */
+      row.querySelector('.inspector__faq-toggle').addEventListener('click', function () {
+        item.expanded = !item.expanded;
+        row.classList.toggle('inspector__faq-item--expanded', item.expanded);
+        if (item.expanded) row.querySelector('.faq-answer-input').focus();
+      });
 
       /* Question input */
       row.querySelector('.inspector__card-name-input').addEventListener('input', function (e) {
@@ -214,7 +241,7 @@
   /* ── Add item ── */
   document.getElementById('addFaqItem').addEventListener('click', function () {
     var id = nextId++;
-    items.push({ id: id, q: '새 질문', a: '답변을 입력하세요.', open: false });
+    items.push({ id: id, q: '새 질문', a: '답변을 입력하세요.', open: false, expanded: true });
     renderWidget();
     renderInspectorItems();
     var newRow = faqItemList.lastElementChild;

@@ -12,8 +12,8 @@
 
   var nextId = 3;
   var items = [
-    { id: 1, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION' },
-    { id: 2, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION' }
+    { id: 1, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION', expanded: false },
+    { id: 2, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION', expanded: false }
   ];
   var dragSrcId = null;
   var textStyle = {
@@ -165,15 +165,35 @@
 
     items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__card-item' + (item.expanded ? ' inspector__faq-item--expanded' : '');
       row.dataset.id = item.id;
       row.innerHTML =
-        '<span class="inspector__drag">&#8942;&#8942;</span>' +
+        '<span class="inspector__drag">' +
+          '<svg viewBox="0 0 8 14" fill="currentColor" width="8" height="14"' +
+            ' xmlns="http://www.w3.org/2000/svg">' +
+            '<circle cx="2" cy="2"  r="1.2"/><circle cx="6" cy="2"  r="1.2"/>' +
+            '<circle cx="2" cy="7"  r="1.2"/><circle cx="6" cy="7"  r="1.2"/>' +
+            '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
+          '</svg>' +
+        '</span>' +
         '<div class="inspector__card-fields">' +
-          '<input class="inspector__card-name-input" type="text"' +
-            ' value="' + escAttr(item.title) + '" placeholder="ITEM TITLE">' +
-          '<input class="inspector__card-role-input" type="text"' +
-            ' value="' + escAttr(item.desc)  + '" placeholder="ITEM DESCRIPTION">' +
+          '<div class="inspector__faq-row">' +
+            '<input class="inspector__card-name-input" type="text"' +
+              ' value="' + escAttr(item.title) + '" placeholder="ITEM TITLE">' +
+            '<button class="inspector__faq-toggle" type="button" aria-label="설명 편집">' +
+              '<svg class="inspector__faq-chevron" viewBox="0 0 16 16" fill="none"' +
+                ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
+                ' width="14" height="14">' +
+                '<polyline points="4,6 8,10 12,6"/>' +
+              '</svg>' +
+            '</button>' +
+          '</div>' +
+          '<div class="inspector__faq-body">' +
+            '<div class="inspector__faq-body-inner">' +
+              '<input class="inspector__card-role-input" type="text"' +
+                ' value="' + escAttr(item.desc) + '" placeholder="ITEM DESCRIPTION">' +
+            '</div>' +
+          '</div>' +
         '</div>' +
         '<button class="inspector__card-delete" title="삭제" type="button">' +
           '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor"' +
@@ -186,6 +206,13 @@
             '<line x1="9" y1="6" x2="9" y2="10"/>' +
           '</svg>' +
         '</button>';
+
+      /* Expand toggle */
+      row.querySelector('.inspector__faq-toggle').addEventListener('click', function () {
+        item.expanded = !item.expanded;
+        row.classList.toggle('inspector__faq-item--expanded', item.expanded);
+        if (item.expanded) row.querySelector('.inspector__card-role-input').focus();
+      });
 
       row.querySelector('.inspector__card-name-input').addEventListener('input', function (e) {
         updateItemField(item.id, 'title', e.target.value);
@@ -208,7 +235,7 @@
 
   function addItem() {
     var id = nextId++;
-    items.push({ id: id, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION' });
+    items.push({ id: id, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION', expanded: true });
     renderTrack(id);
     renderIndicators();
     renderInspectorItems();
