@@ -152,6 +152,66 @@
   opacity: 0.8;
 }
 
+/* FAQ thumb: horizontal lines (accordion rows) */
+.widget-nav__item[data-widget="faq"] .widget-nav__thumb::before,
+.widget-nav__item[data-widget="faq"] .widget-nav__thumb::after {
+  content: '';
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  height: 1.5px;
+  background: #ced4da;
+  border-radius: 1px;
+  transition: background 0.15s;
+}
+
+.widget-nav__item[data-widget="faq"] .widget-nav__thumb::before {
+  top: 14px;
+}
+
+.widget-nav__item[data-widget="faq"] .widget-nav__thumb::after {
+  top: 26px;
+}
+
+.widget-nav__item.active[data-widget="faq"] .widget-nav__thumb::before,
+.widget-nav__item.active[data-widget="faq"] .widget-nav__thumb::after {
+  background: #748ffc;
+  opacity: 0.6;
+}
+
+/* Dynamic card thumb: stacked card effect (two tilted rectangles) */
+.widget-nav__item[data-widget="dynamic-card"] .widget-nav__thumb::before,
+.widget-nav__item[data-widget="dynamic-card"] .widget-nav__thumb::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 26px;
+  height: 34px;
+  border-radius: 3px;
+  transform-origin: center center;
+}
+
+.widget-nav__item[data-widget="dynamic-card"] .widget-nav__thumb::before {
+  background: #dee2e6;
+  transform: translate(-50%, -50%) rotate(-8deg);
+}
+
+.widget-nav__item[data-widget="dynamic-card"] .widget-nav__thumb::after {
+  background: #ced4da;
+  transform: translate(-50%, -50%) rotate(5deg);
+}
+
+.widget-nav__item.active[data-widget="dynamic-card"] .widget-nav__thumb::before {
+  background: #748ffc;
+  opacity: 0.5;
+}
+
+.widget-nav__item.active[data-widget="dynamic-card"] .widget-nav__thumb::after {
+  background: #748ffc;
+  opacity: 0.85;
+}
+
 /* ── Nav Labels ── */
 .widget-nav__label {
   font-size: 11px;

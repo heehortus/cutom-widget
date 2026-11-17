@@ -1,0 +1,107 @@
+/* =====================================
+   FAQ Widget
+   ===================================== */
+
+.editor__canvas--faq {
+  align-items: flex-start;
+  justify-content: center;
+  padding: 48px 24px;
+  overflow-y: auto;
+}
+
+/* ── Widget wrapper ── */
+.faq-widget {
+  background: #f8f8f8;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* ── FAQ item ── */
+.faq-item {
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.faq-item:first-child {
+  border-top: 1px solid #e0e0e0;
+}
+
+/* ── Header (clickable row) ── */
+.faq-item__header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  gap: 20px;
+  transition: background 0.15s;
+}
+
+.faq-item__header:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.faq-item__question {
+  font-size: var(--faq-q-size, 18px);
+  font-weight: 700;
+  color: var(--faq-q-color, #1a1a1a);
+  flex: 1;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+}
+
+.faq-item__icon {
+  font-size: 22px;
+  font-weight: 300;
+  color: #1a1a1a;
+  flex-shrink: 0;
+  line-height: 1;
+  width: 24px;
+  text-align: center;
+  user-select: none;
+}
+
+/* ── Collapsible body ── */
+.faq-item__body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.faq-item--open .faq-item__body {
+  grid-template-rows: 1fr;
+}
+
+.faq-item__body-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.faq-item__body-pad {
+  padding: 0 24px 22px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.faq-item--open .faq-item__body-pad {
+  opacity: 1;
+}
+
+.faq-item__answer {
+  font-size: var(--faq-a-size, 14px);
+  color: var(--faq-a-color, #6b7280);
+  line-height: 1.65;
+  letter-spacing: -0.005em;
+  white-space: pre-line;
+}
+
+/* ── Inspector: answer textarea ── */
+.faq-answer-input {
+  resize: vertical;
+  font-family: inherit;
+  line-height: 1.5;
+  min-height: 60px;
+}

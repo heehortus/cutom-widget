@@ -1,0 +1,254 @@
+/* =====================================
+   Dynamic Card (Card Stack) Widget
+   ===================================== */
+
+/* ── Canvas ── */
+.editor__canvas--dynamic-card {
+  align-items: flex-start;
+  padding: 60px 48px;
+}
+
+#dynamicCardContainer {
+  width: 100%;
+}
+
+/* ── Root ── */
+.iw-cardstack {
+  --color-card-bg:  #F4F1EC;
+  --color-title:    #FFFFFF;
+  --color-arrow:    #1A1A1A;
+  --color-arrow-bg: #EDEAE4;
+  --radius-card:    16px;
+  --duration-spread:700ms;
+  --title-size:     16px;
+  --title-weight:   600;
+  --dim-height:     55%;
+
+  width: 100%;
+  background: transparent;
+}
+
+/* ── Nav (prev/next buttons) ── */
+.iw-cardstack .iw-cardstack__nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 16px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 300ms ease;
+}
+
+.iw-cardstack[data-draggable='true'] .iw-cardstack__nav {
+  opacity: 1;
+  visibility: visible;
+}
+
+.iw-cardstack .iw-cardstack__arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: var(--color-arrow-bg);
+  color: var(--color-arrow);
+  cursor: pointer;
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+
+.iw-cardstack .iw-cardstack__arrow[data-state='disabled'] {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.iw-cardstack .iw-cardstack__arrow[data-state='enabled']:hover {
+  transform: scale(1.08);
+}
+
+/* ── Stage ── */
+.iw-cardstack .iw-cardstack__stage {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.iw-cardstack[data-draggable='true'] .iw-cardstack__stage {
+  cursor: grab;
+}
+
+.iw-cardstack[data-dragging='true'] .iw-cardstack__stage {
+  cursor: grabbing;
+}
+
+/* ── Card ── */
+.iw-cardstack .iw-cardstack__card {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 260px;
+  height: 340px;
+  transform: translate(0, -50%);
+  transition: transform var(--duration-spread) cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.iw-cardstack .iw-cardstack__inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-card);
+  background: var(--color-card-bg);
+  overflow: hidden;
+  transition: transform 500ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+}
+
+.iw-cardstack .iw-cardstack__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  pointer-events: none;
+}
+
+/* editor-content reset */
+.editor-content p,
+.editor-content span,
+.editor-content b, .editor-content strong,
+.editor-content em, .editor-content i,
+.editor-content u, .editor-content s,
+.editor-content a, .editor-content ul, .editor-content li {
+  margin: 0;
+  padding: 0;
+  color: inherit;
+}
+.editor-content p { display: block; }
+.editor-content b, .editor-content strong { font-weight: 700; }
+.editor-content em, .editor-content i { font-style: italic; }
+.editor-content u { text-decoration: underline; }
+.editor-content s { text-decoration: line-through; }
+
+/* ── Title overlay ── */
+.iw-cardstack .iw-cardstack__card .iw-cardstack__title {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: var(--dim-height);
+  padding: 24px;
+  background: linear-gradient(to top, rgba(0,0,0,.6) 0%, rgba(0,0,0,.35) 45%, rgba(0,0,0,0) 100%);
+  color: var(--color-title);
+  font-size: var(--title-size);
+  font-weight: var(--title-weight);
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .iw-cardstack .iw-cardstack__stage {
+    width: 90%;
+  }
+  .iw-cardstack .iw-cardstack__nav {
+    padding: 0 20px;
+  }
+  .iw-cardstack .iw-cardstack__card .iw-cardstack__title {
+    font-size: clamp(14px, 1.2vw, var(--title-size));
+    padding: 20px;
+  }
+  .iw-cardstack .iw-cardstack__card {
+    left: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iw-cardstack .iw-cardstack__card,
+  .iw-cardstack .iw-cardstack__inner {
+    transition-duration: 0ms;
+  }
+}
+
+/* ── Inspector: select ── */
+.inspector__select {
+  width: 100%;
+  border: 1px solid #dee2e6;
+  border-radius: 7px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #212529;
+  background: #fff;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.inspector__select:focus {
+  border-color: #4263eb;
+}
+
+/* ── Inspector: toggle switch ── */
+.inspector__switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+.inspector__switch-label {
+  font-size: 12px;
+  color: #868e96;
+  letter-spacing: -0.01em;
+}
+
+.inspector__switch {
+  position: relative;
+  width: 36px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.inspector__switch input[type="checkbox"] {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.inspector__switch-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: #dee2e6;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.inspector__switch-track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  transition: transform 0.2s;
+}
+
+.inspector__switch input:checked + .inspector__switch-track {
+  background: #4263eb;
+}
+
+.inspector__switch input:checked + .inspector__switch-track::after {
+  transform: translateX(16px);
+}
