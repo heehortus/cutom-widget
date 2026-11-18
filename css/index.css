@@ -877,7 +877,7 @@ body {
 
 /* 열린 행: 화살표 아래로 */
 .gthumb--faq .gthumb__row--open {
-  height: auto;
+  height: 26px;
   flex-shrink: 0;
   background: var(--clr-white);
 }
@@ -886,12 +886,6 @@ body {
   transform: translateY(-50%) rotate(135deg);
 }
 
-.gthumb--faq .gthumb__row-body {
-  height: 18px;
-  margin: 2px 10px 8px;
-  border-radius: 3px;
-  background: var(--clr-200);
-}
 
 /* === 다이나믹 카드 (dynamic-card): stacked cards === */
 .gthumb--dynamic-card {
