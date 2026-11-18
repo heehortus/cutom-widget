@@ -166,19 +166,37 @@ body {
 }
 
 .inspector__sec-add {
-  padding: 0 20px 0 0;
+  display: block;
+  width: 100%;
+  padding: 7px 10px;
+  margin-bottom: 8px;
   background: none;
-  border: none;
-  font-size: 14px;
+  border: 1.5px dashed var(--clr-300);
+  border-radius: 7px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--clr-700);
   cursor: pointer;
-  white-space: nowrap;
-  flex-shrink: 0;
+  text-align: center;
+  transition: border-color 0.15s, background 0.15s;
 }
 
 .inspector__sec-add:hover {
-  color: var(--clr-700);
+  border-color: var(--clr-700);
+  background: var(--clr-100);
+}
+
+/* 그룹 내 인라인 추가 버튼 (타임라인 아이템, image-faq 디테일) */
+.tl-add-item,
+.imf-add-detail {
+  display: inline-block;
+  width: auto;
+  padding: 2px 6px;
+  margin-bottom: 0;
+  border: none;
+  border-radius: 4px;
+  font-size: 12px;
+  text-align: left;
 }
 
 .inspector__chevron {
