@@ -843,32 +843,53 @@ body {
   border-radius: 6px;
   background: var(--clr-white);
   border: 1px solid var(--clr-200);
+  box-shadow: none;
   flex-shrink: 0;
   position: relative;
 }
 
+/* 텍스트 바 */
 .gthumb--faq .gthumb__row::before {
   content: '';
   position: absolute;
   left: 10px;
   top: 50%;
   transform: translateY(-50%);
-  width: 55%;
+  width: 50%;
   height: 4px;
   border-radius: 2px;
   background: var(--clr-300);
 }
 
+/* 오른쪽 화살표 (chevron right) */
+.gthumb--faq .gthumb__row::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  top: 13px;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid var(--clr-400);
+  border-top: 1.5px solid var(--clr-400);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+/* 열린 행: 화살표 아래로 */
 .gthumb--faq .gthumb__row--open {
   height: auto;
   flex-shrink: 0;
+  background: linear-gradient(to bottom, var(--clr-white) 26px, var(--clr-50) 26px);
+}
+
+.gthumb--faq .gthumb__row--open::after {
+  transform: translateY(-50%) rotate(135deg);
 }
 
 .gthumb--faq .gthumb__row-body {
   height: 18px;
   margin: 2px 10px 8px;
   border-radius: 3px;
-  background: var(--clr-100);
+  background: var(--clr-200);
 }
 
 /* === 다이나믹 카드 (dynamic-card): stacked cards === */
@@ -1126,33 +1147,43 @@ body {
   border-radius: 6px;
   background: var(--clr-white);
   border: 1px solid var(--clr-200);
+  box-shadow: none;
   flex-shrink: 0;
   position: relative;
 }
 
+/* 텍스트 바 */
 .gthumb--image-faq .gthumb__row::before {
   content: '';
   position: absolute;
   left: 8px;
   top: 50%;
   transform: translateY(-50%);
-  width: 55%;
+  width: 50%;
   height: 4px;
   border-radius: 2px;
   background: var(--clr-300);
 }
 
-.gthumb--image-faq .gthumb__row--open {
-  height: 46px;
-}
-
-.gthumb--image-faq .gthumb__row--open::after {
+/* 오른쪽 화살표 */
+.gthumb--image-faq .gthumb__row::after {
   content: '';
   position: absolute;
-  bottom: 8px;
-  left: 8px;
   right: 8px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--clr-100);
+  top: 13px;
+  width: 5px;
+  height: 5px;
+  border-right: 1.5px solid var(--clr-400);
+  border-top: 1.5px solid var(--clr-400);
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.gthumb--image-faq .gthumb__row--open {
+  height: 46px;
+  background: linear-gradient(to bottom, var(--clr-white) 26px, var(--clr-50) 26px);
+}
+
+/* 열린 행: 화살표 아래로 */
+.gthumb--image-faq .gthumb__row--open::after {
+  transform: translateY(-50%) rotate(135deg);
 }
