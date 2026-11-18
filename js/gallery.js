@@ -75,8 +75,10 @@
       <div class="gthumb gthumb--image-faq">
         <div class="gthumb__img"></div>
         <div class="gthumb__ac">
+          <div class="gthumb__row gthumb__row--open">
+            <div class="gthumb__row-body"></div>
+          </div>
           <div class="gthumb__row"></div>
-          <div class="gthumb__row gthumb__row--open"></div>
           <div class="gthumb__row"></div>
         </div>
       </div>`,
