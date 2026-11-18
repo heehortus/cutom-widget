@@ -13,6 +13,7 @@
 .faq-widget {
   width: 100%;
   overflow: hidden;
+  background: var(--clr-white);
 }
 
 /* ── FAQ item ── */
