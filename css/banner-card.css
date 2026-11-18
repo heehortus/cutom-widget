@@ -14,8 +14,8 @@
   --name-color: rgba(249, 249, 249, 1);
   --role-size: 16px;
   --role-color: rgba(249, 249, 249, 1);
-  --hover-start: #555555;
-  --hover-end: #222222;
+  --hover-start: var(--clr-700);
+  --hover-end: var(--clr-darker);
   --card-width: 240px;
   --card-height: 320px;
 }
@@ -53,7 +53,7 @@
 .card-widget__photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, #4a4a4a 0%, #2c2c2c 50%, #111 100%);
+  background: linear-gradient(160deg, var(--clr-black-2) 0%, var(--clr-black-1) 50%, var(--clr-black-3) 100%);
 }
 
 /* Hover color overlay — fades in/out via opacity */
@@ -61,7 +61,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, var(--hover-start, #555555) 0%, var(--hover-end, #222222) 100%);
+  background: linear-gradient(160deg, var(--hover-start, var(--clr-700)) 0%, var(--hover-end, var(--clr-darker)) 100%);
   opacity: 0;
   transition: opacity 0.35s ease;
   z-index: 1;

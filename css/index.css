@@ -1,3 +1,46 @@
+:root {
+  /* Base */
+  --clr-white:    #ffffff;
+  --clr-black:    #000000;
+
+  /* Gray ramp (UI chrome) */
+  --clr-50:       #f8f9fa;
+  --clr-100:      #f1f3f5;
+  --clr-200:      #e9ecef;
+  --clr-300:      #dee2e6;
+  --clr-400:      #ced4da;
+  --clr-500:      #adb5bd;
+  --clr-600:      #868e96;
+  --clr-700:      #555555;
+  --clr-750:      #495057;
+  --clr-800:      #343a40;
+  --clr-900:      #212529;
+
+  /* Near-blacks */
+  --clr-dark:     #1a1a1a;
+  --clr-darker:   #222222;
+  --clr-black-1:  #2c2c2c;
+  --clr-black-2:  #4a4a4a;
+  --clr-black-3:  #111111;
+
+  /* Widget text */
+  --clr-body:     #6b7280;
+  --clr-mid:      #5e5e5e;
+  --clr-off-white:#f7f7f7;
+
+  /* Soft dividers & tracks */
+  --clr-soft:     #e1e1e1;
+  --clr-track:    #e0e0e0;
+
+  /* Placeholder fills */
+  --clr-pale:     #f0f0f0;
+  --clr-pale-md:  #e8e8e8;
+
+  /* Status */
+  --clr-danger:    #fa5252;
+  --clr-danger-bg: #fff5f5;
+}
+
 /* =====================================
    Widget Editor — Base / Inspector Styles
    ===================================== */
@@ -20,7 +63,7 @@ input[type="number"] {
 
 body {
   font-family: 'Pretendard', 'Apple SD Gothic Neo', -apple-system, sans-serif;
-  background: #f1f3f5;
+  background: var(--clr-100);
   overflow: hidden;
 }
 
@@ -37,8 +80,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #e9ecef;
-  background-image: radial-gradient(circle, #ced4da 1px, transparent 1px);
+  background-color: var(--clr-200);
+  background-image: radial-gradient(circle, var(--clr-400) 1px, transparent 1px);
   background-size: 24px 24px;
   overflow: auto;
 }
@@ -48,8 +91,8 @@ body {
   width: 300px;
   min-width: 300px;
   height: 100vh;
-  background: #ffffff;
-  border-left: 1px solid #dee2e6;
+  background: var(--clr-white);
+  border-left: 1px solid var(--clr-300);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -60,21 +103,21 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 16px 20px;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--clr-200);
   flex-shrink: 0;
 }
 
 .inspector__title {
   font-size: 18px;
   font-weight: 600;
-  color: #212529;
+  color: var(--clr-900);
 }
 
 .inspector__close {
   background: none;
   border: none;
   font-size: 18px;
-  color: #adb5bd;
+  color: var(--clr-500);
   cursor: pointer;
   padding: 2px 4px;
   line-height: 1;
@@ -82,7 +125,7 @@ body {
 }
 
 .inspector__close:hover {
-  color: #495057;
+  color: var(--clr-750);
 }
 
 .inspector__body {
@@ -92,7 +135,7 @@ body {
 
 /* ── Section ── */
 .inspector__section {
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid var(--clr-100);
 }
 
 /* Section header with optional action button */
@@ -112,14 +155,14 @@ body {
   border: none;
   font-size: 16px;
   font-weight: 600;
-  color: #212529;
+  color: var(--clr-900);
   cursor: pointer;
   text-align: left;
   letter-spacing: -0.01em;
 }
 
 .inspector__sec-toggle:hover {
-  background: #f8f9fa;
+  background: var(--clr-50);
 }
 
 .inspector__sec-add {
@@ -128,20 +171,20 @@ body {
   border: none;
   font-size: 14px;
   font-weight: 500;
-  color: #555555;
+  color: var(--clr-700);
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .inspector__sec-add:hover {
-  color: #555555;
+  color: var(--clr-700);
 }
 
 .inspector__chevron {
   width: 14px;
   height: 14px;
-  color: #adb5bd;
+  color: var(--clr-500);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -164,7 +207,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 10px 0;
-  border-bottom: 1px solid #f8f9fa;
+  border-bottom: 1px solid var(--clr-50);
 }
 
 .inspector__card-item:last-child {
@@ -172,7 +215,7 @@ body {
 }
 
 .inspector__drag {
-  color: #ced4da;
+  color: var(--clr-400);
   cursor: grab;
   user-select: none;
   flex-shrink: 0;
@@ -197,13 +240,13 @@ body {
 .inspector__card-name-input,
 .inspector__card-role-input {
   width: 100%;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   border-radius: 6px;
   padding: 6px 9px;
   font-size: 13px;
-  color: #212529;
+  color: var(--clr-900);
   outline: none;
-  background: #fff;
+  background: var(--clr-white);
   transition: border-color 0.15s;
 }
 
@@ -212,18 +255,18 @@ body {
 }
 
 .inspector__card-role-input {
-  color: #868e96;
+  color: var(--clr-600);
 }
 
 .inspector__card-name-input:focus,
 .inspector__card-role-input:focus {
-  border-color: #555555;
+  border-color: var(--clr-700);
 }
 
 .inspector__card-delete {
   background: none;
   border: none;
-  color: #ced4da;
+  color: var(--clr-400);
   cursor: pointer;
   padding: 4px;
   flex-shrink: 0;
@@ -236,7 +279,7 @@ body {
 }
 
 .inspector__card-delete:hover {
-  color: #fa5252;
+  color: var(--clr-danger);
 }
 
 /* Drag & drop states */
@@ -245,11 +288,11 @@ body {
 }
 
 .inspector__card-item.drag-over-top {
-  box-shadow: inset 0 2px 0 #555555;
+  box-shadow: inset 0 2px 0 var(--clr-700);
 }
 
 .inspector__card-item.drag-over-bottom {
-  box-shadow: inset 0 -2px 0 #555555;
+  box-shadow: inset 0 -2px 0 var(--clr-700);
 }
 
 /* ── Layout toggle ── */
@@ -267,24 +310,24 @@ body {
   justify-content: center;
   gap: 6px;
   padding: 12px 8px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   border-radius: 8px;
-  background: #fff;
+  background: var(--clr-white);
   font-size: 12px;
-  color: #868e96;
+  color: var(--clr-600);
   cursor: pointer;
   transition: all 0.15s;
 }
 
 .inspector__layout-btn:hover {
-  border-color: #adb5bd;
-  color: #495057;
+  border-color: var(--clr-500);
+  color: var(--clr-750);
 }
 
 .inspector__layout-btn.active {
-  background: #f1f3f5;
-  border-color: #555555;
-  color: #555555;
+  background: var(--clr-100);
+  border-color: var(--clr-700);
+  color: var(--clr-700);
   font-weight: 500;
 }
 
@@ -311,7 +354,7 @@ body {
 
 .inspector__grid-sep {
   font-size: 14px;
-  color: #adb5bd;
+  color: var(--clr-500);
   flex-shrink: 0;
 }
 
@@ -321,9 +364,9 @@ body {
   padding-bottom: 10px;
   font-size: 12px;
   font-weight: 600;
-  color: #495057;
+  color: var(--clr-750);
   letter-spacing: -0.01em;
-  border-bottom: 1px solid #f1f3f5;
+  border-bottom: 1px solid var(--clr-100);
 }
 
 .inspector__group-label:first-child {
@@ -338,7 +381,7 @@ body {
 .inspector__field-label {
   display: block;
   font-size: 12px;
-  color: #868e96;
+  color: var(--clr-600);
   margin-bottom: 6px;
   letter-spacing: -0.01em;
 }
@@ -346,9 +389,9 @@ body {
 .inspector__num-row {
   display: flex;
   align-items: center;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   border-radius: 7px;
-  background: #fff;
+  background: var(--clr-white);
   overflow: hidden;
 }
 
@@ -358,13 +401,13 @@ body {
   outline: none;
   padding: 8px 12px;
   font-size: 14px;
-  color: #212529;
+  color: var(--clr-900);
   background: transparent;
 }
 
 .inspector__unit {
   font-size: 12px;
-  color: #adb5bd;
+  color: var(--clr-500);
   padding: 0 10px 0 0;
   flex-shrink: 0;
 }
@@ -374,9 +417,9 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   border-radius: 7px;
-  background: #fff;
+  background: var(--clr-white);
   padding: 0 10px;
   height: 38px;
 }
@@ -391,7 +434,7 @@ body {
   overflow: hidden;
   cursor: pointer;
   flex-shrink: 0;
-  background: #F9F9F9;
+  background: var(--clr-50);
 }
 
 .inspector__color-native {
@@ -411,7 +454,7 @@ body {
   border: none;
   outline: none;
   font-size: 13px;
-  color: #212529;
+  color: var(--clr-900);
   background: transparent;
   min-width: 0;
   font-family: 'SF Mono', 'Fira Code', monospace;
@@ -423,14 +466,14 @@ body {
   border: none;
   outline: none;
   font-size: 13px;
-  color: #495057;
+  color: var(--clr-750);
   background: transparent;
   text-align: right;
 }
 
 .inspector__pct {
   font-size: 12px;
-  color: #adb5bd;
+  color: var(--clr-500);
   flex-shrink: 0;
 }
 
@@ -438,7 +481,7 @@ body {
 .inspector__footer {
   flex-shrink: 0;
   padding: 14px 20px;
-  border-top: 1px solid #e9ecef;
+  border-top: 1px solid var(--clr-200);
 }
 
 .inspector__delete-btn {
@@ -451,13 +494,13 @@ body {
   background: none;
   border: none;
   font-size: 13px;
-  color: #868e96;
+  color: var(--clr-600);
   cursor: pointer;
   border-radius: 7px;
   transition: background 0.15s, color 0.15s;
 }
 
 .inspector__delete-btn:hover {
-  background: #fff5f5;
-  color: #fa5252;
+  background: var(--clr-danger-bg);
+  color: var(--clr-danger);
 }

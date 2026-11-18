@@ -25,15 +25,15 @@
   --card-title-gap: 4px;
   --card-radius: 8px;
   --card-height: 480px;
-  --color-title: #ffffff;
-  --color-subtitle: #ffffff;
+  --color-title: var(--clr-white);
+  --color-subtitle: var(--clr-white);
   --color-dim: rgba(0, 0, 0, 0.4);
-  --color-btn-bg: #ffffff;
+  --color-btn-bg: var(--clr-white);
   --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   --btn-gap: 8px;
   --btn-label-size: 14px;
   --btn-label-weight: 600;
-  --btn-label-color: #111111;
+  --btn-label-color: var(--clr-black-3);
   --btn-label-spacing: 0px;
   background: transparent;
 }
@@ -78,7 +78,7 @@
 .flex-card-bg {
   position: absolute;
   inset: 0;
-  background: #cccccc;
+  background: var(--clr-400);
   transition: transform 0.5s ease;
 }
 

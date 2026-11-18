@@ -14,10 +14,10 @@
 
 /* ── Root ── */
 .iw-cardstack {
-  --color-card-bg:  #F0F0F0;
-  --color-title:    #FFFFFF;
-  --color-arrow:    #1A1A1A;
-  --color-arrow-bg: #E8E8E8;
+  --color-card-bg:  var(--clr-pale);
+  --color-title:    var(--clr-white);
+  --color-arrow:    var(--clr-dark);
+  --color-arrow-bg: var(--clr-pale-md);
   --radius-card:    16px;
   --duration-spread:700ms;
   --title-size:     16px;
@@ -179,12 +179,12 @@
 /* ── Inspector: select ── */
 .inspector__select {
   width: 100%;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   border-radius: 7px;
   padding: 8px 12px;
   font-size: 14px;
-  color: #212529;
-  background: #fff;
+  color: var(--clr-900);
+  background: var(--clr-white);
   outline: none;
   cursor: pointer;
   appearance: none;
@@ -192,7 +192,7 @@
 }
 
 .inspector__select:focus {
-  border-color: #555555;
+  border-color: var(--clr-700);
 }
 
 /* ── Inspector: toggle switch ── */
@@ -205,7 +205,7 @@
 
 .inspector__switch-label {
   font-size: 12px;
-  color: #868e96;
+  color: var(--clr-600);
   letter-spacing: -0.01em;
 }
 
@@ -227,7 +227,7 @@
   position: absolute;
   inset: 0;
   border-radius: 10px;
-  background: #dee2e6;
+  background: var(--clr-300);
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -240,13 +240,13 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: #fff;
+  background: var(--clr-white);
   box-shadow: 0 1px 3px rgba(0,0,0,.2);
   transition: transform 0.2s;
 }
 
 .inspector__switch input:checked + .inspector__switch-track {
-  background: #555555;
+  background: var(--clr-700);
 }
 
 .inspector__switch input:checked + .inspector__switch-track::after {

@@ -21,8 +21,8 @@
   --cc-padding:      36px;
   --cc-title-size:   32px;
   --cc-body-size:    20px;
-  --cc-title-color:  #f7f7f7;
-  --cc-body-color:   #f7f7f7;
+  --cc-title-color:  var(--clr-off-white);
+  --cc-body-color:   var(--clr-off-white);
   --cc-dim-base:     0.15;
   --cc-dim-hover:    0.7;
 
@@ -74,14 +74,14 @@
 .wg-cc__img-fallback {
   position: absolute;
   inset: 0;
-  background: #cfcfcf;
+  background: var(--clr-400);
 }
 
 /* ── 딤 ── */
 .wg-cc__dim {
   position: absolute;
   inset: 0;
-  background: #222222;
+  background: var(--clr-darker);
   opacity: var(--cc-dim-base);
   transition: opacity 0.4s ease;
   pointer-events: none;
