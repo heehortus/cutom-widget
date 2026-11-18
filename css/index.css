@@ -840,10 +840,11 @@ body {
 
 .gthumb--faq .gthumb__row {
   height: 26px;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--clr-white);
-  border: 1px solid var(--clr-200);
+  border: none;
   box-shadow: none;
+  outline: none;
   flex-shrink: 0;
   position: relative;
 }
@@ -878,7 +879,7 @@ body {
 .gthumb--faq .gthumb__row--open {
   height: auto;
   flex-shrink: 0;
-  background: linear-gradient(to bottom, var(--clr-white) 26px, var(--clr-50) 26px);
+  background: var(--clr-white);
 }
 
 .gthumb--faq .gthumb__row--open::after {
@@ -1144,10 +1145,11 @@ body {
 
 .gthumb--image-faq .gthumb__row {
   height: 26px;
-  border-radius: 6px;
+  border-radius: 4px;
   background: var(--clr-white);
-  border: 1px solid var(--clr-200);
+  border: none;
   box-shadow: none;
+  outline: none;
   flex-shrink: 0;
   position: relative;
 }
@@ -1180,7 +1182,7 @@ body {
 
 .gthumb--image-faq .gthumb__row--open {
   height: 46px;
-  background: linear-gradient(to bottom, var(--clr-white) 26px, var(--clr-50) 26px);
+  background: var(--clr-white);
 }
 
 /* 열린 행: 화살표 아래로 */
