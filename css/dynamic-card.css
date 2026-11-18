@@ -14,10 +14,10 @@
 
 /* ── Root ── */
 .iw-cardstack {
-  --color-card-bg:  #F4F1EC;
+  --color-card-bg:  #F0F0F0;
   --color-title:    #FFFFFF;
   --color-arrow:    #1A1A1A;
-  --color-arrow-bg: #EDEAE4;
+  --color-arrow-bg: #E8E8E8;
   --radius-card:    16px;
   --duration-spread:700ms;
   --title-size:     16px;
@@ -192,7 +192,7 @@
 }
 
 .inspector__select:focus {
-  border-color: #4263eb;
+  border-color: #555555;
 }
 
 /* ── Inspector: toggle switch ── */
@@ -246,7 +246,7 @@
 }
 
 .inspector__switch input:checked + .inspector__switch-track {
-  background: #4263eb;
+  background: #555555;
 }
 
 .inspector__switch input:checked + .inspector__switch-track::after {

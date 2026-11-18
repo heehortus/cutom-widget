@@ -14,8 +14,8 @@
   --name-color: rgba(249, 249, 249, 1);
   --role-size: 16px;
   --role-color: rgba(249, 249, 249, 1);
-  --hover-start: #4263eb;
-  --hover-end: #3b2fc9;
+  --hover-start: #555555;
+  --hover-end: #222222;
   --card-width: 240px;
   --card-height: 320px;
 }
@@ -61,7 +61,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, var(--hover-start, #4263eb) 0%, var(--hover-end, #3b2fc9) 100%);
+  background: linear-gradient(160deg, var(--hover-start, #555555) 0%, var(--hover-end, #222222) 100%);
   opacity: 0;
   transition: opacity 0.35s ease;
   z-index: 1;

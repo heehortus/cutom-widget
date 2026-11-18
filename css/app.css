@@ -79,7 +79,7 @@
 }
 
 .widget-nav__item.active {
-  background: #f0f4ff;
+  background: #f1f3f5;
 }
 
 /* ── Thumbnail (CSS mini preview) ── */
@@ -96,8 +96,8 @@
 }
 
 .widget-nav__item.active .widget-nav__thumb {
-  border-color: #c5d3ff;
-  background: #eef2ff;
+  border-color: #dee2e6;
+  background: #f1f3f5;
 }
 
 /* Card thumb: text bars at bottom */
@@ -126,12 +126,12 @@
 }
 
 .widget-nav__item.active[data-widget="card"] .widget-nav__thumb::before {
-  background: #748ffc;
+  background: #868e96;
   opacity: 0.7;
 }
 
 .widget-nav__item.active[data-widget="card"] .widget-nav__thumb::after {
-  background: #748ffc;
+  background: #868e96;
   opacity: 0.4;
 }
 
@@ -148,7 +148,7 @@
 }
 
 .widget-nav__item.active[data-widget="banner"] .widget-nav__thumb::before {
-  background: #4263eb;
+  background: #555555;
   opacity: 0.8;
 }
 
@@ -175,7 +175,7 @@
 
 .widget-nav__item.active[data-widget="faq"] .widget-nav__thumb::before,
 .widget-nav__item.active[data-widget="faq"] .widget-nav__thumb::after {
-  background: #748ffc;
+  background: #868e96;
   opacity: 0.6;
 }
 
@@ -203,12 +203,12 @@
 }
 
 .widget-nav__item.active[data-widget="dynamic-card"] .widget-nav__thumb::before {
-  background: #748ffc;
+  background: #868e96;
   opacity: 0.5;
 }
 
 .widget-nav__item.active[data-widget="dynamic-card"] .widget-nav__thumb::after {
-  background: #748ffc;
+  background: #868e96;
   opacity: 0.85;
 }
 
@@ -221,7 +221,7 @@
 }
 
 .widget-nav__item.active .widget-nav__label {
-  color: #4263eb;
+  color: #555555;
   font-weight: 600;
 }
 

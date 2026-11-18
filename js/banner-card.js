@@ -16,9 +16,9 @@
   var gridRows = 2;
   var dragSrcId = null;
   var hoverStyle = {
-    startHex:     '#4263EB',
+    startHex:     '#555555',
     startOpacity: 100,
-    endHex:       '#3B2FC9',
+    endHex:       '#222222',
     endOpacity:   100
   };
   var textStyle = {

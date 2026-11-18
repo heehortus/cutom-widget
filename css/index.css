@@ -128,14 +128,14 @@ body {
   border: none;
   font-size: 14px;
   font-weight: 500;
-  color: #4263eb;
+  color: #555555;
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .inspector__sec-add:hover {
-  color: #3b5bdb;
+  color: #555555;
 }
 
 .inspector__chevron {
@@ -217,7 +217,7 @@ body {
 
 .inspector__card-name-input:focus,
 .inspector__card-role-input:focus {
-  border-color: #4263eb;
+  border-color: #555555;
 }
 
 .inspector__card-delete {
@@ -245,11 +245,11 @@ body {
 }
 
 .inspector__card-item.drag-over-top {
-  box-shadow: inset 0 2px 0 #4263eb;
+  box-shadow: inset 0 2px 0 #555555;
 }
 
 .inspector__card-item.drag-over-bottom {
-  box-shadow: inset 0 -2px 0 #4263eb;
+  box-shadow: inset 0 -2px 0 #555555;
 }
 
 /* ── Layout toggle ── */
@@ -282,9 +282,9 @@ body {
 }
 
 .inspector__layout-btn.active {
-  background: #f0f4ff;
-  border-color: #4263eb;
-  color: #4263eb;
+  background: #f1f3f5;
+  border-color: #555555;
+  color: #555555;
   font-weight: 500;
 }
 

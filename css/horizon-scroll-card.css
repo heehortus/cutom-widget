@@ -17,7 +17,7 @@
   --color-desc: #ffffff;
   --color-overlay: #000000;
   --color-dot: #e1e1e1;
-  --color-dot-active: #3e673e;
+  --color-dot-active: #555555;
   --card-radius: 12px;
   --title-size: 32px;
   --desc-size: 16px;
@@ -29,7 +29,7 @@
   --desc-line: 1.55;
   --desc-weight: 500;
   --slide-speed: 500ms;
-  --card-bg: #f4eee7;
+  --card-bg: #f0f0f0;
   --bleed-size: 72px;
   --track-gap: 28px;
   --card-shadow: 0 20px 44px rgba(0, 0, 0, 0.08);

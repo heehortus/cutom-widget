@@ -37,9 +37,9 @@
     overlayOpacity:      60,
     dotHex:              '#e1e1e1',
     dotOpacity:          100,
-    dotActiveHex:        '#3e673e',
+    dotActiveHex:        '#555555',
     dotActiveOpacity:    100,
-    cardBgHex:           '#f4eee7'
+    cardBgHex:           '#f0f0f0'
   };
 
   var dragSrcId  = null;

@@ -69,10 +69,10 @@
 
   var style = {
     trackInactive:  '#e0e0e0',
-    trackActive:    '#3b82f6',
+    trackActive:    '#555555',
     bulletSize:     10,
     eraSize:        14,
-    eraHex:         '#3b82f6',
+    eraHex:         '#555555',
     eraOpacity:     100,
     headingSize:    32,
     headingHex:     '#1a1a1a',
