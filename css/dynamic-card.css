@@ -4,7 +4,7 @@
 
 /* ── Canvas ── */
 .editor__canvas--dynamic-card {
-  align-items: flex-start;
+  align-items: center;
   padding: 60px 48px;
 }
 

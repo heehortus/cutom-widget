@@ -224,3 +224,52 @@
   color: #4263eb;
   font-weight: 600;
 }
+
+/* ── Inspector: Image Upload ── */
+.inspector__img-upload {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.inspector__img-thumb {
+  width: 52px;
+  height: 40px;
+  border-radius: 5px;
+  border: 1.5px dashed #ced4da;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  flex-shrink: 0;
+  color: #adb5bd;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.inspector__img-thumb:hover { border-color: #868e96; color: #868e96; }
+
+.inspector__img-thumb--filled {
+  border-style: solid;
+  border-color: #dee2e6;
+}
+
+.inspector__img-clear {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 0;
+  background: #dee2e6;
+  color: #495057;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 10px;
+  line-height: 1;
+  padding: 0;
+}
+
+.inspector__img-upload--filled .inspector__img-clear { display: flex; }

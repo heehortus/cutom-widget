@@ -1,0 +1,148 @@
+/* =====================================
+   Focus Card 2 Widget
+   ===================================== */
+
+/* ── Canvas ── */
+.editor__canvas--focus-card-2 {
+  align-items: center;
+  padding: 40px;
+}
+
+.editor__canvas--focus-card-2 .wg-cc {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ── Widget ── */
+.wg-cc {
+  --cc-card-radius:  8px;
+  --cc-card-gap:     24px;
+  --cc-zigzag:       48px;
+  --cc-padding:      36px;
+  --cc-title-size:   32px;
+  --cc-body-size:    20px;
+  --cc-title-color:  #f7f7f7;
+  --cc-body-color:   #f7f7f7;
+  --cc-dim-base:     0.15;
+  --cc-dim-hover:    0.7;
+
+  display: flex;
+  gap: var(--cc-card-gap);
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  flex-wrap: nowrap;
+  box-sizing: border-box;
+}
+
+.wg-cc * { box-sizing: border-box; }
+
+/* ── Card ── */
+.wg-cc__card {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 3 / 4;
+  border-radius: var(--cc-card-radius);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: var(--cc-padding);
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.wg-cc__card.is-visible { opacity: 1; transform: translateY(0); }
+
+/* 지그재그 */
+.wg-cc__card:nth-child(2),
+.wg-cc__card:nth-child(4) { margin-top: var(--cc-zigzag); }
+
+/* ── 이미지 / 플레이스홀더 ── */
+.wg-cc__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wg-cc__img-fallback {
+  position: absolute;
+  inset: 0;
+  background: #cfcfcf;
+}
+
+/* ── 딤 ── */
+.wg-cc__dim {
+  position: absolute;
+  inset: 0;
+  background: #222222;
+  opacity: var(--cc-dim-base);
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.wg-cc__card:hover .wg-cc__dim { opacity: var(--cc-dim-hover); }
+
+/* ── 상단: 본문 (hover 시 노출) ── */
+.wg-cc__top { position: relative; z-index: 1; width: 100%; }
+
+.wg-cc__body {
+  margin: 0;
+  color: var(--cc-body-color);
+  font-weight: 400;
+  font-size: var(--cc-body-size);
+  line-height: 1.8;
+  letter-spacing: -0.4px;
+  word-break: keep-all;
+  opacity: 0;
+  transform: translateY(-12px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.wg-cc__card:hover .wg-cc__body { opacity: 1; transform: translateY(0); }
+
+/* ── 하단: 제목 ── */
+.wg-cc__text { position: relative; z-index: 1; width: 100%; word-break: keep-all; }
+
+.wg-cc__title {
+  margin: 0;
+  color: var(--cc-title-color);
+  font-weight: 500;
+  font-size: var(--cc-title-size);
+  line-height: 1.2;
+  letter-spacing: -0.64px;
+  white-space: nowrap;
+  transition: transform 0.4s ease;
+}
+
+.wg-cc__card:hover .wg-cc__title { transform: translateY(-4px); }
+
+/* ── 반응형 ── */
+@media (max-width: 1024px) {
+  .wg-cc { flex-wrap: wrap; }
+  .wg-cc__card {
+    flex: 1 1 45%;
+    padding: 32px;
+  }
+  .wg-cc__card:nth-child(2),
+  .wg-cc__card:nth-child(4) { margin-top: 0; }
+  .wg-cc__body  { font-size: 16px; }
+  .wg-cc__title { font-size: 26px; }
+}
+
+@media (max-width: 600px) {
+  .wg-cc__card { flex: 1 1 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wg-cc__card,
+  .wg-cc__body,
+  .wg-cc__dim,
+  .wg-cc__title { transition: none; }
+}

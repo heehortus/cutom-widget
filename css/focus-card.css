@@ -1,0 +1,241 @@
+/* =====================================
+   Focus Card Widget
+   ===================================== */
+
+/* ── Canvas ── */
+.editor__canvas--focus-card {
+  align-items: center;
+  padding: 40px;
+}
+
+.editor__canvas--focus-card .flex-card-wrap {
+  width: 100%;
+  max-width: 1200px;
+}
+
+:where(*, *::before, *::after) {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.flex-card-wrap {
+  --card-title-size: 24px;
+  --card-subtitle-size: 16px;
+  --card-title-gap: 4px;
+  --card-radius: 8px;
+  --card-height: 480px;
+  --color-title: #ffffff;
+  --color-subtitle: #ffffff;
+  --color-dim: rgba(0, 0, 0, 0.4);
+  --color-btn-bg: #ffffff;
+  --card-hover-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  --btn-gap: 8px;
+  --btn-label-size: 14px;
+  --btn-label-weight: 600;
+  --btn-label-color: #111111;
+  --btn-label-spacing: 0px;
+  background: transparent;
+}
+
+.flex-card-wrap[data-btn='true']  .flex-card-circle-btn { display: flex; }
+.flex-card-wrap[data-btn='false'] .flex-card-circle-btn { display: none; }
+
+/* ── 리스트 ── */
+.flex-card-list {
+  display: flex;
+  gap: 16px;
+  height: var(--card-height);
+  width: 100%;
+}
+
+/* ── 카드 ── */
+.flex-card-item {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  transition: flex 0.5s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.5s ease;
+}
+
+.flex-card-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+.flex-card-inner {
+  width: 100%;
+  height: 100%;
+}
+
+/* ── 배경 ── */
+.flex-card-bg {
+  position: absolute;
+  inset: 0;
+  background: #cccccc;
+  transition: transform 0.5s ease;
+}
+
+.flex-card-bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.flex-card-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--color-dim), transparent);
+}
+
+/* ── 콘텐츠 ── */
+.flex-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 32px;
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.flex-card-text-zone {
+  flex: 1;
+  padding-right: 16px;
+}
+
+/* ── 뱃지 ── */
+.flex-card-badge {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.flex-card-badge[data-badge='false'] { display: none; }
+
+.flex-card-badge img {
+  height: 24px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+}
+
+/* ── 텍스트 ── */
+.flex-card-title {
+  font-size: var(--card-title-size);
+  font-weight: 700;
+  color: var(--color-title);
+  margin: 0 0 var(--card-title-gap) 0;
+  white-space: nowrap;
+}
+
+.flex-card-desc {
+  font-size: var(--card-subtitle-size);
+  color: var(--color-subtitle);
+  margin: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* ── 버튼 ── */
+.flex-card-circle-btn {
+  flex-shrink: 0;
+  width: fit-content;
+  height: 48px;
+  border-radius: 24px;
+  background-color: var(--color-btn-bg);
+  display: flex;
+  gap: var(--btn-gap);
+  opacity: 0;
+  align-items: center;
+  justify-content: center;
+  padding: 0 16px;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.flex-card-btn-label {
+  font-size: var(--btn-label-size);
+  font-weight: var(--btn-label-weight);
+  color: var(--btn-label-color);
+  letter-spacing: var(--btn-label-spacing);
+  white-space: nowrap;
+}
+
+.flex-card-btn-label:empty { display: none; }
+.flex-card-btn-icon:empty  { display: none; }
+
+.flex-card-btn-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.flex-card-circle-btn img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: block;
+}
+
+/* ── 호버 ── */
+.flex-card-list .flex-card-item:hover {
+  flex: 2.5 1 0;
+  box-shadow: var(--card-hover-shadow);
+}
+
+.flex-card-item:hover .flex-card-bg       { transform: scale(1.02); }
+.flex-card-item:hover .flex-card-desc     { opacity: 1; transform: translateY(0); transition-delay: 0.1s; }
+.flex-card-item:hover .flex-card-circle-btn { opacity: 1; transition-delay: 0.1s; }
+.flex-card-item:hover .flex-card-btn-icon { transform: rotate(-45deg); transition: transform 0.3s ease; }
+
+.flex-card-link:focus-visible { outline: 2px solid var(--color-title); outline-offset: -4px; }
+.flex-card-item:focus-within .flex-card-circle-btn { opacity: 1; }
+.flex-card-item:focus-within .flex-card-desc { opacity: 1; transform: translateY(0); }
+
+/* ── 반응형 ── */
+@media (max-width: 768px) {
+  .flex-card-badge { display: none; }
+  .flex-card-desc { opacity: 1; transform: translateY(-2px); }
+  .flex-card-list { flex-direction: column; height: 120vh; }
+  .flex-card-item { width: 100%; height: auto; flex: 1 1 0; }
+  .flex-card-item:hover { flex: 1 1 0; }
+  .flex-card-circle-btn { opacity: 1; }
+  .flex-card-content { padding: 24px; }
+  .flex-card-title    { font-size: min(var(--card-title-size), 18px); }
+  .flex-card-desc     { font-size: min(var(--card-subtitle-size), 16px); }
+  .flex-card-btn-label { font-size: min(var(--btn-label-size), 16px); }
+  .flex-card-btn-icon { width: 24px; height: 24px; }
+  .flex-card-btn-icon img { width: 20px; height: 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flex-card-item,
+  .flex-card-bg,
+  .flex-card-desc,
+  .flex-card-circle-btn,
+  .flex-card-btn-icon { transition: none; }
+}
+
+/* ── 플레이스홀더 이미지 숨김 ── */
+.flex-card-bg img[src^="data:"]           { display: none; }
+.flex-card-badge:has(img[src^="data:"])   { display: none; }
+.flex-card-btn-icon:has(img[src^="data:"]) { display: none; }
+
+/* ── 링크 미설정 시 클릭 차단 ── */
+.flex-card-link[href="#"],
+.flex-card-link[href=""],
+.flex-card-link:not([href]) { pointer-events: none; cursor: default; }

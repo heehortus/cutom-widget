@@ -5,11 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Widget Editor</title>
   <link rel="stylesheet" href="css/index.css">
-  <link rel="stylesheet" href="css/card.css">
+  <link rel="stylesheet" href="css/banner-card.css">
   <link rel="stylesheet" href="css/banner.css">
   <link rel="stylesheet" href="css/app.css">
   <link rel="stylesheet" href="css/faq.css">
   <link rel="stylesheet" href="css/dynamic-card.css">
+  <link rel="stylesheet" href="css/timeline.css">
+  <link rel="stylesheet" href="css/horizon-scroll-card.css">
+  <link rel="stylesheet" href="css/focus-card.css">
+  <link rel="stylesheet" href="css/focus-card-2.css">
+  <link rel="stylesheet" href="css/image-faq.css">
 </head>
 <body>
 
@@ -38,6 +43,31 @@
       <button class="widget-nav__item" data-widget="dynamic-card" type="button">
         <div class="widget-nav__thumb"></div>
         <span class="widget-nav__label">다이나믹<br>카드</span>
+      </button>
+
+      <button class="widget-nav__item" data-widget="timeline" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">타임라인</span>
+      </button>
+
+      <button class="widget-nav__item" data-widget="horizon-scroll-card" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">호라이즌<br>스크롤</span>
+      </button>
+
+      <button class="widget-nav__item" data-widget="focus-card" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">포커스<br>카드</span>
+      </button>
+
+      <button class="widget-nav__item" data-widget="focus-card-2" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">포커스<br>카드 2</span>
+      </button>
+
+      <button class="widget-nav__item" data-widget="image-faq" type="button">
+        <div class="widget-nav__thumb"></div>
+        <span class="widget-nav__label">이미지<br>FAQ</span>
       </button>
 
     </div>
@@ -771,14 +801,1123 @@
 
     </div><!-- /#view-dynamic-card -->
 
+    <!-- ───────────── Timeline Widget View ───────────── -->
+    <div class="widget-view" id="view-timeline">
+
+      <main class="editor__canvas editor__canvas--timeline">
+        <div class="timeline-widget" id="timelineWidget"></div>
+      </main>
+
+      <aside class="inspector" id="timelineInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">타임라인 위젯</span>
+          <button class="inspector__close" id="timelineInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+              <button class="inspector__sec-add" id="addTimelineGroup" type="button">+ 그룹 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="timelineGroupList"></div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">Era 라벨</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="tlEraSize" value="14" min="8" max="40">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="tlEraSwatchWrap" style="background:#3b82f6">
+                    <input type="color" class="inspector__color-native" id="tlEraPicker" value="#3b82f6">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="tlEraHex" value="#3B82F6" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="tlEraOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">제목</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="tlHeadingSize" value="32" min="16" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="tlHeadingSwatchWrap" style="background:#1a1a1a">
+                    <input type="color" class="inspector__color-native" id="tlHeadingPicker" value="#1a1a1a">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="tlHeadingHex" value="#1A1A1A" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="tlHeadingOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">년도</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="tlYearSize" value="18" min="10" max="48">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="tlYearSwatchWrap" style="background:#1a1a1a">
+                    <input type="color" class="inspector__color-native" id="tlYearPicker" value="#1a1a1a">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="tlYearHex" value="#1A1A1A" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="tlYearOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">텍스트</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="tlTextSize" value="16" min="10" max="40">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="tlTextSwatchWrap" style="background:#6b7280">
+                    <input type="color" class="inspector__color-native" id="tlTextPicker" value="#6b7280">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="tlTextHex" value="#6B7280" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="tlTextOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 트랙 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>트랙</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">비활성 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="tlTrackInactiveSwatchWrap" style="background:#e0e0e0">
+                    <input type="color" class="inspector__color-native" id="tlTrackInactivePicker" value="#e0e0e0">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="tlTrackInactiveHex" value="#E0E0E0" maxlength="7" spellcheck="false">
+                </div>
+              </div>
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">활성 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="tlTrackActiveSwatchWrap" style="background:#3b82f6">
+                    <input type="color" class="inspector__color-native" id="tlTrackActivePicker" value="#3b82f6">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="tlTrackActiveHex" value="#3B82F6" maxlength="7" spellcheck="false">
+                </div>
+              </div>
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">Bullet 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="tlBulletSize" value="10" min="4" max="24">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">그룹 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="tlGroupGap" value="60" min="0" max="200">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="timelineDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-timeline -->
+
+    <!-- ───────────── Horizon Scroll Card Widget View ───────────── -->
+    <div class="widget-view" id="view-horizon-scroll-card">
+
+      <main class="editor__canvas editor__canvas--horizon-scroll-card">
+        <section class="iw-dir"
+          id="horizonScrollCard"
+          aria-label="카드 슬라이드"
+          data-active="0"
+          data-autoplay="true"
+          data-interval="4000"
+          data-ratio="4-3"
+          data-hover-zoom="true">
+          <div class="iw-dir__viewport" data-viewport>
+            <ul class="iw-dir__track" data-track>
+              <li class="iw-dir__card" data-card>
+                <div class="iw-dir__media">
+                  <div class="iw-dir__placeholder" aria-hidden="true">
+                    <span class="iw-dir__placeholder-mark">IMAGE</span>
+                  </div>
+                  <div class="iw-dir__overlay" aria-hidden="true"></div>
+                </div>
+                <div class="iw-dir__text">
+                  <div class="iw-dir__title editor-content">TRUST</div>
+                  <div class="iw-dir__desc editor-content">나의 가족이 안심하고 먹을 수 있는 제품을 만든다는 생각으로, 고객에게 투명한 과정으로 진심을 전합니다.</div>
+                </div>
+              </li>
+              <li class="iw-dir__card" data-card>
+                <div class="iw-dir__media">
+                  <div class="iw-dir__placeholder" aria-hidden="true">
+                    <span class="iw-dir__placeholder-mark">IMAGE</span>
+                  </div>
+                  <div class="iw-dir__overlay" aria-hidden="true"></div>
+                </div>
+                <div class="iw-dir__text">
+                  <div class="iw-dir__title editor-content"></div>
+                  <div class="iw-dir__desc editor-content"></div>
+                </div>
+              </li>
+              <li class="iw-dir__card" data-card>
+                <div class="iw-dir__media">
+                  <div class="iw-dir__placeholder" aria-hidden="true">
+                    <span class="iw-dir__placeholder-mark">IMAGE</span>
+                  </div>
+                  <div class="iw-dir__overlay" aria-hidden="true"></div>
+                </div>
+                <div class="iw-dir__text">
+                  <div class="iw-dir__title editor-content">EVERYDAY</div>
+                  <div class="iw-dir__desc editor-content">남녀노소 누구나 즐기는, 매일 손이 가는 친근한 한 끼의 풍경을 담았습니다.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <nav class="iw-dir__pagination" data-pagination aria-label="슬라이드 페이지네이션"></nav>
+        </section>
+      </main>
+
+      <aside class="inspector" id="horizonScrollCardInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">호라이즌 스크롤 카드</span>
+          <button class="inspector__close" id="horizonScrollCardInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+              <button class="inspector__sec-add" id="addHscItem" type="button">+ 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="hscItemList"></div>
+          </div>
+
+          <!-- 재생 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>재생</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">자동 재생</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="hscAutoplay" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">자동 재생 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscInterval" value="4000" min="500" max="30000">
+                  <span class="inspector__unit">ms</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">전환 속도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscSlideSpeed" value="500" min="100" max="3000">
+                  <span class="inspector__unit">ms</span>
+                </div>
+              </div>
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">호버 확대</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="hscHoverZoom" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 배경색</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscCardBgSwatch" style="background:#f4eee7">
+                    <input type="color" class="inspector__color-native" id="hscCardBgPicker" value="#f4eee7">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscCardBgHex" value="#F4EEE7" maxlength="7" spellcheck="false">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">이미지 비율</label>
+                <select class="inspector__select" id="hscRatio">
+                  <option value="16-9">16:9</option>
+                  <option value="4-3" selected>4:3</option>
+                  <option value="1-1">1:1</option>
+                  <option value="3-4">3:4</option>
+                </select>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscCardRadius" value="12" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">제목</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleSize" value="32" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">자간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleLetter" value="-6" min="-20" max="20">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">행간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleLine" value="1.1" min="0.8" max="3" step="0.05">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">굵기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleWeight" value="700" min="100" max="900" step="100">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscTitleSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="hscTitlePicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscTitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">설명</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescSize" value="16" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">자간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescLetter" value="-2" min="-20" max="20">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">행간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescLine" value="1.55" min="0.8" max="3" step="0.05">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">굵기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescWeight" value="500" min="100" max="900" step="100">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscDescSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="hscDescPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscDescHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscDescOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 컬러 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>컬러</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 색상</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscOverlaySwatch" style="background:#000000">
+                    <input type="color" class="inspector__color-native" id="hscOverlayPicker" value="#000000">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscOverlayHex" value="#000000" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscOverlayColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 강도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscOverlayOpacity" value="60" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">페이지 점</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscDotSwatch" style="background:#e1e1e1">
+                    <input type="color" class="inspector__color-native" id="hscDotPicker" value="#e1e1e1">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscDotHex" value="#E1E1E1" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscDotOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">활성 점</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscDotActiveSwatch" style="background:#3e673e">
+                    <input type="color" class="inspector__color-native" id="hscDotActivePicker" value="#3e673e">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscDotActiveHex" value="#3E673E" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscDotActiveOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="horizonScrollCardDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-horizon-scroll-card -->
+
+    <!-- ───────────── Focus Card Widget View ───────────── -->
+    <div class="widget-view" id="view-focus-card">
+
+      <main class="editor__canvas editor__canvas--focus-card">
+        <section class="flex-card-wrap" id="focusCardWrap" aria-label="포커스 카드 리스트" data-btn="true">
+          <div class="flex-card-list" id="focusCardList"></div>
+        </section>
+      </main>
+
+      <aside class="inspector" id="focusCardInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">포커스 카드</span>
+          <button class="inspector__close" id="focusCardInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+              </button>
+              <button class="inspector__sec-add" id="addFcItem" type="button">+ 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="fcItemList"></div>
+          </div>
+
+          <!-- 카드 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>카드</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">높이</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcCardHeight" value="480" min="100" max="1200">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcCardRadius" value="8" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">연결 버튼 사용</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="fcBtnOnOff" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">타이틀</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcTitleSize" value="24" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcTitleSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="fcTitlePicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcTitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">서브 텍스트</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcSubtitleSize" value="16" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcSubtitleSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="fcSubtitlePicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcSubtitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcSubtitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀·서브 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcTitleGap" value="4" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 연결 버튼 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>연결 버튼</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">버튼 배경</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcBtnBgSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="fcBtnBgPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcBtnBgHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcBtnBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnLabelSize" value="14" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 굵기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnLabelWeight" value="600" min="100" max="900" step="100">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 자간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnLabelSpacing" value="0" min="-10" max="20">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcBtnLabelColorSwatch" style="background:#111111">
+                    <input type="color" class="inspector__color-native" id="fcBtnLabelColorPicker" value="#111111">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcBtnLabelColorHex" value="#111111" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcBtnLabelColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블·아이콘 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnGap" value="8" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 컬러 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>컬러</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 오버레이</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcDimSwatch" style="background:rgba(0,0,0,0.4)">
+                    <input type="color" class="inspector__color-native" id="fcDimPicker" value="#000000">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcDimHex" value="#000000" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcDimOpacity" value="40" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">호버 그림자</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcHoverShadowSwatch" style="background:rgba(0,0,0,0.3)">
+                    <input type="color" class="inspector__color-native" id="fcHoverShadowPicker" value="#000000">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcHoverShadowHex" value="#000000" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcHoverShadowOpacity" value="30" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="focusCardDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-focus-card -->
+
+    <!-- ───────────── Focus Card 2 Widget View ───────────── -->
+    <div class="widget-view" id="view-focus-card-2">
+
+      <main class="editor__canvas editor__canvas--focus-card-2">
+        <div class="wg-cc" id="fc2Wrap"></div>
+      </main>
+
+      <aside class="inspector" id="fc2Inspector">
+        <div class="inspector__head">
+          <span class="inspector__title">포커스 카드 2</span>
+          <button class="inspector__close" id="fc2InspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+              </button>
+              <button class="inspector__sec-add" id="addFc2Item" type="button">+ 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="fc2ItemList"></div>
+          </div>
+
+          <!-- 카드 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>카드</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2CardRadius" value="8" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2CardGap" value="24" min="0" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">지그재그</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2Zigzag" value="48" min="0" max="200">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">내부 여백</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2Padding" value="36" min="0" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">타이틀</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2TitleSize" value="32" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fc2TitleSwatch" style="background:#f7f7f7">
+                    <input type="color" class="inspector__color-native" id="fc2TitlePicker" value="#f7f7f7">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fc2TitleHex" value="#F7F7F7" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fc2TitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">설명</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2BodySize" value="20" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fc2BodySwatch" style="background:#f7f7f7">
+                    <input type="color" class="inspector__color-native" id="fc2BodyPicker" value="#f7f7f7">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fc2BodyHex" value="#F7F7F7" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fc2BodyOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 딤 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>딤</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">기본 강도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2DimBase" value="15" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">호버 강도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2DimHover" value="70" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="fc2Delete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-focus-card-2 -->
+
+    <!-- ───────────── Image FAQ Widget View ───────────── -->
+    <div class="widget-view" id="view-image-faq">
+
+      <main class="editor__canvas editor__canvas--image-faq">
+        <div class="wg-ac" id="imgFaqWrap"></div>
+      </main>
+
+      <aside class="inspector" id="imgFaqInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">이미지 FAQ</span>
+          <button class="inspector__close" id="imgFaqInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section">
+            <div class="inspector__sec-head">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+              </button>
+              <button class="inspector__sec-add" id="addImfItem" type="button">+ 추가</button>
+            </div>
+            <div class="inspector__sec-body" id="imfItemList"></div>
+          </div>
+
+          <!-- 이미지 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>이미지</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">이미지</label>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div class="inspector__img-upload" id="imfImgUploadWrap">
+                    <div class="inspector__img-thumb" id="imfImgThumb">
+                      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/><path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/></svg>
+                    </div>
+                    <button class="inspector__img-clear" id="imfImgClear" type="button" title="이미지 제거">&#x2715;</button>
+                    <input type="file" accept="image/*" id="imfImgFile" style="display:none">
+                  </div>
+                  <input type="text" class="inspector__text-input" id="imfImgUrl" placeholder="또는 URL 입력">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">배경색</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="imfImgBgSwatch" style="background:#efe7e2">
+                    <input type="color" class="inspector__color-native" id="imfImgBgPicker" value="#efe7e2">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="imfImgBgHex" value="#EFE7E2" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="imfImgBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfImgRadius" value="16" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">아이템 타이틀</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfTitleSize" value="24" min="8" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="imfTitleSwatch" style="background:#222222">
+                    <input type="color" class="inspector__color-native" id="imfTitlePicker" value="#222222">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="imfTitleHex" value="#222222" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="imfTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">소제목</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfDTitleSize" value="20" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="imfDTitleSwatch" style="background:#3e673e">
+                    <input type="color" class="inspector__color-native" id="imfDTitlePicker" value="#3e673e">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="imfDTitleHex" value="#3E673E" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="imfDTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">내용</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfDBodySize" value="16" min="8" max="40">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="imfDBodySwatch" style="background:#5e5e5e">
+                    <input type="color" class="inspector__color-native" id="imfDBodyPicker" value="#5e5e5e">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="imfDBodyHex" value="#5E5E5E" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="imfDBodyOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">좌우 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfGap" value="24" min="0" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">아이템 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfItemGap" value="16" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">아이템 모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfItemRadius" value="16" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">테두리 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="imfBorderSwatch" style="background:#e1e1e1">
+                    <input type="color" class="inspector__color-native" id="imfBorderPicker" value="#e1e1e1">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="imfBorderHex" value="#E1E1E1" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="imfBorderOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">아이템 배경</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="imfItemBgSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="imfItemBgPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="imfItemBgHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="imfItemBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">헤더 세로 여백</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfHeadPy" value="28" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">헤더 가로 여백</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="imfHeadPx" value="32" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="imgFaqDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+    </div><!-- /#view-image-faq -->
+
   </div><!-- /.widget-views -->
 
 </div><!-- /.app -->
 
-<script src="js/widget.js"></script>
+<script src="js/banner-card.js"></script>
 <script src="js/banner.js"></script>
 <script src="js/faq.js"></script>
 <script src="js/dynamic-card.js"></script>
+<script src="js/timeline.js"></script>
+<script src="js/horizon-scroll-card.js"></script>
+<script src="js/focus-card.js"></script>
+<script src="js/focus-card-2.js"></script>
+<script src="js/image-faq.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

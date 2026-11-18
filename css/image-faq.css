@@ -1,0 +1,181 @@
+/* =====================================
+   Image FAQ Widget
+   ===================================== */
+
+/* ── Canvas ── */
+.editor__canvas--image-faq {
+  align-items: center;
+  padding: 40px;
+}
+
+.editor__canvas--image-faq .wg-ac {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* ── Widget ── */
+.wg-ac {
+  --ac-gap:            24px;
+  --ac-item-gap:       16px;
+  --ac-img-radius:     16px;
+  --ac-img-bg:         #efe7e2;
+  --ac-item-radius:    16px;
+  --ac-border-color:   #e1e1e1;
+  --ac-item-bg:        #ffffff;
+  --ac-head-py:        28px;
+  --ac-head-px:        32px;
+  --ac-title-size:     24px;
+  --ac-title-color:    #222222;
+  --ac-d-title-size:   20px;
+  --ac-d-title-color:  #3e673e;
+  --ac-d-body-size:    16px;
+  --ac-d-body-color:   #5e5e5e;
+
+  display: flex;
+  gap: var(--ac-gap);
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.wg-ac * { box-sizing: border-box; }
+
+/* ── 왼쪽 이미지 ── */
+.wg-ac__left {
+  flex: 1 1 0;
+  min-width: 0;
+  align-self: stretch;
+}
+
+.wg-ac__img-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border-radius: var(--ac-img-radius);
+  overflow: hidden;
+  background: var(--ac-img-bg);
+}
+
+.wg-ac__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.wg-ac__img-grad {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,249,247,0) 0%, rgba(255,249,247,0.4) 100%);
+  pointer-events: none;
+}
+
+/* ── 오른쪽 아코디언 ── */
+.wg-ac__right {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ac-item-gap);
+}
+
+.wg-ac__item {
+  border: 1px solid var(--ac-border-color);
+  border-radius: var(--ac-item-radius);
+  overflow: hidden;
+  background: var(--ac-item-bg);
+}
+
+.wg-ac__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: var(--ac-head-py) var(--ac-head-px);
+  background: none;
+  border: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
+.wg-ac__title {
+  margin: 0;
+  color: var(--ac-title-color);
+  font-weight: 600;
+  font-size: var(--ac-title-size);
+  line-height: 1.2;
+  letter-spacing: -0.96px;
+  white-space: nowrap;
+}
+
+.wg-ac__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ac-title-color);
+  transition: transform 0.3s ease;
+}
+
+.wg-ac__item.is-open .wg-ac__icon { transform: rotate(180deg); }
+.wg-ac__icon svg { display: block; }
+
+/* ── 패널 ── */
+.wg-ac__panel { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.wg-ac__panel-inner { padding: 0; }
+.wg-ac__divider { height: 1px; background: var(--ac-border-color); margin: 0; }
+
+.wg-ac__detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 24px var(--ac-head-px) 8px;
+}
+
+.wg-ac__detail + .wg-ac__detail { padding: 8px var(--ac-head-px); }
+.wg-ac__detail:last-child { padding-bottom: 24px; }
+
+.wg-ac__d-title {
+  margin: 0;
+  color: var(--ac-d-title-color);
+  font-weight: 600;
+  font-size: var(--ac-d-title-size);
+  line-height: 1.8;
+  letter-spacing: -0.4px;
+  word-break: keep-all;
+}
+
+.wg-ac__d-body {
+  margin: 0;
+  color: var(--ac-d-body-color);
+  font-weight: 400;
+  font-size: var(--ac-d-body-size);
+  line-height: 1.6;
+  letter-spacing: -0.32px;
+  word-break: keep-all;
+}
+
+/* ── 반응형 ── */
+@media (max-width: 900px) {
+  .wg-ac { flex-direction: column; }
+  .wg-ac__left { align-self: auto; }
+  .wg-ac__img-wrap { min-height: 240px; }
+  .wg-ac__head { padding: 16px 20px; }
+  .wg-ac__title { font-size: 20px; }
+  .wg-ac__d-title { font-size: 18px; }
+  .wg-ac__d-body { font-size: 14px; }
+  .wg-ac__detail { padding-left: 20px; padding-right: 20px; }
+  .wg-ac__detail + .wg-ac__detail { padding-left: 20px; padding-right: 20px; }
+  .wg-ac__right { gap: 12px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wg-ac__icon,
+  .wg-ac__panel { transition: none; }
+}
