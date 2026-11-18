@@ -33,8 +33,10 @@
       </div>`,
     'faq': `
       <div class="gthumb gthumb--faq">
+        <div class="gthumb__row gthumb__row--open">
+          <div class="gthumb__row-body"></div>
+        </div>
         <div class="gthumb__row"></div>
-        <div class="gthumb__row gthumb__row--open"></div>
         <div class="gthumb__row"></div>
         <div class="gthumb__row"></div>
       </div>`,

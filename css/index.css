@@ -862,7 +862,7 @@ body {
   background: var(--clr-300);
 }
 
-/* 오른쪽 화살표 (chevron right) */
+/* 아래 화살표 ∨ (closed) */
 .gthumb--faq .gthumb__row::after {
   content: '';
   position: absolute;
@@ -872,18 +872,52 @@ body {
   height: 5px;
   border-right: 1.5px solid var(--clr-400);
   border-top: 1.5px solid var(--clr-400);
-  transform: translateY(-50%) rotate(45deg);
+  transform: translateY(-50%) rotate(135deg);
 }
 
-/* 열린 행: 화살표 아래로 */
+/* 열린 행: 60px (헤더 26px + 본문 34px) */
 .gthumb--faq .gthumb__row--open {
-  height: 26px;
+  height: 60px;
   flex-shrink: 0;
   background: var(--clr-white);
 }
 
+/* 열린 행: 질문 텍스트 바를 헤더 영역(26px)에 고정 */
+.gthumb--faq .gthumb__row--open::before {
+  top: 11px;
+  transform: none;
+}
+
+/* 위 화살표 ∧ (open) */
 .gthumb--faq .gthumb__row--open::after {
-  transform: translateY(-50%) rotate(135deg);
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+/* desc 텍스트 라인 2개 */
+.gthumb--faq .gthumb__row-body {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  top: 32px;
+}
+
+.gthumb--faq .gthumb__row-body::before {
+  content: '';
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--clr-200);
+  width: 80%;
+  margin-bottom: 7px;
+}
+
+.gthumb--faq .gthumb__row-body::after {
+  content: '';
+  display: block;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--clr-200);
+  width: 55%;
 }
 
 
