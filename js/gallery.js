@@ -96,7 +96,7 @@
           <span class="wg-card__badge">${w.catLabel}</span>
           <div class="wg-card__name">${w.name}</div>
           <div class="wg-card__desc">${w.desc}</div>
-          <button class="wg-card__edit-btn" data-widget="${w.id}" type="button">위젯 수정</button>
+          <button class="wg-card__edit-btn" data-widget="${w.id}" type="button">위젯 사용해보기</button>
         </div>
       </div>
     `).join('');

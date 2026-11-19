@@ -49,6 +49,10 @@
   var root       = document.getElementById('horizonScrollCard');
   var itemListEl = document.getElementById('hscItemList');
 
+  /* ── Detail Panel ── */
+  var currentDetailItem = null;
+  var detailEl = null;
+
   /* ── Helpers ── */
   function esc(str) {
     return String(str)
@@ -314,22 +318,12 @@
     }
   };
 
-  /* ── Render: inspector item list ── */
+  /* ── Detail Panel helpers ── */
   var UPLOAD_SVG =
     '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"' +
     ' stroke-linecap="round" stroke-linejoin="round" width="14" height="14">' +
     '<polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/>' +
     '<path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/>' +
-    '</svg>';
-
-  var DELETE_SVG =
-    '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"' +
-    ' stroke-linecap="round" stroke-linejoin="round" width="13" height="13">' +
-    '<polyline points="1,3 13,3"/>' +
-    '<path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/>' +
-    '<rect x="2" y="3" width="10" height="9" rx="1"/>' +
-    '<line x1="5" y1="6" x2="5" y2="10"/>' +
-    '<line x1="9" y1="6" x2="9" y2="10"/>' +
     '</svg>';
 
   var DRAG_SVG =
@@ -339,102 +333,175 @@
     '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
     '</svg>';
 
+  function createDetailPanel() {
+    var inspectorEl = document.querySelector('#horizonScrollCardInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><polyline points="10,3 4,8 10,13"/></svg>' +
+          '슬라이드 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="hscDetailBody"></div>';
+    inspectorEl.appendChild(panel);
+
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
+
+    return panel;
+  }
+
+  function renderDetailBody(bodyEl, item) {
+    bodyEl.innerHTML = '';
+
+    /* 이미지 필드 */
+    var imgField = document.createElement('div');
+    imgField.innerHTML =
+      '<label class="inspector__field-label">이미지</label>' +
+      '<div class="inspector__img-upload' + (item.imgSrc ? ' inspector__img-upload--filled' : '') + '">' +
+        '<div class="inspector__img-thumb' + (item.imgSrc ? ' inspector__img-thumb--filled' : '') + '">' +
+          (item.imgSrc ? '<img src="' + escAttr(item.imgSrc) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' : UPLOAD_SVG) +
+        '</div>' +
+        '<button class="inspector__img-clear" type="button" title="이미지 제거">&#x2715;</button>' +
+        '<input type="file" accept="image/*" style="display:none">' +
+      '</div>';
+
+    var uploadWrap = imgField.querySelector('.inspector__img-upload');
+    var thumb      = imgField.querySelector('.inspector__img-thumb');
+    var clearBtn   = imgField.querySelector('.inspector__img-clear');
+    var fileInput  = imgField.querySelector('input[type="file"]');
+
+    thumb.addEventListener('click', function () { fileInput.click(); });
+    fileInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        item.imgSrc = ev.target.result;
+        var mediaEl = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__media');
+        if (mediaEl) {
+          var placeholder = mediaEl.querySelector('.iw-dir__placeholder');
+          if (placeholder) placeholder.remove();
+          var imgEl = mediaEl.querySelector('img');
+          if (!imgEl) {
+            imgEl = document.createElement('img');
+            imgEl.alt = ''; imgEl.setAttribute('aria-hidden', 'true');
+            imgEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;';
+            mediaEl.insertBefore(imgEl, mediaEl.firstChild);
+          }
+          imgEl.src = item.imgSrc;
+        }
+        thumb.innerHTML = '<img src="' + item.imgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        thumb.classList.add('inspector__img-thumb--filled');
+        uploadWrap.classList.add('inspector__img-upload--filled');
+        fileInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+    clearBtn.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      item.imgSrc = '';
+      var mediaEl = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__media');
+      if (mediaEl) {
+        var imgEl = mediaEl.querySelector('img');
+        if (imgEl) imgEl.remove();
+        if (!mediaEl.querySelector('.iw-dir__placeholder')) {
+          var ph = document.createElement('div');
+          ph.className = 'iw-dir__placeholder'; ph.setAttribute('aria-hidden', 'true');
+          ph.innerHTML = '<span class="iw-dir__placeholder-mark">IMAGE</span>';
+          mediaEl.insertBefore(ph, mediaEl.firstChild);
+        }
+      }
+      thumb.innerHTML = UPLOAD_SVG;
+      thumb.classList.remove('inspector__img-thumb--filled');
+      uploadWrap.classList.remove('inspector__img-upload--filled');
+      fileInput.value = '';
+    });
+    bodyEl.appendChild(imgField);
+
+    /* 제목 필드 */
+    var titleField = document.createElement('div');
+    titleField.className = 'inspector__field';
+    titleField.innerHTML =
+      '<label class="inspector__field-label">제목</label>' +
+      '<input class="inspector__card-name-input" type="text" value="' + escAttr(item.title) + '" placeholder="제목" style="width:100%">';
+    titleField.querySelector('input').addEventListener('input', function (e) {
+      item.title = e.target.value;
+      var el = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__title');
+      if (el) el.textContent = item.title;
+      var rowEl = itemListEl.querySelector('[data-id="' + item.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = e.target.value || 'Title';
+    });
+    bodyEl.appendChild(titleField);
+
+    /* 설명 필드 */
+    var descField = document.createElement('div');
+    descField.className = 'inspector__field';
+    descField.innerHTML =
+      '<label class="inspector__field-label">설명</label>' +
+      '<input class="inspector__card-name-input" type="text" value="' + escAttr(item.desc) + '" placeholder="설명" style="width:100%">';
+    descField.querySelector('input').addEventListener('input', function (e) {
+      item.desc = e.target.value;
+      var el = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__desc');
+      if (el) el.textContent = item.desc;
+    });
+    bodyEl.appendChild(descField);
+
+    /* 삭제 버튼 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' +
+        '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="1,3 13,3"/><path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/><rect x="2" y="3" width="10" height="9" rx="1"/><line x1="5" y1="6" x2="5" y2="10"/><line x1="9" y1="6" x2="9" y2="10"/></svg>' +
+        '슬라이드 삭제' +
+      '</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      if (items.length <= 1) return;
+      detailEl.classList.remove('open');
+      currentDetailItem = null;
+      items = items.filter(function (it) { return it.id !== item.id; });
+      renderWidget();
+      renderInspectorItems();
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openDetail(item) {
+    currentDetailItem = item;
+    var bodyEl = detailEl.querySelector('#hscDetailBody');
+    renderDetailBody(bodyEl, item);
+    detailEl.classList.add('open');
+  }
+
+  /* ── Render: inspector item list ── */
   function renderInspectorItems() {
     itemListEl.innerHTML = '';
 
     items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__item-row';
       row.dataset.id = item.id;
       row.innerHTML =
         '<span class="inspector__drag">' + DRAG_SVG + '</span>' +
-        '<div class="inspector__card-fields" style="flex-direction:column;gap:4px">' +
-          '<input class="inspector__card-name-input hsc-title-input" type="text"' +
-            ' value="' + escAttr(item.title) + '" placeholder="제목">' +
-          '<input class="inspector__card-name-input hsc-desc-input" type="text"' +
-            ' value="' + escAttr(item.desc) + '" placeholder="설명">' +
-          '<div style="display:flex;align-items:center;gap:6px;margin-top:2px">' +
-            '<span style="font-size:11px;color:#868e96;flex-shrink:0">이미지</span>' +
-            '<div class="inspector__img-upload' + (item.imgSrc ? ' inspector__img-upload--filled' : '') + '">' +
-              '<div class="inspector__img-thumb' + (item.imgSrc ? ' inspector__img-thumb--filled' : '') + '">' +
-                (item.imgSrc ? '<img src="' + escAttr(item.imgSrc) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' : UPLOAD_SVG) +
-              '</div>' +
-              '<button class="inspector__img-clear" type="button" title="이미지 제거">&#x2715;</button>' +
-              '<input type="file" accept="image/*" style="display:none">' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<button class="inspector__card-delete" type="button" aria-label="삭제">' + DELETE_SVG + '</button>';
+        '<span class="inspector__item-name">' + esc(item.title || 'Title') + '</span>' +
+        '<span class="inspector__item-arrow">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="6,3 10,8 6,13"/></svg>' +
+        '</span>';
 
-      row.querySelector('.hsc-title-input').addEventListener('input', function (e) {
-        item.title = e.target.value;
-        var el = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__title');
-        if (el) el.textContent = item.title;
-      });
-
-      row.querySelector('.hsc-desc-input').addEventListener('input', function (e) {
-        item.desc = e.target.value;
-        var el = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__desc');
-        if (el) el.textContent = item.desc;
-      });
-      /* 이미지 업로드 */
-      (function () {
-        var uploadWrap = row.querySelector('.inspector__img-upload');
-        var thumb      = row.querySelector('.inspector__img-thumb');
-        var clearBtn   = row.querySelector('.inspector__img-clear');
-        var fileInput  = row.querySelector('input[type="file"]');
-        thumb.addEventListener('click', function () { fileInput.click(); });
-        fileInput.addEventListener('change', function (e) {
-          var file = e.target.files[0];
-          if (!file) return;
-          var reader = new FileReader();
-          reader.onload = function (ev) {
-            item.imgSrc = ev.target.result;
-            var mediaEl = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__media');
-            if (mediaEl) {
-              var placeholder = mediaEl.querySelector('.iw-dir__placeholder');
-              if (placeholder) placeholder.remove();
-              var imgEl = mediaEl.querySelector('img');
-              if (!imgEl) {
-                imgEl = document.createElement('img');
-                imgEl.alt = ''; imgEl.setAttribute('aria-hidden', 'true');
-                imgEl.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;';
-                mediaEl.insertBefore(imgEl, mediaEl.firstChild);
-              }
-              imgEl.src = item.imgSrc;
-            }
-            thumb.innerHTML = '<img src="' + item.imgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
-            thumb.classList.add('inspector__img-thumb--filled');
-            uploadWrap.classList.add('inspector__img-upload--filled');
-            fileInput.value = '';
-          };
-          reader.readAsDataURL(file);
-        });
-        clearBtn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          item.imgSrc = '';
-          var mediaEl = root.querySelector('.iw-dir__card[data-id="' + item.id + '"] .iw-dir__media');
-          if (mediaEl) {
-            var imgEl = mediaEl.querySelector('img');
-            if (imgEl) imgEl.remove();
-            if (!mediaEl.querySelector('.iw-dir__placeholder')) {
-              var ph = document.createElement('div');
-              ph.className = 'iw-dir__placeholder'; ph.setAttribute('aria-hidden', 'true');
-              ph.innerHTML = '<span class="iw-dir__placeholder-mark">IMAGE</span>';
-              mediaEl.insertBefore(ph, mediaEl.firstChild);
-            }
-          }
-          thumb.innerHTML = UPLOAD_SVG;
-          thumb.classList.remove('inspector__img-thumb--filled');
-          uploadWrap.classList.remove('inspector__img-upload--filled');
-          fileInput.value = '';
-        });
-      })();
-      row.querySelector('.inspector__card-delete').addEventListener('click', function () {
-        if (items.length <= 1) return;
-        items = items.filter(function (it) { return it.id !== item.id; });
-        renderWidget();
-        renderInspectorItems();
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openDetail(item);
       });
 
       setupDragDrop(row, item.id);
@@ -480,16 +547,18 @@
   }
 
   function clearDragIndicators() {
-    itemListEl.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    itemListEl.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
 
   /* ── Add item ── */
   document.getElementById('addHscItem').addEventListener('click', function () {
-    items.push({ id: nextId++, title: 'Title', desc: 'Description', imgSrc: '' });
+    var newItem = { id: nextId++, title: 'Title', desc: 'Description', imgSrc: '' };
+    items.push(newItem);
     renderWidget();
     renderInspectorItems();
+    openDetail(newItem);
   });
 
   /* ── Color control helper ── */
@@ -652,6 +721,7 @@
   });
 
   /* ── Init ── */
+  detailEl = createDetailPanel();
   renderWidget();
   renderInspectorItems();
 

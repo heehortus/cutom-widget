@@ -91,8 +91,33 @@
     });
   }
 
+  /* ── Mobile Nav Toggle ───────────── */
+  function initNavToggle() {
+    var nav     = document.getElementById('widgetNav');
+    var overlay = document.getElementById('navOverlay');
+    var openBtn = document.getElementById('navOpenBtn');
+    var closeBtn = document.getElementById('navToggle');
+
+    function openNav() {
+      nav.classList.add('open');
+      overlay.classList.add('visible');
+      openBtn.classList.add('hidden');
+    }
+
+    function closeNav() {
+      nav.classList.remove('open');
+      overlay.classList.remove('visible');
+      openBtn.classList.remove('hidden');
+    }
+
+    openBtn.addEventListener('click', openNav);
+    closeBtn.addEventListener('click', closeNav);
+    overlay.addEventListener('click', closeNav);
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initNav();
+    initNavToggle();
     loadAllWidgets();
   });
 

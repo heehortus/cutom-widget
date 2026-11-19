@@ -29,25 +29,30 @@
 
 /* ── Widget Nav Sidebar ── */
 .widget-nav {
-  width: 160px;
-  min-width: 160px;
+  position: fixed;
+  top: 0;
+  left: -200px;
+  width: 200px;
   height: 100vh;
   background: var(--clr-white);
   border-right: 1px solid var(--clr-200);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
+  z-index: 100;
+  transition: left 0.25s ease;
+}
+
+.widget-nav.open {
+  left: 0;
 }
 
 .widget-nav__header {
-  padding: 16px 16px 12px;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--clr-500);
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  display: flex;
+  align-items: center;
   border-bottom: 1px solid var(--clr-100);
   flex-shrink: 0;
+  padding-right: 8px;
 }
 
 .widget-nav__list {
@@ -62,16 +67,16 @@
 .widget-nav__item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 8px 10px;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 12px 12px;
   border: none;
   background: none;
   border-radius: 10px;
   cursor: pointer;
   transition: background 0.15s;
   width: 100%;
-  text-align: center;
+  text-align: left;
 }
 
 .widget-nav__item:hover {
@@ -84,8 +89,9 @@
 
 /* ── Thumbnail (CSS mini preview) ── */
 .widget-nav__thumb {
-  width: 64px;
-  height: 48px;
+  display: none;
+  width: 140px;
+  height: 100px;
   border-radius: 8px;
   border: 1.5px solid var(--clr-300);
   background: var(--clr-100);
@@ -214,10 +220,11 @@
 
 /* ── Nav Labels ── */
 .widget-nav__label {
-  font-size: 11px;
+  font-size: 16px;
   font-weight: 500;
   color: var(--clr-600);
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .widget-nav__item.active .widget-nav__label {
@@ -273,3 +280,73 @@
 }
 
 .inspector__img-upload--filled .inspector__img-clear { display: flex; }
+
+/* ── Nav Header (toggle button row) ── */
+.widget-nav__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ── 닫기 토글 버튼 (헤더 안) ── */
+.widget-nav__toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: var(--clr-500);
+  flex-shrink: 0;
+}
+
+.widget-nav__toggle:hover {
+  background: var(--clr-100);
+  color: var(--clr-700);
+}
+
+/* ── 열기 버튼 (nav 닫혔을 때 좌상단에 표시) ── */
+.widget-nav-open-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 98;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--clr-white);
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.14);
+  cursor: pointer;
+  color: var(--clr-600);
+}
+
+.widget-nav-open-btn.hidden {
+  display: none;
+}
+
+/* ── Overlay ── */
+.widget-nav-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 99;
+}
+
+.widget-nav-overlay.visible {
+  display: block;
+}
+
+/* ── Mobile ── */
+@media (max-width: 640px) {
+  .widget-view {
+    flex-direction: column;
+  }
+}

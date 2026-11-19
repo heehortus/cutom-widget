@@ -55,6 +55,127 @@
   var container   = document.getElementById('dynamicCardContainer');
   var itemListEl  = document.getElementById('dynamicCardItemList');
 
+  /* ── Detail Panel ── */
+  var currentDetailItem = null;
+  var detailEl = null;
+
+  var UPLOAD_SVG_DC = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/><path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/></svg>';
+
+  function createDetailPanel() {
+    var inspectorEl = document.querySelector('#dynamicCardInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><polyline points="10,3 4,8 10,13"/></svg>' +
+          '카드 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="dcDetailBody"></div>';
+    inspectorEl.appendChild(panel);
+
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
+
+    return panel;
+  }
+
+  function renderDetailBody(bodyEl, item) {
+    bodyEl.innerHTML = '';
+
+    /* 이미지 필드 */
+    var imgField = document.createElement('div');
+    imgField.innerHTML =
+      '<label class="inspector__field-label">이미지</label>' +
+      '<div class="inspector__img-upload' + (item.image ? ' inspector__img-upload--filled' : '') + '">' +
+        '<div class="inspector__img-thumb' + (item.image ? ' inspector__img-thumb--filled' : '') + '">' +
+          (item.image ? '<img src="' + escAttr(item.image) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' : UPLOAD_SVG_DC) +
+        '</div>' +
+        '<button class="inspector__img-clear" type="button" title="이미지 제거">&#x2715;</button>' +
+        '<input type="file" accept="image/*" style="display:none">' +
+      '</div>';
+
+    var uploadWrap = imgField.querySelector('.inspector__img-upload');
+    var thumb      = imgField.querySelector('.inspector__img-thumb');
+    var clearBtn   = imgField.querySelector('.inspector__img-clear');
+    var fileInput  = imgField.querySelector('input[type="file"]');
+
+    thumb.addEventListener('click', function () { fileInput.click(); });
+    fileInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        item.image = ev.target.result;
+        updateCardInPlace(item.id, 'image', item.image);
+        thumb.innerHTML = '<img src="' + item.image + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        thumb.classList.add('inspector__img-thumb--filled');
+        uploadWrap.classList.add('inspector__img-upload--filled');
+        fileInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+    clearBtn.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      item.image = '';
+      updateCardInPlace(item.id, 'image', '');
+      thumb.innerHTML = UPLOAD_SVG_DC;
+      thumb.classList.remove('inspector__img-thumb--filled');
+      uploadWrap.classList.remove('inspector__img-upload--filled');
+      fileInput.value = '';
+    });
+    bodyEl.appendChild(imgField);
+
+    /* 제목 필드 */
+    var titleField = document.createElement('div');
+    titleField.className = 'inspector__field';
+    titleField.innerHTML =
+      '<label class="inspector__field-label">제목</label>' +
+      '<input class="inspector__card-name-input" type="text" value="' + escAttr(item.title) + '" placeholder="카드 제목" style="width:100%">';
+    titleField.querySelector('input').addEventListener('input', function (e) {
+      item.title = e.target.value;
+      updateCardInPlace(item.id, 'title', item.title);
+      var rowEl = itemListEl.querySelector('[data-id="' + item.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = e.target.value || '카드 제목';
+    });
+    bodyEl.appendChild(titleField);
+
+    /* 삭제 버튼 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' +
+        '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="1,3 13,3"/><path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/><rect x="2" y="3" width="10" height="9" rx="1"/><line x1="5" y1="6" x2="5" y2="10"/><line x1="9" y1="6" x2="9" y2="10"/></svg>' +
+        '카드 삭제' +
+      '</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      if (items.length <= 1) return;
+      detailEl.classList.remove('open');
+      currentDetailItem = null;
+      items = items.filter(function (it) { return it.id !== item.id; });
+      renderWidget();
+      renderInspectorItems();
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openDetail(item) {
+    currentDetailItem = item;
+    var bodyEl = detailEl.querySelector('#dcDetailBody');
+    renderDetailBody(bodyEl, item);
+    detailEl.classList.add('open');
+  }
+
   /* ── Helpers ── */
   function hexToRgba(hex, opacity) {
     var h = hex.replace('#', '');
@@ -379,7 +500,7 @@
 
     items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__item-row';
       row.dataset.id = item.id;
 
       row.innerHTML =
@@ -391,39 +512,14 @@
             '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
           '</svg>' +
         '</span>' +
-        '<div class="inspector__card-fields">' +
-          '<input class="inspector__card-name-input" type="text"' +
-            ' value="' + escAttr(item.title) + '" placeholder="카드 제목">' +
-          '<input class="inspector__card-role-input" type="text"' +
-            ' value="' + escAttr(item.image) + '" placeholder="이미지 URL">' +
-        '</div>' +
-        '<button class="inspector__card-delete" type="button" aria-label="삭제">' +
-          '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor"' +
-            ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"' +
-            ' width="13" height="13">' +
-            '<polyline points="1,3 13,3"/>' +
-            '<path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/>' +
-            '<rect x="2" y="3" width="10" height="9" rx="1"/>' +
-            '<line x1="5" y1="6" x2="5" y2="10"/>' +
-            '<line x1="9" y1="6" x2="9" y2="10"/>' +
-          '</svg>' +
-        '</button>';
+        '<span class="inspector__item-name">' + esc(item.title || '카드 제목') + '</span>' +
+        '<span class="inspector__item-arrow">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="6,3 10,8 6,13"/></svg>' +
+        '</span>';
 
-      row.querySelector('.inspector__card-name-input').addEventListener('input', function (e) {
-        item.title = e.target.value;
-        updateCardInPlace(item.id, 'title', item.title);
-      });
-
-      row.querySelector('.inspector__card-role-input').addEventListener('input', function (e) {
-        item.image = e.target.value.trim();
-        updateCardInPlace(item.id, 'image', item.image);
-      });
-
-      row.querySelector('.inspector__card-delete').addEventListener('click', function () {
-        if (items.length <= 1) return;
-        items = items.filter(function (it) { return it.id !== item.id; });
-        renderWidget();
-        renderInspectorItems();
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openDetail(item);
       });
 
       setupDragDrop(row, item.id);
@@ -478,18 +574,18 @@
   }
 
   function clearDragIndicators() {
-    itemListEl.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    itemListEl.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
 
   /* ── Add card ── */
   document.getElementById('addDynamicCard').addEventListener('click', function () {
-    items.push({ id: nextId++, image: '', title: '카드 제목' });
+    var newItem = { id: nextId++, image: '', title: '카드 제목' };
+    items.push(newItem);
     renderWidget();
     renderInspectorItems();
-    var newRow = itemListEl.lastElementChild;
-    if (newRow) newRow.querySelector('.inspector__card-name-input').focus();
+    openDetail(newItem);
   });
 
   /* ── Layout controls (require re-render to pick up new baseW/H/gap/rotate) ── */
@@ -591,6 +687,7 @@
   });
 
   /* ── Init ── */
+  detailEl = createDetailPanel();
   renderWidget();
   renderInspectorItems();
 

@@ -9,8 +9,10 @@
 
   var nextId = 2;
   var cards  = [
-    { id: 1, name: 'TITLE', role: 'DESCRIPTION' }
+    { id: 1, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' }
   ];
+
+  var UPLOAD_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/><path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/></svg>';
   var layout   = 'row';
   var gridCols = 3;
   var gridRows = 2;
@@ -32,6 +34,139 @@
 
   var cardListEl = document.getElementById('cardList');
   var itemListEl = document.getElementById('cardItemList');
+
+  /* ── Detail Panel ── */
+  var currentDetailItem = null;
+  var detailEl = null;
+
+  function createDetailPanel() {
+    var inspectorEl = document.querySelector('#cardInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11"><polyline points="10,3 4,8 10,13"/></svg>' +
+          '카드 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="cardDetailBody"></div>';
+    inspectorEl.appendChild(panel);
+
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
+
+    return panel;
+  }
+
+  function renderDetailBody(bodyEl, card) {
+    bodyEl.innerHTML = '';
+
+    /* 이미지 필드 */
+    var imgField = document.createElement('div');
+    imgField.innerHTML =
+      '<label class="inspector__field-label">이미지</label>' +
+      '<div class="inspector__img-upload' + (card.imgSrc ? ' inspector__img-upload--filled' : '') + '">' +
+        '<div class="inspector__img-thumb' + (card.imgSrc ? ' inspector__img-thumb--filled' : '') + '">' +
+          (card.imgSrc ? '<img src="' + escAttr(card.imgSrc) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' : UPLOAD_SVG) +
+        '</div>' +
+        '<button class="inspector__img-clear" type="button" title="이미지 제거">&#x2715;</button>' +
+        '<input type="file" accept="image/*" style="display:none">' +
+      '</div>';
+
+    var uploadWrap = imgField.querySelector('.inspector__img-upload');
+    var thumb      = imgField.querySelector('.inspector__img-thumb');
+    var clearBtn   = imgField.querySelector('.inspector__img-clear');
+    var fileInput  = imgField.querySelector('input[type="file"]');
+
+    thumb.addEventListener('click', function () { fileInput.click(); });
+    fileInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        card.imgSrc = ev.target.result;
+        var photoEl = cardListEl.querySelector('[data-id="' + card.id + '"] .card-widget__photo');
+        if (photoEl) {
+          var imgEl = photoEl.querySelector('img');
+          if (!imgEl) { imgEl = document.createElement('img'); imgEl.alt = ''; imgEl.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;'; photoEl.appendChild(imgEl); }
+          imgEl.src = card.imgSrc;
+        }
+        thumb.innerHTML = '<img src="' + card.imgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        thumb.classList.add('inspector__img-thumb--filled');
+        uploadWrap.classList.add('inspector__img-upload--filled');
+        fileInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+    clearBtn.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      card.imgSrc = '';
+      var photoEl = cardListEl.querySelector('[data-id="' + card.id + '"] .card-widget__photo');
+      if (photoEl) { var imgEl = photoEl.querySelector('img'); if (imgEl) imgEl.remove(); }
+      thumb.innerHTML = UPLOAD_SVG;
+      thumb.classList.remove('inspector__img-thumb--filled');
+      uploadWrap.classList.remove('inspector__img-upload--filled');
+      fileInput.value = '';
+    });
+    bodyEl.appendChild(imgField);
+
+    /* 이름 필드 */
+    var nameField = document.createElement('div');
+    nameField.className = 'inspector__field';
+    nameField.innerHTML =
+      '<label class="inspector__field-label">이름</label>' +
+      '<input class="inspector__card-name-input" type="text" value="' + escAttr(card.name) + '" placeholder="TITLE" style="width:100%">';
+    nameField.querySelector('input').addEventListener('input', function (e) {
+      updateCardField(card.id, 'name', e.target.value);
+      /* 리스트 행 이름 업데이트 */
+      var rowEl = itemListEl.querySelector('[data-id="' + card.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = e.target.value || 'TITLE';
+    });
+    bodyEl.appendChild(nameField);
+
+    /* 설명 필드 */
+    var roleField = document.createElement('div');
+    roleField.className = 'inspector__field';
+    roleField.innerHTML =
+      '<label class="inspector__field-label">설명</label>' +
+      '<input class="inspector__card-role-input" type="text" value="' + escAttr(card.role) + '" placeholder="DESCRIPTION" style="width:100%">';
+    roleField.querySelector('input').addEventListener('input', function (e) {
+      updateCardField(card.id, 'role', e.target.value);
+    });
+    bodyEl.appendChild(roleField);
+
+    /* 삭제 버튼 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' +
+        '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><polyline points="1,3 13,3"/><path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/><rect x="2" y="3" width="10" height="9" rx="1"/><line x1="5" y1="6" x2="5" y2="10"/><line x1="9" y1="6" x2="9" y2="10"/></svg>' +
+        '아이템 삭제' +
+      '</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      detailEl.classList.remove('open');
+      currentDetailItem = null;
+      removeCard(card.id);
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openDetail(card) {
+    currentDetailItem = card;
+    var bodyEl = detailEl.querySelector('#cardDetailBody');
+    renderDetailBody(bodyEl, card);
+    detailEl.classList.add('open');
+  }
 
   /* ── Helpers ────────────────────────── */
 
@@ -86,7 +221,9 @@
       el.className = 'card-widget';
       el.dataset.id = card.id;
       el.innerHTML =
-        '<div class="card-widget__photo"></div>' +
+        '<div class="card-widget__photo">' +
+          (card.imgSrc ? '<img src="' + escAttr(card.imgSrc) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' : '') +
+        '</div>' +
         '<div class="card-widget__overlay">' +
           '<p class="card-widget__name">' + esc(card.name) + '</p>' +
           '<p class="card-widget__role">' + esc(card.role) + '</p>' +
@@ -104,7 +241,7 @@
 
     cards.forEach(function (card) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__item-row';
       row.dataset.id = card.id;
       row.innerHTML =
         '<span class="inspector__drag">' +
@@ -115,37 +252,15 @@
             '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
           '</svg>' +
         '</span>' +
-        '<div class="inspector__card-fields">' +
-          '<input class="inspector__card-name-input" type="text"' +
-            ' value="' + escAttr(card.name) + '" placeholder="TITLE">' +
-          '<input class="inspector__card-role-input" type="text"' +
-            ' value="' + escAttr(card.role) + '" placeholder="DESCRIPTION">' +
-        '</div>' +
-        '<button class="inspector__card-delete" title="삭제" type="button">' +
-          '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor"' +
-            ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"' +
-            ' width="13" height="13">' +
-            '<polyline points="1,3 13,3"/>' +
-            '<path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/>' +
-            '<rect x="2" y="3" width="10" height="9" rx="1"/>' +
-            '<line x1="5" y1="6" x2="5" y2="10"/>' +
-            '<line x1="9" y1="6" x2="9" y2="10"/>' +
-          '</svg>' +
-        '</button>';
+        '<span class="inspector__item-name">' + esc(card.name || 'TITLE') + '</span>' +
+        '<span class="inspector__item-arrow">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="6,3 10,8 6,13"/></svg>' +
+        '</span>';
 
-      /* name input → update canvas */
-      row.querySelector('.inspector__card-name-input').addEventListener('input', function (e) {
-        updateCardField(card.id, 'name', e.target.value);
-      });
-
-      /* role input → update canvas */
-      row.querySelector('.inspector__card-role-input').addEventListener('input', function (e) {
-        updateCardField(card.id, 'role', e.target.value);
-      });
-
-      /* delete button */
-      row.querySelector('.inspector__card-delete').addEventListener('click', function () {
-        removeCard(card.id);
+      /* 행 클릭 → 상세 패널 (드래그 핸들 클릭 제외) */
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openDetail(card);
       });
 
       /* drag & drop */
@@ -205,7 +320,7 @@
   }
 
   function clearDragIndicators() {
-    itemListEl.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    itemListEl.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
@@ -214,12 +329,12 @@
 
   function addCard() {
     var id = nextId++;
-    cards.push({ id: id, name: 'TITLE', role: 'DESCRIPTION' });
+    var newCard = { id: id, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' };
+    cards.push(newCard);
     renderCards();
     renderItems();
-    /* focus the new name input */
-    var newRow = itemListEl.lastElementChild;
-    if (newRow) newRow.querySelector('.inspector__card-name-input').focus();
+    /* 새 아이템의 상세 패널 열기 */
+    openDetail(newCard);
   }
 
   function removeCard(id) {
@@ -431,6 +546,7 @@
 
   /* ── Init ────────────────────────────── */
 
+  detailEl = createDetailPanel();
   renderCards();
   renderItems();
   applyHoverStyle();

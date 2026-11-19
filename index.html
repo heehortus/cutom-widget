@@ -34,15 +34,33 @@
 <div id="page-editor" style="display:none">
 <div class="app">
 
+  <!-- ── Mobile Nav Overlay ── -->
+  <div class="widget-nav-overlay" id="navOverlay"></div>
+
+  <!-- ── Mobile Nav Open Button ── -->
+  <button class="widget-nav-open-btn" id="navOpenBtn" type="button" aria-label="패널 열기">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="16" height="16">
+      <rect x="2" y="2" width="12" height="12" rx="2"/>
+      <line x1="6" y1="2" x2="6" y2="14"/>
+    </svg>
+  </button>
+
   <!-- ── Widget Nav ── -->
-  <nav class="widget-nav">
-    <button class="widget-nav__back" id="galleryBackBtn" type="button">
-      <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11">
-        <polyline points="10,3 4,8 10,13"/>
-      </svg>
-      목록으로
-    </button>
-    <div class="widget-nav__header">Widgets</div>
+  <nav class="widget-nav" id="widgetNav">
+    <div class="widget-nav__header">
+      <button class="widget-nav__back" id="galleryBackBtn" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11">
+          <polyline points="10,3 4,8 10,13"/>
+        </svg>
+        목록으로
+      </button>
+      <button class="widget-nav__toggle" id="navToggle" type="button" aria-label="패널 닫기">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="16" height="16">
+          <rect x="2" y="2" width="12" height="12" rx="2"/>
+          <line x1="6" y1="2" x2="6" y2="14"/>
+        </svg>
+      </button>
+    </div>
     <div class="widget-nav__list">
 
       <button class="widget-nav__item active" data-widget="card" type="button">
@@ -62,7 +80,7 @@
 
       <button class="widget-nav__item" data-widget="dynamic-card" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">다이나믹<br>카드</span>
+        <span class="widget-nav__label">다이나믹 카드</span>
       </button>
 
       <button class="widget-nav__item" data-widget="timeline" type="button">
@@ -72,22 +90,22 @@
 
       <button class="widget-nav__item" data-widget="horizon-scroll-card" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">호라이즌<br>스크롤</span>
+        <span class="widget-nav__label">호라이즌 스크롤</span>
       </button>
 
       <button class="widget-nav__item" data-widget="focus-card" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">포커스<br>카드</span>
+        <span class="widget-nav__label">포커스 카드</span>
       </button>
 
       <button class="widget-nav__item" data-widget="focus-card-2" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">포커스<br>카드 2</span>
+        <span class="widget-nav__label">포커스 카드 2</span>
       </button>
 
       <button class="widget-nav__item" data-widget="image-faq" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">이미지<br>FAQ</span>
+        <span class="widget-nav__label">이미지 FAQ</span>
       </button>
 
     </div>
