@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>포커스 카드 2 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/focus-card-2.css">
+</head>
+<body>
+<div class="app">
+
+      <main class="editor__canvas editor__canvas--focus-card-2">
+        <div class="wg-cc" id="fc2Wrap"></div>
+      </main>
+
+      <aside class="inspector" id="fc2Inspector">
+        <div class="inspector__head">
+          <span class="inspector__title">포커스 카드 2</span>
+          <button class="inspector__close" id="fc2InspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section collapsed">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+              </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="addFc2Item" type="button">+ 추가</button>
+              <div id="fc2ItemList"></div>
+            </div>
+          </div>
+
+          <!-- 카드 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>카드</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2CardRadius" value="8" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2CardGap" value="24" min="0" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">지그재그</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2Zigzag" value="48" min="0" max="200">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">내부 여백</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2Padding" value="36" min="0" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">타이틀</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2TitleSize" value="32" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fc2TitleSwatch" style="background:#f7f7f7">
+                    <input type="color" class="inspector__color-native" id="fc2TitlePicker" value="#f7f7f7">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fc2TitleHex" value="#F7F7F7" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fc2TitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">설명</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2BodySize" value="20" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fc2BodySwatch" style="background:#f7f7f7">
+                    <input type="color" class="inspector__color-native" id="fc2BodyPicker" value="#f7f7f7">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fc2BodyHex" value="#F7F7F7" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fc2BodyOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 딤 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>딤</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">기본 강도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2DimBase" value="15" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">호버 강도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fc2DimHover" value="70" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="fc2Delete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+</div>
+<script src="../js/focus-card-2.js"></script>
+</body>
+</html>

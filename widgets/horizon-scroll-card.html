@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>호라이즌 스크롤 카드 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/horizon-scroll-card.css">
+</head>
+<body>
+<div class="app">
+
+      <main class="editor__canvas editor__canvas--horizon-scroll-card">
+        <section class="iw-dir"
+          id="horizonScrollCard"
+          aria-label="카드 슬라이드"
+          data-active="0"
+          data-autoplay="true"
+          data-interval="4000"
+          data-ratio="4-3"
+          data-hover-zoom="true">
+          <div class="iw-dir__viewport" data-viewport>
+            <ul class="iw-dir__track" data-track>
+              <li class="iw-dir__card" data-card>
+                <div class="iw-dir__media">
+                  <div class="iw-dir__placeholder" aria-hidden="true">
+                    <span class="iw-dir__placeholder-mark">IMAGE</span>
+                  </div>
+                  <div class="iw-dir__overlay" aria-hidden="true"></div>
+                </div>
+                <div class="iw-dir__text">
+                  <div class="iw-dir__title editor-content">TRUST</div>
+                  <div class="iw-dir__desc editor-content">나의 가족이 안심하고 먹을 수 있는 제품을 만든다는 생각으로, 고객에게 투명한 과정으로 진심을 전합니다.</div>
+                </div>
+              </li>
+              <li class="iw-dir__card" data-card>
+                <div class="iw-dir__media">
+                  <div class="iw-dir__placeholder" aria-hidden="true">
+                    <span class="iw-dir__placeholder-mark">IMAGE</span>
+                  </div>
+                  <div class="iw-dir__overlay" aria-hidden="true"></div>
+                </div>
+                <div class="iw-dir__text">
+                  <div class="iw-dir__title editor-content"></div>
+                  <div class="iw-dir__desc editor-content"></div>
+                </div>
+              </li>
+              <li class="iw-dir__card" data-card>
+                <div class="iw-dir__media">
+                  <div class="iw-dir__placeholder" aria-hidden="true">
+                    <span class="iw-dir__placeholder-mark">IMAGE</span>
+                  </div>
+                  <div class="iw-dir__overlay" aria-hidden="true"></div>
+                </div>
+                <div class="iw-dir__text">
+                  <div class="iw-dir__title editor-content">EVERYDAY</div>
+                  <div class="iw-dir__desc editor-content">남녀노소 누구나 즐기는, 매일 손이 가는 친근한 한 끼의 풍경을 담았습니다.</div>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <nav class="iw-dir__pagination" data-pagination aria-label="슬라이드 페이지네이션"></nav>
+        </section>
+      </main>
+
+      <aside class="inspector" id="horizonScrollCardInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">호라이즌 스크롤 카드</span>
+          <button class="inspector__close" id="horizonScrollCardInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section collapsed">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="addHscItem" type="button">+ 추가</button>
+              <div id="hscItemList"></div>
+            </div>
+          </div>
+
+          <!-- 재생 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>재생</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">자동 재생</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="hscAutoplay" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">자동 재생 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscInterval" value="4000" min="500" max="30000">
+                  <span class="inspector__unit">ms</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">전환 속도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscSlideSpeed" value="500" min="100" max="3000">
+                  <span class="inspector__unit">ms</span>
+                </div>
+              </div>
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">호버 확대</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="hscHoverZoom" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 배경색</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscCardBgSwatch" style="background:#f0f0f0">
+                    <input type="color" class="inspector__color-native" id="hscCardBgPicker" value="#f0f0f0">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscCardBgHex" value="#F0F0F0" maxlength="7" spellcheck="false">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">이미지 비율</label>
+                <select class="inspector__select" id="hscRatio">
+                  <option value="16-9">16:9</option>
+                  <option value="4-3" selected>4:3</option>
+                  <option value="1-1">1:1</option>
+                  <option value="3-4">3:4</option>
+                </select>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscCardRadius" value="12" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">제목</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleSize" value="32" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">자간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleLetter" value="-6" min="-20" max="20">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">행간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleLine" value="1.1" min="0.8" max="3" step="0.05">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">굵기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscTitleWeight" value="700" min="100" max="900" step="100">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscTitleSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="hscTitlePicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscTitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">설명</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescSize" value="16" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">자간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescLetter" value="-2" min="-20" max="20">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">행간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescLine" value="1.55" min="0.8" max="3" step="0.05">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">굵기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscDescWeight" value="500" min="100" max="900" step="100">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscDescSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="hscDescPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscDescHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscDescOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 컬러 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>컬러</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 색상</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscOverlaySwatch" style="background:#000000">
+                    <input type="color" class="inspector__color-native" id="hscOverlayPicker" value="#000000">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscOverlayHex" value="#000000" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscOverlayColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 강도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="hscOverlayOpacity" value="60" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">페이지 점</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscDotSwatch" style="background:#e1e1e1">
+                    <input type="color" class="inspector__color-native" id="hscDotPicker" value="#e1e1e1">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscDotHex" value="#E1E1E1" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscDotOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">활성 점</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="hscDotActiveSwatch" style="background:#555555">
+                    <input type="color" class="inspector__color-native" id="hscDotActivePicker" value="#555555">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="hscDotActiveHex" value="#555555" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="hscDotActiveOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="horizonScrollCardDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+</div>
+<script src="../js/horizon-scroll-card.js"></script>
+</body>
+</html>

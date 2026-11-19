@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/faq.css">
+</head>
+<body>
+<div class="app">
+
+      <main class="editor__canvas editor__canvas--faq">
+        <div class="faq-widget" id="faqWidget"></div>
+      </main>
+
+      <aside class="inspector" id="faqInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">FAQ 위젯</span>
+          <button class="inspector__close" id="faqInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section collapsed">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="addFaqItem" type="button">+ 추가</button>
+              <div id="faqItemList"></div>
+            </div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">최대 너비</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="faqMaxWidth" value="760" min="320" max="1400">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">질문</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="faqQSize" value="18" min="8" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="faqQSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="faqQColorPicker" value="#1a1a1a">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="faqQColorHex" value="#1A1A1A" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="faqQColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">답변</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="faqASize" value="14" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="faqASwatchWrap">
+                    <input type="color" class="inspector__color-native" id="faqAColorPicker" value="#6b7280">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="faqAColorHex" value="#6B7280" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="faqAColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="faqDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+</div>
+<script src="../js/faq.js"></script>
+</body>
+</html>

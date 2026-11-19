@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>다이나믹 카드 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/dynamic-card.css">
+</head>
+<body>
+<div class="app">
+
+      <main class="editor__canvas editor__canvas--dynamic-card">
+        <div id="dynamicCardContainer"></div>
+      </main>
+
+      <aside class="inspector" id="dynamicCardInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">다이나믹 카드</span>
+          <button class="inspector__close" id="dynamicCardInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section collapsed">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="addDynamicCard" type="button">+ 추가</button>
+              <div id="dynamicCardItemList"></div>
+            </div>
+          </div>
+
+          <!-- 레이아웃 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>레이아웃</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 크기</label>
+                <div class="inspector__grid-row">
+                  <div class="inspector__num-row">
+                    <input class="inspector__num-input" type="number" id="dcCardWidth" value="260" min="80" max="600">
+                    <span class="inspector__unit">W</span>
+                  </div>
+                  <span class="inspector__grid-sep">×</span>
+                  <div class="inspector__num-row">
+                    <input class="inspector__num-input" type="number" id="dcCardHeight" value="340" min="80" max="800">
+                    <span class="inspector__unit">H</span>
+                  </div>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">카드 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="dcGap" value="24" min="0" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">회전 각도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="dcRotateMax" value="6" min="0" max="45">
+                  <span class="inspector__unit">deg</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 카드 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>카드</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">배경 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="dcCardBgSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="dcCardBgPicker" value="#f0f0f0">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="dcCardBgHex" value="#F0F0F0" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="dcCardBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">라운드</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="dcRadius" value="16" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">전환 시간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="dcDuration" value="700" min="0" max="3000">
+                  <span class="inspector__unit">ms</span>
+                </div>
+              </div>
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">화면 벗어나면 다시 쌓기</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="dcRepeat" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 타이틀 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>타이틀</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="dcTitleColorSwatchWrap" style="background:#fff">
+                    <input type="color" class="inspector__color-native" id="dcTitleColorPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="dcTitleColorHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="dcTitleColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="dcTitleSize" value="16" min="8" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">굵기</label>
+                <select class="inspector__select" id="dcTitleWeight">
+                  <option value="400">Regular (400)</option>
+                  <option value="500">Medium (500)</option>
+                  <option value="600" selected>Semibold (600)</option>
+                  <option value="700">Bold (700)</option>
+                  <option value="800">ExtraBold (800)</option>
+                </select>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 높이</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="dcDimHeight" value="55" min="0" max="100">
+                  <span class="inspector__unit">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 버튼 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>버튼</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">아이콘 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="dcArrowColorSwatchWrap" style="background:#1a1a1a">
+                    <input type="color" class="inspector__color-native" id="dcArrowColorPicker" value="#1a1a1a">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="dcArrowColorHex" value="#1A1A1A" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="dcArrowColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">버튼 배경</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="dcArrowBgSwatchWrap" style="background:#e8e8e8">
+                    <input type="color" class="inspector__color-native" id="dcArrowBgPicker" value="#e8e8e8">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="dcArrowBgHex" value="#E8E8E8" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="dcArrowBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="dynamicCardDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+</div>
+<script src="../js/dynamic-card.js"></script>
+</body>
+</html>

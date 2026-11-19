@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>포커스 카드 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/focus-card.css">
+</head>
+<body>
+<div class="app">
+
+      <main class="editor__canvas editor__canvas--focus-card">
+        <section class="flex-card-wrap" id="focusCardWrap" aria-label="포커스 카드 리스트" data-btn="true">
+          <div class="flex-card-list" id="focusCardList"></div>
+        </section>
+      </main>
+
+      <aside class="inspector" id="focusCardInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">포커스 카드</span>
+          <button class="inspector__close" id="focusCardInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section collapsed">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+              </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="addFcItem" type="button">+ 추가</button>
+              <div id="fcItemList"></div>
+            </div>
+          </div>
+
+          <!-- 카드 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>카드</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">높이</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcCardHeight" value="480" min="100" max="1200">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">모서리</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcCardRadius" value="8" min="0" max="80">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__switch-row">
+                <span class="inspector__switch-label">연결 버튼 사용</span>
+                <label class="inspector__switch">
+                  <input type="checkbox" id="fcBtnOnOff" checked>
+                  <span class="inspector__switch-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- 텍스트 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <p class="inspector__group-label">타이틀</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcTitleSize" value="24" min="8" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcTitleSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="fcTitlePicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcTitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <p class="inspector__group-label">서브 텍스트</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcSubtitleSize" value="16" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcSubtitleSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="fcSubtitlePicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcSubtitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcSubtitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀·서브 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcTitleGap" value="4" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 연결 버튼 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>연결 버튼</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">버튼 배경</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcBtnBgSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="fcBtnBgPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcBtnBgHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcBtnBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnLabelSize" value="14" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 굵기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnLabelWeight" value="600" min="100" max="900" step="100">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 자간</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnLabelSpacing" value="0" min="-10" max="20">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcBtnLabelColorSwatch" style="background:#111111">
+                    <input type="color" class="inspector__color-native" id="fcBtnLabelColorPicker" value="#111111">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcBtnLabelColorHex" value="#111111" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcBtnLabelColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">레이블·아이콘 간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="fcBtnGap" value="8" min="0" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 컬러 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>컬러</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">딤 오버레이</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcDimSwatch" style="background:rgba(0,0,0,0.4)">
+                    <input type="color" class="inspector__color-native" id="fcDimPicker" value="#000000">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcDimHex" value="#000000" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcDimOpacity" value="40" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">호버 그림자</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="fcHoverShadowSwatch" style="background:rgba(0,0,0,0.3)">
+                    <input type="color" class="inspector__color-native" id="fcHoverShadowPicker" value="#000000">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="fcHoverShadowHex" value="#000000" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="fcHoverShadowOpacity" value="30" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <button class="inspector__delete-btn" id="focusCardDelete" type="button">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+              <polyline points="2,4 14,4"/>
+              <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+              <rect x="3" y="4" width="10" height="10" rx="1"/>
+              <line x1="6" y1="7" x2="6" y2="11"/>
+              <line x1="10" y1="7" x2="10" y2="11"/>
+            </svg>
+            위젯 삭제
+          </button>
+        </div>
+      </aside>
+
+</div>
+<script src="../js/focus-card.js"></script>
+</body>
+</html>
