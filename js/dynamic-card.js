@@ -393,6 +393,7 @@
       dragStartX    = dragX;
       rootEl.setAttribute('data-dragging', 'true');
       setTransition(false);
+      stage.setPointerCapture(e.pointerId);
     });
 
     stage.addEventListener('pointermove', function (e) {

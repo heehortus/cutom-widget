@@ -136,8 +136,40 @@
   .wg-cc__title { font-size: 26px; }
 }
 
+@media (max-width: 768px) {
+  .wg-cc__card {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .wg-cc.has-focus .wg-cc__card {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+
+  .wg-cc.has-focus .wg-cc__card.is-focused {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .wg-cc__card.is-focused .wg-cc__body {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .wg-cc__card.is-focused .wg-cc__dim {
+    opacity: var(--cc-dim-hover);
+  }
+}
+
 @media (max-width: 600px) {
   .wg-cc__card { flex: 1 1 100%; }
+}
+
+@media (max-width: 640px) {
+  .editor__canvas--focus-card-2 {
+    padding: 20px;
+    align-items: flex-start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

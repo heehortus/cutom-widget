@@ -109,7 +109,7 @@
   font-size: var(--ac-title-size);
   line-height: 1.2;
   letter-spacing: -0.96px;
-  white-space: nowrap;
+  word-break: keep-all;
 }
 
 .wg-ac__icon {

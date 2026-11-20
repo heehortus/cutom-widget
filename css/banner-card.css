@@ -293,6 +293,36 @@
   transition: left 0.15s ease, width 0.15s ease;
 }
 
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .banner-widget {
+    width: 100%;
+    flex-direction: column;
+    min-height: unset;
+  }
+
+  .banner-widget__panel {
+    width: 100%;
+    min-width: unset;
+    min-height: 180px;
+  }
+
+  .banner-widget__info {
+    padding: 16px 24px;
+  }
+
+  .banner-widget__info-header {
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 640px) {
+  .editor__canvas--banner {
+    padding: 20px;
+    align-items: flex-start;
+  }
+}
+
 /* ── Inspector: text inputs (banner-specific) ── */
 .inspector__text-input {
   width: 100%;

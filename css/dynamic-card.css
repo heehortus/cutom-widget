@@ -8,6 +8,14 @@
   padding: 60px 48px;
 }
 
+@media (max-width: 640px) {
+  .editor__canvas--dynamic-card {
+    padding: 20px 16px;
+    align-items: flex-start;
+    overflow: hidden;
+  }
+}
+
 #dynamicCardContainer {
   width: 100%;
 }
@@ -154,18 +162,8 @@
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
-  .iw-cardstack .iw-cardstack__stage {
-    width: 90%;
-  }
-  .iw-cardstack .iw-cardstack__nav {
-    padding: 0 20px;
-  }
   .iw-cardstack .iw-cardstack__card .iw-cardstack__title {
-    font-size: clamp(14px, 1.2vw, var(--title-size));
     padding: 20px;
-  }
-  .iw-cardstack .iw-cardstack__card {
-    left: 20px;
   }
 }
 

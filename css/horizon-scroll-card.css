@@ -2,6 +2,11 @@
    Horizon Scroll Card Widget
    ===================================== */
 
+/* bleed 디자인(negative margin)이 캔버스 밖으로 나가므로 overflow-x: hidden 필요 */
+.editor__canvas--horizon-scroll-card {
+  overflow-x: hidden;
+}
+
 :host {
   display: block;
 }

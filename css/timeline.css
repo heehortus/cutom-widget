@@ -203,6 +203,24 @@
   padding-left: 16px;
 }
 
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .timeline-group {
+    flex-direction: column;
+  }
+
+  .timeline-group__left {
+    width: 100%;
+    min-width: unset;
+    position: static;
+    padding: 24px 24px 12px;
+  }
+
+  .timeline-track {
+    padding: 0 24px 24px;
+  }
+}
+
 /* ── Inspector: group cards ── */
 .tl-inspector-group {
   border: 1px solid var(--clr-200);

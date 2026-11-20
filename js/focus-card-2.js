@@ -102,6 +102,46 @@
     });
     applyStyle();
     setupObserver();
+    initMobileFocus();
+  }
+
+  /* ── Mobile scroll focus ── */
+  var mobileFocusCleanup = null;
+
+  function initMobileFocus() {
+    if (mobileFocusCleanup) { mobileFocusCleanup(); mobileFocusCleanup = null; }
+    if (window.innerWidth > 768) return;
+    var canvas = document.querySelector('.editor__canvas--focus-card-2');
+    if (!canvas) return;
+
+    function updateFocus() {
+      var cards = wrap.querySelectorAll('.wg-cc__card');
+      if (!cards.length) return;
+      var canvasRect = canvas.getBoundingClientRect();
+      var centerY = canvasRect.top + canvasRect.height / 2;
+      var closest = null;
+      var closestDist = Infinity;
+      cards.forEach(function (card) {
+        var rect = card.getBoundingClientRect();
+        var dist = Math.abs((rect.top + rect.height / 2) - centerY);
+        if (dist < closestDist) { closestDist = dist; closest = card; }
+      });
+      cards.forEach(function (card) {
+        card.classList.toggle('is-focused', card === closest);
+      });
+      wrap.classList.toggle('has-focus', closest !== null);
+    }
+
+    canvas.addEventListener('scroll', updateFocus, { passive: true });
+    updateFocus();
+
+    mobileFocusCleanup = function () {
+      canvas.removeEventListener('scroll', updateFocus);
+      wrap.classList.remove('has-focus');
+      wrap.querySelectorAll('.wg-cc__card').forEach(function (c) {
+        c.classList.remove('is-focused');
+      });
+    };
   }
 
   /* ── IntersectionObserver for reveal ── */

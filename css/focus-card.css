@@ -210,9 +210,9 @@
 @media (max-width: 768px) {
   .flex-card-badge { display: none; }
   .flex-card-desc { opacity: 1; transform: translateY(-2px); }
-  .flex-card-list { flex-direction: column; height: 120vh; }
-  .flex-card-item { width: 100%; height: auto; flex: 1 1 0; }
-  .flex-card-item:hover { flex: 1 1 0; }
+  .flex-card-list { flex-direction: column; height: auto; }
+  .flex-card-item { width: 100%; min-height: 200px; flex: 0 0 auto; }
+  .flex-card-item:hover { flex: 0 0 auto; box-shadow: none; }
   .flex-card-circle-btn { opacity: 1; }
   .flex-card-content { padding: 24px; }
   .flex-card-title    { font-size: min(var(--card-title-size), 18px); }
@@ -220,6 +220,55 @@
   .flex-card-btn-label { font-size: min(var(--btn-label-size), 16px); }
   .flex-card-btn-icon { width: 24px; height: 24px; }
   .flex-card-btn-icon img { width: 20px; height: 20px; }
+
+  /* ── 모바일 스크롤 포커스 ── */
+  .flex-card-item {
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+
+  .flex-card-list.has-focus .flex-card-item {
+    opacity: 0.55;
+    transform: scale(0.96);
+  }
+
+  .flex-card-list.has-focus .flex-card-item.is-focused {
+    opacity: 1;
+    transform: scale(1);
+    box-shadow: var(--card-hover-shadow);
+  }
+
+  .flex-card-item.is-focused .flex-card-bg {
+    transform: scale(1.03);
+  }
+
+  /* has-focus 상태에서 desc/btn 숨김 → is-focused 카드에서만 노출 */
+  .flex-card-list.has-focus .flex-card-desc {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .flex-card-list.has-focus .flex-card-circle-btn {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .flex-card-list.has-focus .flex-card-item.is-focused .flex-card-desc {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+  }
+
+  .flex-card-list.has-focus .flex-card-item.is-focused .flex-card-circle-btn {
+    opacity: 1;
+    transition-delay: 0.1s;
+  }
+}
+
+@media (max-width: 640px) {
+  .editor__canvas--focus-card {
+    padding: 20px;
+    align-items: flex-start;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

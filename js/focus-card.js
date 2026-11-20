@@ -134,6 +134,46 @@
       listEl.appendChild(div);
     });
     applyStyle();
+    initMobileFocus();
+  }
+
+  /* ── Mobile scroll focus ── */
+  var mobileFocusCleanup = null;
+
+  function initMobileFocus() {
+    if (mobileFocusCleanup) { mobileFocusCleanup(); mobileFocusCleanup = null; }
+    if (window.innerWidth > 768) return;
+    var canvas = document.querySelector('.editor__canvas--focus-card');
+    if (!canvas) return;
+
+    function updateFocus() {
+      var cards = listEl.querySelectorAll('.flex-card-item');
+      if (!cards.length) return;
+      var canvasRect = canvas.getBoundingClientRect();
+      var centerY = canvasRect.top + canvasRect.height / 2;
+      var closest = null;
+      var closestDist = Infinity;
+      cards.forEach(function (card) {
+        var rect = card.getBoundingClientRect();
+        var dist = Math.abs((rect.top + rect.height / 2) - centerY);
+        if (dist < closestDist) { closestDist = dist; closest = card; }
+      });
+      cards.forEach(function (card) {
+        card.classList.toggle('is-focused', card === closest);
+      });
+      listEl.classList.toggle('has-focus', closest !== null);
+    }
+
+    canvas.addEventListener('scroll', updateFocus, { passive: true });
+    updateFocus();
+
+    mobileFocusCleanup = function () {
+      canvas.removeEventListener('scroll', updateFocus);
+      listEl.classList.remove('has-focus');
+      listEl.querySelectorAll('.flex-card-item').forEach(function (c) {
+        c.classList.remove('is-focused');
+      });
+    };
   }
 
   /* ── SVG 상수 ── */
