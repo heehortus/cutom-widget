@@ -31,7 +31,7 @@
     gap:           24,
     itemGap:       16,
     imgRadius:     16,
-    imgBgHex:      '#E8E8E8',
+    imgBgHex:      '#CED4DA',
     imgBgOpacity:  100,
     itemRadius:    16,
     borderHex:     '#E1E1E1',
@@ -52,6 +52,10 @@
   };
 
   var dragSrcId = null;
+
+  /* ── Detail panel ── */
+  var currentDetailItem = null;
+  var detailEl = null;
 
   /* ── DOM refs ── */
   var wrap       = document.getElementById('imgFaqWrap');
@@ -136,6 +140,11 @@
     '<circle cx="2" cy="7" r="1.2"/><circle cx="6" cy="7" r="1.2"/>' +
     '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/></svg>';
 
+  var ARROW_SVG =
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+    ' stroke-linecap="round" stroke-linejoin="round" width="12" height="12">' +
+    '<polyline points="6,3 10,8 6,13"/></svg>';
+
   /* ── Render widget ── */
   function renderWidget() {
     var imgTag = imgUrl ? '<img class="wg-ac__img" src="' + escAttr(imgUrl) + '" alt="">' : '';
@@ -207,7 +216,6 @@
     });
   }
 
-  /* 열린 패널 높이 재계산 */
   window.addEventListener('resize', function () {
     wrap.querySelectorAll('.wg-ac__item.is-open').forEach(function (item) {
       var panel = item.querySelector('[data-panel]');
@@ -215,54 +223,78 @@
     });
   }, { passive: true });
 
-  /* ── Render inspector items ── */
-  function renderInspectorItems() {
-    itemListEl.innerHTML = '';
+  /* ── Detail panel ── */
+  function createDetailPanel() {
+    var inspectorEl = document.getElementById('imgFaqInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+          ' stroke-linecap="round" stroke-linejoin="round" width="11" height="11">' +
+          '<polyline points="10,3 4,8 10,13"/></svg>' +
+          'FAQ 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="imfDetailBody"></div>';
+    inspectorEl.appendChild(panel);
 
-    items.forEach(function (item) {
-      var row = document.createElement('div');
-      row.className = 'inspector__card-item';
-      row.dataset.id = item.id;
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
 
-      var detailsHtml = '';
+    return panel;
+  }
+
+  function renderDetailBody(bodyEl, item) {
+    bodyEl.innerHTML = '';
+
+    /* 타이틀 */
+    var titleField = document.createElement('div');
+    titleField.className = 'inspector__field';
+    titleField.innerHTML =
+      '<label class="inspector__field-label">타이틀</label>' +
+      '<input class="inspector__card-name-input" type="text"' +
+      ' value="' + escAttr(item.title) + '" placeholder="타이틀" style="width:100%">';
+    titleField.querySelector('input').addEventListener('input', function (e) {
+      item.title = e.target.value;
+      var el = wrap.querySelector('.wg-ac__item[data-id="' + item.id + '"] .wg-ac__title');
+      if (el) el.textContent = item.title;
+      var rowEl = itemListEl.querySelector('.inspector__item-row[data-id="' + item.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = item.title || '새 타이틀';
+    });
+    bodyEl.appendChild(titleField);
+
+    /* 디테일 목록 */
+    var detailSection = document.createElement('div');
+    detailSection.className = 'inspector__field';
+
+    function renderDetailList() {
+      detailSection.innerHTML = '';
+
       item.details.forEach(function (d) {
-        detailsHtml +=
-          '<div class="imf-detail-row" data-detail-id="' + d.id + '"' +
-          ' style="display:flex;flex-direction:column;gap:3px;border-left:2px solid #e9ecef;padding:4px 0 4px 8px">' +
-            '<div style="display:flex;align-items:center;gap:4px">' +
-              '<input class="inspector__card-name-input imf-dtitle-input" type="text"' +
-                ' value="' + escAttr(d.dTitle) + '" placeholder="소제목" style="flex:1">' +
-              '<button class="inspector__card-delete imf-detail-del" type="button"' +
-                ' data-detail-id="' + d.id + '" aria-label="항목 삭제">' + DELETE_SVG + '</button>' +
-            '</div>' +
-            '<input class="inspector__card-name-input imf-dbody-input" type="text"' +
-              ' value="' + escAttr(d.dBody) + '" placeholder="내용">' +
-          '</div>';
-      });
+        var dRow = document.createElement('div');
+        dRow.className = 'imf-detail-row';
+        dRow.dataset.detailId = d.id;
+        dRow.style.cssText = 'display:flex;flex-direction:column;gap:3px;border-left:2px solid #e9ecef;padding:4px 0 4px 8px;margin-bottom:6px';
 
-      row.innerHTML =
-        '<span class="inspector__drag">' + DRAG_SVG + '</span>' +
-        '<div class="inspector__card-fields" style="flex-direction:column;gap:4px">' +
-          '<input class="inspector__card-name-input imf-title-input" type="text"' +
-            ' value="' + escAttr(item.title) + '" placeholder="타이틀">' +
-          '<div class="imf-detail-list" style="display:flex;flex-direction:column;gap:4px;padding:2px 0">' +
-            detailsHtml +
+        dRow.innerHTML =
+          '<div style="display:flex;align-items:center;gap:4px">' +
+            '<input class="inspector__card-name-input imf-dtitle-input" type="text"' +
+              ' value="' + escAttr(d.dTitle) + '" placeholder="소제목" style="flex:1">' +
+            '<button class="inspector__card-delete imf-detail-del" type="button" aria-label="항목 삭제">' + DELETE_SVG + '</button>' +
           '</div>' +
-          '<button class="inspector__sec-add imf-add-detail" type="button"' +
-            ' style="font-size:11px">+ 항목 추가</button>' +
-        '</div>' +
-        '<button class="inspector__card-delete imf-item-del" type="button" aria-label="삭제">' + DELETE_SVG + '</button>';
-
-      /* 타이틀 */
-      row.querySelector('.imf-title-input').addEventListener('input', function (e) {
-        item.title = e.target.value;
-        var el = wrap.querySelector('.wg-ac__item[data-id="' + item.id + '"] .wg-ac__title');
-        if (el) el.textContent = item.title;
-      });
-
-      /* 디테일 */
-      item.details.forEach(function (d) {
-        var dRow = row.querySelector('.imf-detail-row[data-detail-id="' + d.id + '"]');
+          '<input class="inspector__card-name-input imf-dbody-input" type="text"' +
+            ' value="' + escAttr(d.dBody) + '" placeholder="내용">';
 
         dRow.querySelector('.imf-dtitle-input').addEventListener('input', function (e) {
           d.dTitle = e.target.value;
@@ -286,23 +318,68 @@
           if (item.details.length <= 1) return;
           item.details = item.details.filter(function (dt) { return dt.id !== d.id; });
           renderWidget();
-          renderInspectorItems();
+          renderDetailList();
         });
+
+        detailSection.appendChild(dRow);
       });
 
-      /* 항목 추가 */
-      row.querySelector('.imf-add-detail').addEventListener('click', function () {
+      /* + 항목 추가 */
+      var addBtn = document.createElement('button');
+      addBtn.className = 'inspector__sec-add imf-add-detail';
+      addBtn.type = 'button';
+      addBtn.style.fontSize = '11px';
+      addBtn.textContent = '+ 항목 추가';
+      addBtn.addEventListener('click', function () {
         item.details.push({ id: nextDetailId++, dTitle: 'Sub Title', dBody: 'Description.' });
         renderWidget();
-        renderInspectorItems();
+        renderDetailList();
       });
+      detailSection.appendChild(addBtn);
+    }
 
-      /* 아이템 삭제 */
-      row.querySelector('.imf-item-del').addEventListener('click', function () {
-        if (items.length <= 1) return;
-        items = items.filter(function (it) { return it.id !== item.id; });
-        renderWidget();
-        renderInspectorItems();
+    renderDetailList();
+    bodyEl.appendChild(detailSection);
+
+    /* 삭제 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' + DELETE_SVG + '아이템 삭제</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      if (items.length <= 1) return;
+      detailEl.classList.remove('open');
+      currentDetailItem = null;
+      items = items.filter(function (it) { return it.id !== item.id; });
+      renderWidget();
+      renderInspectorItems();
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openDetail(item) {
+    currentDetailItem = item;
+    var bodyEl = detailEl.querySelector('#imfDetailBody');
+    renderDetailBody(bodyEl, item);
+    detailEl.classList.add('open');
+  }
+
+  /* ── Render inspector items ── */
+  function renderInspectorItems() {
+    itemListEl.innerHTML = '';
+
+    items.forEach(function (item) {
+      var row = document.createElement('div');
+      row.className = 'inspector__item-row';
+      row.dataset.id = item.id;
+      row.innerHTML =
+        '<span class="inspector__drag">' + DRAG_SVG + '</span>' +
+        '<span class="inspector__item-name">' + esc(item.title || '새 타이틀') + '</span>' +
+        '<span class="inspector__item-arrow">' + ARROW_SVG + '</span>';
+
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openDetail(item);
       });
 
       setupDragDrop(row, item.id);
@@ -342,19 +419,21 @@
   }
 
   function clearDragIndicators() {
-    itemListEl.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    itemListEl.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
 
   /* ── Add item ── */
   document.getElementById('addImfItem').addEventListener('click', function () {
-    items.push({
+    var newItem = {
       id: nextId++,
       title: 'Title',
       details: [{ id: nextDetailId++, dTitle: 'Sub Title', dBody: 'Description.' }]
-    });
+    };
+    items.push(newItem);
     renderWidget(); renderInspectorItems();
+    openDetail(newItem);
   });
 
   /* ── Image URL + File upload ── */
@@ -379,7 +458,6 @@
   document.getElementById('imfImgUrl').addEventListener('input', function (e) {
     var src = e.target.value.trim();
     setWidgetImg(src);
-    /* URL 타이핑 시 썸네일 동기화 */
     var thumb      = document.getElementById('imfImgThumb');
     var uploadWrap = document.getElementById('imfImgUploadWrap');
     if (src) {
@@ -488,6 +566,7 @@
   });
 
   /* ── Init ── */
+  detailEl = createDetailPanel();
   renderWidget();
   renderInspectorItems();
 

@@ -13,12 +13,13 @@
 .faq-widget {
   width: 100%;
   overflow: hidden;
-  background: var(--clr-white);
+  --faq-row-bg: transparent;
 }
 
 /* ── FAQ item ── */
 .faq-item {
   border-bottom: 1px solid var(--clr-track);
+  background: var(--faq-row-bg, transparent);
 }
 
 .faq-item:first-child {

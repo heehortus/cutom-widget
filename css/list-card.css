@@ -53,7 +53,7 @@
 .card-widget__photo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(160deg, var(--clr-black-2) 0%, var(--clr-black-1) 50%, var(--clr-black-3) 100%);
+  background: var(--clr-400);
 }
 
 /* Hover color overlay — fades in/out via opacity */

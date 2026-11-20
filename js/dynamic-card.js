@@ -32,7 +32,7 @@
     gap:              24,
     rotateMax:        6,
     repeat:           true,
-    cardBg:           '#F0F0F0',
+    cardBg:           '#CED4DA',
     cardBgOpacity:    100,
     titleColor:       '#FFFFFF',
     titleColorOpacity:100,

@@ -20,6 +20,11 @@
   --item-title-color: var(--clr-darker);
   --item-desc-size: 16px;
   --item-desc-color: var(--clr-body);
+  --viewmore-size: 14px;
+  --viewmore-color: #1a1a1a;
+  --viewmore-icon: 18px;
+  --indicator-track: #adb5bd;
+  --indicator-thumb: #1a1a1a;
 }
 
 /* ── Left Panel ── */
@@ -34,12 +39,34 @@
   overflow: hidden;
 }
 
+.banner-widget__panel-img {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.banner-widget__panel-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.banner-widget__panel-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.42);
+}
+
 .banner-widget__panel-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
   flex: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .banner-widget__panel-text {
@@ -122,17 +149,19 @@
   padding: 0;
   background: none;
   border: none;
-  font-size: 14px;
+  font-size: var(--viewmore-size, 14px);
   font-weight: 600;
-  color: var(--clr-dark);
+  color: var(--viewmore-color, var(--clr-dark));
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
 .banner-widget__viewmore-arrow {
+  width: var(--viewmore-icon, 18px);
+  height: var(--viewmore-icon, 18px);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-  color: var(--clr-dark);
+  color: var(--viewmore-color, var(--clr-dark));
 }
 
 .banner-widget__viewmore:hover .banner-widget__viewmore-arrow {
@@ -192,20 +221,10 @@
 .banner-item__image {
   width: 100%;
   aspect-ratio: 4 / 3;
-  background: linear-gradient(135deg, var(--clr-200) 0%, var(--clr-300) 100%);
+  background: var(--clr-400);
   position: relative;
   overflow: hidden;
   flex-shrink: 0;
-}
-
-/* Placeholder graphic inside image area */
-.banner-item__image::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(ellipse at 30% 40%, rgba(255,255,255,0.4) 0%, transparent 60%),
-    linear-gradient(135deg, var(--clr-300) 0%, var(--clr-400) 100%);
 }
 
 .banner-item__body {
@@ -260,7 +279,7 @@
   position: relative;
   height: 4px;
   border-radius: 2px;
-  background: var(--clr-500);
+  background: var(--indicator-track, #adb5bd);
   margin-top: 16px;
   flex-shrink: 0;
 }
@@ -270,7 +289,7 @@
   top: 0;
   height: 100%;
   border-radius: 2px;
-  background: var(--clr-dark);
+  background: var(--indicator-thumb, #1a1a1a);
   transition: left 0.15s ease, width 0.15s ease;
 }
 

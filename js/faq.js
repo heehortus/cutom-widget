@@ -8,9 +8,9 @@
   /* ── State ── */
   var nextId = 4;
   var items = [
-    { id: 1, q: 'Power Absorption', a: 'Korean yarn is split evenly and stably, so it has higher bulkiness and better absorbency.\nYou can expect about 150% functional superiority compared to Chinese products.', open: true,  expanded: false },
-    { id: 2, q: 'Lint free', a: 'Our fabric is designed to minimize lint and fiber shedding, keeping your environment clean.', open: false, expanded: false },
-    { id: 3, q: 'Long lasting', a: 'Built with premium materials that maintain quality and appearance through extended use.', open: false, expanded: false }
+    { id: 1, q: 'Power Absorption', a: 'Korean yarn is split evenly and stably, so it has higher bulkiness and better absorbency.\nYou can expect about 150% functional superiority compared to Chinese products.', open: true },
+    { id: 2, q: 'Lint free', a: 'Our fabric is designed to minimize lint and fiber shedding, keeping your environment clean.', open: false },
+    { id: 3, q: 'Long lasting', a: 'Built with premium materials that maintain quality and appearance through extended use.', open: false }
   ];
 
   var dragSrcId = null;
@@ -25,6 +25,12 @@
   };
 
   var maxWidth = 760;
+  var bgEnabled = false;
+  var bgHex     = '#F5F5F5';
+
+  /* ── Detail panel ── */
+  var currentDetailItem = null;
+  var detailEl = null;
 
   /* ── DOM refs ── */
   var faqWidget   = document.getElementById('faqWidget');
@@ -55,6 +61,24 @@
   function escAttr(str) {
     return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
+
+  var ARROW_SVG =
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+    ' stroke-linecap="round" stroke-linejoin="round" width="12" height="12">' +
+    '<polyline points="6,3 10,8 6,13"/></svg>';
+
+  var DRAG_SVG =
+    '<svg viewBox="0 0 8 14" fill="currentColor" width="8" height="14">' +
+    '<circle cx="2" cy="2" r="1.2"/><circle cx="6" cy="2" r="1.2"/>' +
+    '<circle cx="2" cy="7" r="1.2"/><circle cx="6" cy="7" r="1.2"/>' +
+    '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/></svg>';
+
+  var DELETE_SVG =
+    '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5"' +
+    ' stroke-linecap="round" stroke-linejoin="round" width="13" height="13">' +
+    '<polyline points="1,3 13,3"/><path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/>' +
+    '<rect x="2" y="3" width="10" height="9" rx="1"/>' +
+    '<line x1="5" y1="6" x2="5" y2="10"/><line x1="9" y1="6" x2="9" y2="10"/></svg>';
 
   /* ── Apply text style to widget ── */
   function applyTextStyle() {
@@ -104,82 +128,110 @@
     applyTextStyle();
   }
 
+  /* ── Detail panel ── */
+  function createDetailPanel() {
+    var inspectorEl = document.querySelector('#faqInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+          ' stroke-linecap="round" stroke-linejoin="round" width="11" height="11">' +
+          '<polyline points="10,3 4,8 10,13"/></svg>' +
+          'FAQ 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="faqDetailBody"></div>';
+    inspectorEl.appendChild(panel);
+
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
+
+    return panel;
+  }
+
+  function renderDetailBody(bodyEl, item) {
+    bodyEl.innerHTML = '';
+
+    /* 질문 */
+    var qField = document.createElement('div');
+    qField.className = 'inspector__field';
+    qField.innerHTML =
+      '<label class="inspector__field-label">질문</label>' +
+      '<input class="inspector__card-name-input" type="text"' +
+      ' value="' + escAttr(item.q) + '" placeholder="질문" style="width:100%">';
+    qField.querySelector('input').addEventListener('input', function (e) {
+      item.q = e.target.value;
+      var el = faqWidget.querySelector('[data-id="' + item.id + '"] .faq-item__question');
+      if (el) el.textContent = item.q;
+      var rowEl = faqItemList.querySelector('[data-id="' + item.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = item.q || '새 질문';
+    });
+    bodyEl.appendChild(qField);
+
+    /* 답변 */
+    var aField = document.createElement('div');
+    aField.className = 'inspector__field';
+    aField.innerHTML =
+      '<label class="inspector__field-label">답변</label>' +
+      '<textarea class="inspector__card-role-input" placeholder="답변" rows="5"' +
+      ' style="width:100%;resize:vertical">' + esc(item.a) + '</textarea>';
+    aField.querySelector('textarea').addEventListener('input', function (e) {
+      item.a = e.target.value;
+      var el = faqWidget.querySelector('[data-id="' + item.id + '"] .faq-item__answer');
+      if (el) el.textContent = item.a;
+    });
+    bodyEl.appendChild(aField);
+
+    /* 삭제 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' + DELETE_SVG + '아이템 삭제</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      if (items.length <= 1) return;
+      detailEl.classList.remove('open');
+      currentDetailItem = null;
+      items = items.filter(function (it) { return it.id !== item.id; });
+      renderWidget();
+      renderInspectorItems();
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openDetail(item) {
+    currentDetailItem = item;
+    var bodyEl = detailEl.querySelector('#faqDetailBody');
+    renderDetailBody(bodyEl, item);
+    detailEl.classList.add('open');
+  }
+
   /* ── Render inspector item list ── */
   function renderInspectorItems() {
     faqItemList.innerHTML = '';
 
     items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item' + (item.expanded ? ' inspector__faq-item--expanded' : '');
+      row.className = 'inspector__item-row';
       row.dataset.id = item.id;
-
       row.innerHTML =
-        '<span class="inspector__drag">' +
-          '<svg viewBox="0 0 8 14" fill="currentColor" width="8" height="14"' +
-            ' xmlns="http://www.w3.org/2000/svg">' +
-            '<circle cx="2" cy="2"  r="1.2"/><circle cx="6" cy="2"  r="1.2"/>' +
-            '<circle cx="2" cy="7"  r="1.2"/><circle cx="6" cy="7"  r="1.2"/>' +
-            '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/>' +
-          '</svg>' +
-        '</span>' +
-        '<div class="inspector__card-fields">' +
-          '<div class="inspector__faq-row">' +
-            '<input class="inspector__card-name-input" type="text"' +
-              ' value="' + escAttr(item.q) + '" placeholder="질문">' +
-            '<button class="inspector__faq-toggle" type="button" aria-label="답변 편집">' +
-              '<svg class="inspector__faq-chevron" viewBox="0 0 16 16" fill="none"' +
-                ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
-                ' width="14" height="14">' +
-                '<polyline points="4,6 8,10 12,6"/>' +
-              '</svg>' +
-            '</button>' +
-          '</div>' +
-          '<div class="inspector__faq-body">' +
-            '<div class="inspector__faq-body-inner">' +
-              '<textarea class="inspector__card-role-input faq-answer-input"' +
-                ' placeholder="답변" rows="3">' + esc(item.a) + '</textarea>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<button class="inspector__card-delete" type="button" aria-label="삭제">' +
-          '<svg viewBox="0 0 14 14" fill="none" stroke="currentColor"' +
-            ' stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"' +
-            ' width="13" height="13">' +
-            '<polyline points="1,3 13,3"/>' +
-            '<path d="M4,3V2.5A.5.5,0,0,1,4.5,2h5A.5.5,0,0,1,10,2.5V3"/>' +
-            '<rect x="2" y="3" width="10" height="9" rx="1"/>' +
-            '<line x1="5" y1="6" x2="5" y2="10"/>' +
-            '<line x1="9" y1="6" x2="9" y2="10"/>' +
-          '</svg>' +
-        '</button>';
+        '<span class="inspector__drag">' + DRAG_SVG + '</span>' +
+        '<span class="inspector__item-name">' + esc(item.q || '새 질문') + '</span>' +
+        '<span class="inspector__item-arrow">' + ARROW_SVG + '</span>';
 
-      /* Expand toggle */
-      row.querySelector('.inspector__faq-toggle').addEventListener('click', function () {
-        item.expanded = !item.expanded;
-        row.classList.toggle('inspector__faq-item--expanded', item.expanded);
-        if (item.expanded) row.querySelector('.faq-answer-input').focus();
-      });
-
-      /* Question input */
-      row.querySelector('.inspector__card-name-input').addEventListener('input', function (e) {
-        item.q = e.target.value;
-        var el = faqWidget.querySelector('[data-id="' + item.id + '"] .faq-item__question');
-        if (el) el.textContent = item.q;
-      });
-
-      /* Answer textarea */
-      row.querySelector('.faq-answer-input').addEventListener('input', function (e) {
-        item.a = e.target.value;
-        var el = faqWidget.querySelector('[data-id="' + item.id + '"] .faq-item__answer');
-        if (el) el.textContent = item.a;
-      });
-
-      /* Delete */
-      row.querySelector('.inspector__card-delete').addEventListener('click', function () {
-        if (items.length <= 1) return;
-        items = items.filter(function (it) { return it.id !== item.id; });
-        renderWidget();
-        renderInspectorItems();
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openDetail(item);
       });
 
       setupDragDrop(row, item.id);
@@ -233,7 +285,7 @@
   }
 
   function clearDragIndicators() {
-    faqItemList.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    faqItemList.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
@@ -241,18 +293,18 @@
   /* ── Add item ── */
   document.getElementById('addFaqItem').addEventListener('click', function () {
     var id = nextId++;
-    items.push({ id: id, q: '새 질문', a: '답변을 입력하세요.', open: false, expanded: true });
+    var newItem = { id: id, q: '새 질문', a: '답변을 입력하세요.', open: false };
+    items.push(newItem);
     renderWidget();
     renderInspectorItems();
-    var newRow = faqItemList.lastElementChild;
-    if (newRow) newRow.querySelector('.inspector__card-name-input').focus();
+    openDetail(newItem);
   });
 
   /* ── Text style controls ── */
-  function bindColorControl(pickerId, hexId, opacityId, stateHexKey, stateOpacityKey, swatchId) {
+  function bindColorControl(pickerId, hexId, opacityId, stateHexKey, stateOpacityKey) {
     var picker  = document.getElementById(pickerId);
     var hexEl   = document.getElementById(hexId);
-    var opEl    = document.getElementById(opacityId);
+    var opEl    = opacityId ? document.getElementById(opacityId) : null;
 
     picker.addEventListener('input', function () {
       textStyle[stateHexKey] = picker.value.toUpperCase();
@@ -287,13 +339,50 @@
     faqWidget.style.setProperty('--faq-a-size', textStyle.aSize + 'px');
   });
 
-  bindColorControl('faqQColorPicker', 'faqQColorHex', 'faqQColorOpacity', 'qHex', 'qOpacity', 'faqQSwatchWrap');
-  bindColorControl('faqAColorPicker', 'faqAColorHex', 'faqAColorOpacity', 'aHex', 'aOpacity', 'faqASwatchWrap');
+  bindColorControl('faqQColorPicker', 'faqQColorHex', 'faqQColorOpacity', 'qHex', 'qOpacity');
+  bindColorControl('faqAColorPicker', 'faqAColorHex', 'faqAColorOpacity', 'aHex', 'aOpacity');
 
   /* ── Max width ── */
   document.getElementById('faqMaxWidth').addEventListener('input', function (e) {
     maxWidth = clamp(e.target.value, 320, 1400);
     faqWidget.style.maxWidth = maxWidth + 'px';
+  });
+
+  /* ── Background color toggle ── */
+  function applyBg() {
+    faqWidget.style.setProperty('--faq-row-bg', bgEnabled ? bgHex : 'transparent');
+  }
+
+  var bgToggleBtn   = document.getElementById('faqBgToggle');
+  var bgColorWrap   = document.getElementById('faqBgColorWrap');
+  var bgPicker      = document.getElementById('faqBgColorPicker');
+  var bgHexEl       = document.getElementById('faqBgColorHex');
+  var bgSwatchEl    = document.getElementById('faqBgSwatchWrap');
+
+  bgToggleBtn.addEventListener('click', function () {
+    bgEnabled = !bgEnabled;
+    bgToggleBtn.classList.toggle('active', bgEnabled);
+    bgToggleBtn.setAttribute('aria-pressed', bgEnabled);
+    bgColorWrap.style.display = bgEnabled ? '' : 'none';
+    if (bgEnabled) bgSwatchEl.style.background = bgHex;
+    applyBg();
+  });
+
+  bgPicker.addEventListener('input', function () {
+    bgHex = bgPicker.value.toUpperCase();
+    bgHexEl.value = bgHex;
+    bgSwatchEl.style.background = bgHex;
+    applyBg();
+  });
+
+  bgHexEl.addEventListener('input', function () {
+    var v = bgHexEl.value;
+    if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+      bgHex = v.toUpperCase();
+      bgPicker.value = v;
+      bgSwatchEl.style.background = bgHex;
+      applyBg();
+    }
   });
 
   /* ── Section collapse ── */
@@ -317,6 +406,7 @@
   });
 
   /* ── Init ── */
+  detailEl = createDetailPanel();
   renderWidget();
   renderInspectorItems();
 

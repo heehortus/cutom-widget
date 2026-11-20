@@ -113,11 +113,61 @@
     openBtn.addEventListener('click', openNav);
     closeBtn.addEventListener('click', closeNav);
     overlay.addEventListener('click', closeNav);
+
+    /* PC: start with nav open */
+    if (window.innerWidth > 640) {
+      nav.classList.add('open');
+      openBtn.classList.add('hidden');
+    }
+  }
+
+  /* ── Mobile Inspector Reopen ─────── */
+  function initMobileInspector() {
+    var openBtn = document.getElementById('inspectorOpenBtn');
+    if (!openBtn) return;
+
+    /* Intercept .inspector__close clicks in capture phase on mobile.
+       This runs before widget-specific bubble-phase handlers,
+       preventing display:none and instead letting us manage open/close. */
+    document.addEventListener('click', function (e) {
+      var closeBtn = e.target.closest('.inspector__close');
+      if (!closeBtn) return;
+
+      e.stopImmediatePropagation();
+
+      var inspector = closeBtn.closest('.inspector');
+      if (inspector) {
+        inspector.classList.add('inspector--hidden');
+        openBtn.classList.add('visible');
+      }
+    }, true /* capture */);
+
+    /* Reopen the active inspector */
+    openBtn.addEventListener('click', function () {
+      var activeView = document.querySelector('.widget-view.active');
+      if (!activeView) return;
+      var inspector = activeView.querySelector('.inspector');
+      if (inspector) {
+        inspector.classList.remove('inspector--hidden');
+        openBtn.classList.remove('visible');
+      }
+    });
+
+    /* When switching widgets on mobile, reset inspector visibility */
+    document.querySelectorAll('.widget-nav__item').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        openBtn.classList.remove('visible');
+        var target = btn.dataset.widget;
+        var inspector = document.querySelector('#view-' + target + ' .inspector');
+        if (inspector) inspector.classList.remove('inspector--hidden');
+      });
+    });
   }
 
   document.addEventListener('DOMContentLoaded', function () {
     initNav();
     initNavToggle();
+    initMobileInspector();
     loadAllWidgets();
   });
 

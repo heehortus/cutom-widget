@@ -39,7 +39,7 @@
     dotOpacity:          100,
     dotActiveHex:        '#555555',
     dotActiveOpacity:    100,
-    cardBgHex:           '#f0f0f0'
+    cardBgHex:           '#ced4da'
   };
 
   var dragSrcId  = null;

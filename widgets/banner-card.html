@@ -15,6 +15,7 @@
 
           <!-- Left: Dark panel -->
           <div class="banner-widget__panel">
+            <div class="banner-widget__panel-img" id="bannerPanelImg"></div>
             <div class="banner-widget__panel-top">
               <div class="banner-widget__panel-text">
                 <h2 class="banner-widget__panel-title" id="bannerTitleEl">BANNER TITLE</h2>
@@ -59,20 +60,6 @@
         </div>
         <div class="inspector__body">
 
-          <!-- 아이템 섹션 -->
-          <div class="inspector__section collapsed">
-              <button class="inspector__sec-toggle" type="button">
-                <span>아이템</span>
-                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                  <polyline points="4,10 8,6 12,10"/>
-                </svg>
-              </button>
-            <div class="inspector__sec-body">
-              <button class="inspector__sec-add" id="addItem" type="button">+ 추가</button>
-              <div id="bannerItemList"></div>
-            </div>
-          </div>
-
           <!-- 콘텐츠 섹션 -->
           <div class="inspector__section collapsed">
             <button class="inspector__sec-toggle" type="button">
@@ -83,6 +70,16 @@
             </button>
             <div class="inspector__sec-body">
               <p class="inspector__group-label">배너</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">이미지</label>
+                <div class="inspector__img-upload" id="bannerImgUpload">
+                  <div class="inspector__img-thumb" id="bannerImgThumb">
+                    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/><path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/></svg>
+                  </div>
+                  <button class="inspector__img-clear" id="bannerImgClear" type="button" title="이미지 제거">&#x2715;</button>
+                  <input type="file" id="bannerImgFile" accept="image/*" style="display:none">
+                </div>
+              </div>
               <div class="inspector__field">
                 <label class="inspector__field-label">타이틀</label>
                 <input type="text" class="inspector__text-input" id="bannerTitleInput" value="BANNER TITLE">
@@ -100,6 +97,20 @@
                 <label class="inspector__field-label">버튼 텍스트</label>
                 <input type="text" class="inspector__text-input" id="viewMoreInput" value="View More">
               </div>
+            </div>
+          </div>
+
+          <!-- 아이템 섹션 -->
+          <div class="inspector__section collapsed">
+              <button class="inspector__sec-toggle" type="button">
+                <span>아이템</span>
+                <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <polyline points="4,10 8,6 12,10"/>
+                </svg>
+              </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="addItem" type="button">+ 추가</button>
+              <div id="bannerItemList"></div>
             </div>
           </div>
 
@@ -180,6 +191,63 @@
           </div>
 
 
+
+          <!-- 버튼 / 인디케이터 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>버튼 / 인디케이터</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                <polyline points="4,10 8,6 12,10"/>
+              </svg>
+            </button>
+            <div class="inspector__sec-body">
+              <p class="inspector__group-label">View More 버튼</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">텍스트 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="viewmoreSizeInput" value="14" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="viewmoreSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="viewmoreColorPicker" value="#1a1a1a">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="viewmoreColorHex" value="#1A1A1A" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="viewmoreColorOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">아이콘 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="viewmoreIconSizeInput" value="18" min="8" max="48">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <p class="inspector__group-label">스크롤 인디케이터</p>
+              <div class="inspector__field">
+                <label class="inspector__field-label">트랙 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="indicatorTrackSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="indicatorTrackPicker" value="#adb5bd">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="indicatorTrackHex" value="#ADB5BD" maxlength="7" spellcheck="false">
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">썸 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="indicatorThumbSwatchWrap">
+                    <input type="color" class="inspector__color-native" id="indicatorThumbPicker" value="#1a1a1a">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="indicatorThumbHex" value="#1A1A1A" maxlength="7" spellcheck="false">
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div><!-- /.inspector__body -->
         <div class="inspector__footer">

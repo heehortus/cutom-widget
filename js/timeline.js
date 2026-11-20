@@ -86,10 +86,15 @@
     groupGap:       60
   };
 
-  var LINE_DURATION  = 1000; /* CSS tl-line-draw 애니메이션과 동기화 */
+  var LINE_DURATION  = 1000;
 
   var dragSrcGroupId = null;
   var dragSrcItemId  = null;
+
+  /* ── Detail panel ── */
+  var currentDetailGroup = null;
+  var currentDetailItem  = null;
+  var itemDetailEl       = null;
 
   /* ── DOM refs ── */
   var widget    = document.getElementById('timelineWidget');
@@ -194,14 +199,12 @@
     bullet.classList.add('timeline-item__bullet--pop');
     setTimeout(function () { bullet.classList.remove('timeline-item__bullet--pop'); }, 600);
 
-    /* 라인 애니메이션이 끝나면 다음 아이템 활성화 */
     var next = itemEl.nextElementSibling;
     if (next && next.classList.contains('timeline-item')) {
       setTimeout(function () { activateItem(next); }, LINE_DURATION);
     }
   }
 
-  /* 같은 트랙 안에 이미 활성화된 선행 아이템이 있는지 확인 */
   function hasPrecedingActive(itemEl) {
     var prev = itemEl.previousElementSibling;
     while (prev && prev.classList.contains('timeline-item')) {
@@ -221,10 +224,7 @@
         if (!entry.isIntersecting) return;
         var itemEl = entry.target;
         if (itemEl.classList.contains('timeline-item--active')) return;
-
-        /* 선행 아이템이 하나라도 active면 체인이 순서대로 처리 */
         if (hasPrecedingActive(itemEl)) return;
-
         activateItem(itemEl);
       });
     }, { root: canvas, threshold: 0.1 });
@@ -256,6 +256,103 @@
     '<svg class="inspector__faq-chevron" viewBox="0 0 16 16" fill="none"' +
       ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"' +
       ' width="14" height="14"><polyline points="4,6 8,10 12,6"/></svg>';
+
+  var ARROW_SVG =
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+    ' stroke-linecap="round" stroke-linejoin="round" width="12" height="12">' +
+    '<polyline points="6,3 10,8 6,13"/></svg>';
+
+  /* ── Item detail panel ── */
+  function createItemDetailPanel() {
+    var inspectorEl = document.getElementById('timelineInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+          ' stroke-linecap="round" stroke-linejoin="round" width="11" height="11">' +
+          '<polyline points="10,3 4,8 10,13"/></svg>' +
+          '타임라인 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="tlItemDetailBody"></div>';
+    inspectorEl.appendChild(panel);
+
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailGroup = null;
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailGroup = null;
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
+
+    return panel;
+  }
+
+  function renderItemDetailBody(bodyEl, group, item) {
+    bodyEl.innerHTML = '';
+
+    /* 년도 */
+    var yearField = document.createElement('div');
+    yearField.className = 'inspector__field';
+    yearField.innerHTML =
+      '<label class="inspector__field-label">년도</label>' +
+      '<input class="inspector__card-name-input" type="text"' +
+      ' value="' + escAttr(item.year) + '" placeholder="년도" style="width:100%">';
+    yearField.querySelector('input').addEventListener('input', function (e) {
+      item.year = e.target.value;
+      var el = widget.querySelector('.timeline-item[data-id="' + item.id + '"] .timeline-item__year');
+      if (el) el.textContent = item.year;
+      var rowEl = groupList.querySelector('.inspector__item-row[data-id="' + item.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = item.year || '새 항목';
+    });
+    bodyEl.appendChild(yearField);
+
+    /* 내용 */
+    var textField = document.createElement('div');
+    textField.className = 'inspector__field';
+    textField.innerHTML =
+      '<label class="inspector__field-label">내용</label>' +
+      '<textarea class="inspector__card-role-input" placeholder="내용" rows="3"' +
+      ' style="width:100%;resize:vertical">' + esc(item.text) + '</textarea>';
+    textField.querySelector('textarea').addEventListener('input', function (e) {
+      item.text = e.target.value;
+      var el = widget.querySelector('.timeline-item[data-id="' + item.id + '"] .timeline-item__content');
+      if (el) el.textContent = item.text;
+    });
+    bodyEl.appendChild(textField);
+
+    /* 삭제 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' + DELETE_SVG + '아이템 삭제</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      if (group.items.length <= 1) return;
+      itemDetailEl.classList.remove('open');
+      currentDetailGroup = null;
+      currentDetailItem = null;
+      group.items = group.items.filter(function (it) { return it.id !== item.id; });
+      renderWidget();
+      renderInspectorGroups();
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openItemDetail(group, item) {
+    currentDetailGroup = group;
+    currentDetailItem = item;
+    var bodyEl = itemDetailEl.querySelector('#tlItemDetailBody');
+    renderItemDetailBody(bodyEl, group, item);
+    itemDetailEl.classList.add('open');
+  }
 
   /* ── Render inspector groups ── */
   function renderInspectorGroups() {
@@ -324,9 +421,11 @@
       /* Add item */
       groupEl.querySelector('.tl-add-item').addEventListener('click', function () {
         var id = nextItemId++;
-        group.items.push({ id: id, year: String(new Date().getFullYear()), text: '새 항목을 입력하세요.' });
+        var newItem = { id: id, year: String(new Date().getFullYear()), text: '새 항목을 입력하세요.' };
+        group.items.push(newItem);
         renderWidget();
         renderInspectorGroups();
+        openItemDetail(group, newItem);
       });
 
       /* Render items */
@@ -341,38 +440,16 @@
   function renderInspectorItems(group, container) {
     group.items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__item-row';
       row.dataset.id = item.id;
-
       row.innerHTML =
         '<span class="inspector__drag">' + DRAG_SVG + '</span>' +
-        '<div class="inspector__card-fields">' +
-          '<div class="tl-item-fields">' +
-            '<input class="inspector__card-name-input tl-year-input" type="text"' +
-              ' value="' + escAttr(item.year) + '" placeholder="년도">' +
-            '<input class="inspector__card-name-input tl-text-input" type="text"' +
-              ' value="' + escAttr(item.text) + '" placeholder="내용">' +
-          '</div>' +
-        '</div>' +
-        '<button class="inspector__card-delete" type="button" aria-label="삭제">' + DELETE_SVG + '</button>';
+        '<span class="inspector__item-name">' + esc(item.year || '새 항목') + '</span>' +
+        '<span class="inspector__item-arrow">' + ARROW_SVG + '</span>';
 
-      row.querySelector('.tl-year-input').addEventListener('input', function (e) {
-        item.year = e.target.value;
-        var el = widget.querySelector('.timeline-item[data-id="' + item.id + '"] .timeline-item__year');
-        if (el) el.textContent = item.year;
-      });
-
-      row.querySelector('.tl-text-input').addEventListener('input', function (e) {
-        item.text = e.target.value;
-        var el = widget.querySelector('.timeline-item[data-id="' + item.id + '"] .timeline-item__content');
-        if (el) el.textContent = item.text;
-      });
-
-      row.querySelector('.inspector__card-delete').addEventListener('click', function () {
-        if (group.items.length <= 1) return;
-        group.items = group.items.filter(function (it) { return it.id !== item.id; });
-        renderWidget();
-        renderInspectorGroups();
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openItemDetail(group, item);
       });
 
       setupItemDragDrop(row, item, group);
@@ -429,7 +506,7 @@
   }
 
   function clearDragIndicators() {
-    groupList.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    groupList.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
@@ -477,7 +554,6 @@
     }
   }
 
-  /* Track colors (no opacity) */
   function bindTrackColor(pickerId, hexId, cssVar, stateKey, swatchId) {
     var picker = document.getElementById(pickerId);
     var hexEl  = document.getElementById(hexId);
@@ -500,7 +576,6 @@
     });
   }
 
-  /* Style controls: size */
   function bindSizeControl(inputId, stateKey, min, max, cssVar) {
     document.getElementById(inputId).addEventListener('input', function (e) {
       style[stateKey] = clamp(e.target.value, min, max);
@@ -552,6 +627,7 @@
   });
 
   /* ── Init ── */
+  itemDetailEl = createItemDetailPanel();
   renderWidget();
   renderInspectorGroups();
 

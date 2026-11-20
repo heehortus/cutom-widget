@@ -5,15 +5,15 @@
   'use strict';
 
   const WIDGETS = [
-    { id: 'card',                name: '카드',           category: 'card',    catLabel: '카드',    desc: '호버 그라디언트 카드 위젯' },
-    { id: 'banner',              name: '배너',           category: 'banner',  catLabel: '배너',    desc: '이미지 배너 카드 위젯' },
-    { id: 'faq',                 name: 'FAQ',            category: 'faq',     catLabel: 'FAQ',     desc: '아코디언 FAQ 위젯' },
-    { id: 'dynamic-card',        name: '다이나믹 카드',   category: 'card',    catLabel: '카드',    desc: '드래그 스택 카드 위젯' },
-    { id: 'timeline',            name: '타임라인',       category: 'history', catLabel: '연혁',    desc: '연혁 타임라인 위젯' },
-    { id: 'horizon-scroll-card', name: '호라이즌 스크롤', category: 'banner',  catLabel: '배너',    desc: '가로 스크롤 카드 위젯' },
-    { id: 'focus-card',          name: '포커스 카드',     category: 'card',    catLabel: '카드',    desc: '이미지 포커스 카드 위젯' },
-    { id: 'focus-card-2',        name: '포커스 카드 2',   category: 'card',    catLabel: '카드',    desc: '확장형 포커스 카드 위젯' },
-    { id: 'image-faq',           name: '이미지 FAQ',      category: 'faq',     catLabel: 'FAQ',     desc: '이미지 + 아코디언 FAQ 위젯' },
+    { id: 'card',                name: '그라디언트 카드',           category: 'card',    catLabel: '카드',    desc: '마우스 호버 이벤트 그라디언트 카드' },
+    { id: 'banner',              name: '배너 + 카드',           category: 'banner',  catLabel: '배너',    desc: '좌측 이미지 배너 카드' },
+    { id: 'faq',                 name: 'FAQ',            category: 'faq',     catLabel: 'FAQ',     desc: '아코디언 FAQ' },
+    { id: 'dynamic-card',        name: '다이나믹 카드',   category: 'card',    catLabel: '카드',    desc: '역동적인 애니메이션의 카드' },
+    { id: 'timeline',            name: '연혁 타임라인',       category: 'history', catLabel: '연혁',    desc: '스크롤 애니메이션 연혁 타임라인' },
+    { id: 'horizon-scroll-card', name: '가로 스크롤 카드', category: 'banner',  catLabel: '배너',    desc: '가로 스크롤 카드' },
+    { id: 'focus-card',          name: '포커스 카드',     category: 'card',    catLabel: '카드',    desc: '이미지 포커스 카드' },
+    { id: 'focus-card-2',        name: '포커스 카드 2',   category: 'card',    catLabel: '카드',    desc: '확장형 포커스 카드' },
+    { id: 'image-faq',           name: '이미지 FAQ',      category: 'faq',     catLabel: 'FAQ',     desc: '이미지 + 아코디언 FAQ' },
   ];
 
   const THUMB_HTML = {

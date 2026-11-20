@@ -17,14 +17,21 @@
   ];
 
   var UPLOAD_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/><path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/></svg>';
+  var bannerImgSrc = '';
   var dragSrcId = null;
   var textStyle = {
-    titleSize:    24,
-    titleHex:     '#262626',
-    titleOpacity: 100,
-    descSize:     16,
-    descHex:      '#767676',
-    descOpacity:  100
+    titleSize:         24,
+    titleHex:          '#262626',
+    titleOpacity:      100,
+    descSize:          16,
+    descHex:           '#767676',
+    descOpacity:       100,
+    viewmoreSize:      14,
+    viewmoreHex:       '#1A1A1A',
+    viewmoreOpacity:   100,
+    viewmoreIconSize:  18,
+    indicatorTrackHex: '#ADB5BD',
+    indicatorThumbHex: '#1A1A1A'
   };
 
   /* ── DOM refs ───────────────────────── */
@@ -197,16 +204,25 @@
   /* ── Apply text style ───────────────── */
 
   function applyTextStyle() {
-    var titleColor = hexToRgba(textStyle.titleHex, textStyle.titleOpacity) || textStyle.titleHex;
-    var descColor  = hexToRgba(textStyle.descHex,  textStyle.descOpacity)  || textStyle.descHex;
+    var titleColor    = hexToRgba(textStyle.titleHex,    textStyle.titleOpacity)    || textStyle.titleHex;
+    var descColor     = hexToRgba(textStyle.descHex,     textStyle.descOpacity)     || textStyle.descHex;
+    var viewmoreColor = hexToRgba(textStyle.viewmoreHex, textStyle.viewmoreOpacity) || textStyle.viewmoreHex;
 
     bannerWidget.style.setProperty('--item-title-size',  textStyle.titleSize + 'px');
     bannerWidget.style.setProperty('--item-title-color', titleColor);
     bannerWidget.style.setProperty('--item-desc-size',   textStyle.descSize  + 'px');
     bannerWidget.style.setProperty('--item-desc-color',  descColor);
+    bannerWidget.style.setProperty('--viewmore-size',    textStyle.viewmoreSize + 'px');
+    bannerWidget.style.setProperty('--viewmore-color',   viewmoreColor);
+    bannerWidget.style.setProperty('--viewmore-icon',    textStyle.viewmoreIconSize + 'px');
+    bannerWidget.style.setProperty('--indicator-track',  textStyle.indicatorTrackHex);
+    bannerWidget.style.setProperty('--indicator-thumb',  textStyle.indicatorThumbHex);
 
-    document.getElementById('itemTitleSwatchWrap').style.background = titleColor;
-    document.getElementById('itemDescSwatchWrap').style.background  = descColor;
+    document.getElementById('itemTitleSwatchWrap').style.background    = titleColor;
+    document.getElementById('itemDescSwatchWrap').style.background     = descColor;
+    document.getElementById('viewmoreSwatchWrap').style.background     = viewmoreColor;
+    document.getElementById('indicatorTrackSwatchWrap').style.background = textStyle.indicatorTrackHex;
+    document.getElementById('indicatorThumbSwatchWrap').style.background = textStyle.indicatorThumbHex;
   }
 
   /* ── Indicators ─────────────────────── */
@@ -412,6 +428,44 @@
     });
   }
 
+  /* ── Banner image upload ────────────── */
+
+  function initBannerImgUpload() {
+    var uploadWrap = document.getElementById('bannerImgUpload');
+    var thumb      = document.getElementById('bannerImgThumb');
+    var clearBtn   = document.getElementById('bannerImgClear');
+    var fileInput  = document.getElementById('bannerImgFile');
+    var panelImg   = document.getElementById('bannerPanelImg');
+    if (!uploadWrap) return;
+
+    thumb.addEventListener('click', function () { fileInput.click(); });
+
+    fileInput.addEventListener('change', function (e) {
+      var file = e.target.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function (ev) {
+        bannerImgSrc = ev.target.result;
+        panelImg.innerHTML = '<img src="' + bannerImgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        thumb.innerHTML = '<img src="' + bannerImgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
+        thumb.classList.add('inspector__img-thumb--filled');
+        uploadWrap.classList.add('inspector__img-upload--filled');
+        fileInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    clearBtn.addEventListener('click', function (ev) {
+      ev.stopPropagation();
+      bannerImgSrc = '';
+      panelImg.innerHTML = '';
+      thumb.innerHTML = UPLOAD_SVG;
+      thumb.classList.remove('inspector__img-thumb--filled');
+      uploadWrap.classList.remove('inspector__img-upload--filled');
+      fileInput.value = '';
+    });
+  }
+
   /* ── Content bindings ───────────────── */
 
   function bindText(inputId, elId) {
@@ -489,6 +543,78 @@
     applyTextStyle();
   });
 
+  /* ── View More / Indicator controls ─────── */
+
+  var viewmoreSizeEl         = document.getElementById('viewmoreSizeInput');
+  var viewmorePicker         = document.getElementById('viewmoreColorPicker');
+  var viewmoreHexEl          = document.getElementById('viewmoreColorHex');
+  var viewmoreOpacityEl      = document.getElementById('viewmoreColorOpacity');
+  var viewmoreIconEl         = document.getElementById('viewmoreIconSizeInput');
+  var indicatorTrackPickerEl = document.getElementById('indicatorTrackPicker');
+  var indicatorTrackHexEl    = document.getElementById('indicatorTrackHex');
+  var indicatorThumbPickerEl = document.getElementById('indicatorThumbPicker');
+  var indicatorThumbHexEl    = document.getElementById('indicatorThumbHex');
+
+  viewmoreSizeEl.addEventListener('input', function () {
+    textStyle.viewmoreSize = clamp(viewmoreSizeEl.value, 8, 60);
+    applyTextStyle();
+  });
+
+  viewmorePicker.addEventListener('input', function () {
+    textStyle.viewmoreHex = viewmorePicker.value.toUpperCase();
+    viewmoreHexEl.value = textStyle.viewmoreHex;
+    applyTextStyle();
+  });
+
+  viewmoreHexEl.addEventListener('input', function () {
+    var hex = viewmoreHexEl.value;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      textStyle.viewmoreHex = hex.toUpperCase();
+      viewmorePicker.value = hex;
+      applyTextStyle();
+    }
+  });
+
+  viewmoreOpacityEl.addEventListener('input', function () {
+    textStyle.viewmoreOpacity = clamp(viewmoreOpacityEl.value, 0, 100);
+    applyTextStyle();
+  });
+
+  viewmoreIconEl.addEventListener('input', function () {
+    textStyle.viewmoreIconSize = clamp(viewmoreIconEl.value, 8, 48);
+    applyTextStyle();
+  });
+
+  indicatorTrackPickerEl.addEventListener('input', function () {
+    textStyle.indicatorTrackHex = indicatorTrackPickerEl.value.toUpperCase();
+    indicatorTrackHexEl.value = textStyle.indicatorTrackHex;
+    applyTextStyle();
+  });
+
+  indicatorTrackHexEl.addEventListener('input', function () {
+    var hex = indicatorTrackHexEl.value;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      textStyle.indicatorTrackHex = hex.toUpperCase();
+      indicatorTrackPickerEl.value = hex;
+      applyTextStyle();
+    }
+  });
+
+  indicatorThumbPickerEl.addEventListener('input', function () {
+    textStyle.indicatorThumbHex = indicatorThumbPickerEl.value.toUpperCase();
+    indicatorThumbHexEl.value = textStyle.indicatorThumbHex;
+    applyTextStyle();
+  });
+
+  indicatorThumbHexEl.addEventListener('input', function () {
+    var hex = indicatorThumbHexEl.value;
+    if (/^#[0-9a-fA-F]{6}$/.test(hex)) {
+      textStyle.indicatorThumbHex = hex.toUpperCase();
+      indicatorThumbPickerEl.value = hex;
+      applyTextStyle();
+    }
+  });
+
   /* ── Layout controls ────────────────── */
 
   document.getElementById('itemWidth').addEventListener('input', function (e) {
@@ -531,6 +657,7 @@
   /* ── Init ────────────────────────────── */
 
   detailEl = createDetailPanel();
+  initBannerImgUpload();
   renderTrack(null);
   applyGap();
   renderIndicators();

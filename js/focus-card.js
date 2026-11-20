@@ -42,9 +42,13 @@
 
   var dragSrcId = null;
 
+  /* ── Detail panel ── */
+  var currentDetailItem = null;
+  var detailEl = null;
+
   /* ── DOM refs ── */
-  var wrap     = document.getElementById('focusCardWrap');
-  var listEl   = document.getElementById('focusCardList');
+  var wrap       = document.getElementById('focusCardWrap');
+  var listEl     = document.getElementById('focusCardList');
   var itemListEl = document.getElementById('fcItemList');
 
   /* ── Helpers ── */
@@ -93,7 +97,6 @@
     wrap.style.setProperty('--card-hover-shadow',  '0 20px 40px ' + hoverShadowColor);
     wrap.setAttribute('data-btn', String(style.btnOnOff));
 
-    /* Swatch 업데이트 */
     document.getElementById('fcTitleSwatch').style.background       = titleColor;
     document.getElementById('fcSubtitleSwatch').style.background    = subtitleColor;
     document.getElementById('fcDimSwatch').style.background         = dimColor;
@@ -154,104 +157,197 @@
     '<circle cx="2" cy="7" r="1.2"/><circle cx="6" cy="7" r="1.2"/>' +
     '<circle cx="2" cy="12" r="1.2"/><circle cx="6" cy="12" r="1.2"/></svg>';
 
+  var ARROW_SVG =
+    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+    ' stroke-linecap="round" stroke-linejoin="round" width="12" height="12">' +
+    '<polyline points="6,3 10,8 6,13"/></svg>';
+
+  /* ── Detail panel ── */
+  function createDetailPanel() {
+    var inspectorEl = document.getElementById('focusCardInspector');
+    var panel = document.createElement('div');
+    panel.className = 'inspector__detail';
+    panel.innerHTML =
+      '<div class="inspector__detail-head">' +
+        '<button class="inspector__detail-back" type="button">' +
+          '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"' +
+          ' stroke-linecap="round" stroke-linejoin="round" width="11" height="11">' +
+          '<polyline points="10,3 4,8 10,13"/></svg>' +
+          '카드 아이템' +
+        '</button>' +
+        '<button class="inspector__detail-close" type="button">&#x2715;</button>' +
+      '</div>' +
+      '<div class="inspector__detail-body" id="fcDetailBody"></div>';
+    inspectorEl.appendChild(panel);
+
+    panel.querySelector('.inspector__detail-back').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+    });
+    panel.querySelector('.inspector__detail-close').addEventListener('click', function () {
+      panel.classList.remove('open');
+      currentDetailItem = null;
+      var closeBtn = inspectorEl.querySelector('.inspector__close');
+      if (closeBtn) closeBtn.click();
+    });
+
+    return panel;
+  }
+
+  function renderDetailBody(bodyEl, item) {
+    bodyEl.innerHTML = '';
+
+    /* 이미지 */
+    var imgField = document.createElement('div');
+    imgField.className = 'inspector__field';
+    imgField.innerHTML =
+      '<label class="inspector__field-label">이미지</label>' +
+      '<div class="inspector__img-upload' + (item.imgSrc ? ' inspector__img-upload--filled' : '') + '">' +
+        '<div class="inspector__img-thumb' + (item.imgSrc ? ' inspector__img-thumb--filled' : '') + '">' +
+          (item.imgSrc ? '<img src="' + escAttr(item.imgSrc) + '" alt="">' : UPLOAD_SVG) +
+        '</div>' +
+        '<button class="inspector__img-clear" type="button" title="이미지 제거">&#x2715;</button>' +
+        '<input type="file" accept="image/*" style="display:none">' +
+      '</div>';
+
+    (function () {
+      var uploadWrap = imgField.querySelector('.inspector__img-upload');
+      var thumb      = imgField.querySelector('.inspector__img-thumb');
+      var clearBtn   = imgField.querySelector('.inspector__img-clear');
+      var fileInput  = imgField.querySelector('input[type="file"]');
+      thumb.addEventListener('click', function () { fileInput.click(); });
+      fileInput.addEventListener('change', function (e) {
+        var file = e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          item.imgSrc = ev.target.result;
+          var bgEl = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-bg');
+          if (bgEl) {
+            var imgEl = bgEl.querySelector('img');
+            if (!imgEl) { imgEl = document.createElement('img'); imgEl.alt = ''; bgEl.appendChild(imgEl); }
+            imgEl.src = item.imgSrc;
+          }
+          thumb.innerHTML = '<img src="' + item.imgSrc + '" alt="">';
+          thumb.classList.add('inspector__img-thumb--filled');
+          uploadWrap.classList.add('inspector__img-upload--filled');
+          fileInput.value = '';
+        };
+        reader.readAsDataURL(file);
+      });
+      clearBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        item.imgSrc = '';
+        var bgEl = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-bg');
+        if (bgEl) { var imgEl = bgEl.querySelector('img'); if (imgEl) imgEl.remove(); }
+        thumb.innerHTML = UPLOAD_SVG;
+        thumb.classList.remove('inspector__img-thumb--filled');
+        uploadWrap.classList.remove('inspector__img-upload--filled');
+        fileInput.value = '';
+      });
+    })();
+    bodyEl.appendChild(imgField);
+
+    /* 타이틀 */
+    var titleField = document.createElement('div');
+    titleField.className = 'inspector__field';
+    titleField.innerHTML =
+      '<label class="inspector__field-label">타이틀</label>' +
+      '<input class="inspector__card-name-input" type="text"' +
+      ' value="' + escAttr(item.title) + '" placeholder="타이틀" style="width:100%">';
+    titleField.querySelector('input').addEventListener('input', function (e) {
+      item.title = e.target.value;
+      var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-title');
+      if (el) el.textContent = item.title;
+      var rowEl = itemListEl.querySelector('.inspector__item-row[data-id="' + item.id + '"] .inspector__item-name');
+      if (rowEl) rowEl.textContent = item.title || '새 카드';
+    });
+    bodyEl.appendChild(titleField);
+
+    /* 서브 텍스트 */
+    var subtitleField = document.createElement('div');
+    subtitleField.className = 'inspector__field';
+    subtitleField.innerHTML =
+      '<label class="inspector__field-label">서브 텍스트</label>' +
+      '<input class="inspector__card-name-input" type="text"' +
+      ' value="' + escAttr(item.subtitle) + '" placeholder="서브 텍스트" style="width:100%">';
+    subtitleField.querySelector('input').addEventListener('input', function (e) {
+      item.subtitle = e.target.value;
+      var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-desc');
+      if (el) el.textContent = item.subtitle;
+    });
+    bodyEl.appendChild(subtitleField);
+
+    /* 버튼 레이블 */
+    var btnField = document.createElement('div');
+    btnField.className = 'inspector__field';
+    btnField.innerHTML =
+      '<label class="inspector__field-label">버튼 레이블</label>' +
+      '<input class="inspector__card-name-input" type="text"' +
+      ' value="' + escAttr(item.btnLabel) + '" placeholder="버튼 레이블" style="width:100%">';
+    btnField.querySelector('input').addEventListener('input', function (e) {
+      item.btnLabel = e.target.value;
+      var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-btn-label');
+      if (el) el.textContent = item.btnLabel;
+    });
+    bodyEl.appendChild(btnField);
+
+    /* 배경색 */
+    var bgField = document.createElement('div');
+    bgField.className = 'inspector__field';
+    bgField.innerHTML =
+      '<label class="inspector__field-label">배경색</label>' +
+      '<div class="inspector__color-row">' +
+        '<span class="inspector__swatch" style="background:' + escAttr(item.bgColor) + '">' +
+          '<input type="color" class="inspector__color-native" value="' + escAttr(item.bgColor) + '">' +
+        '</span>' +
+      '</div>';
+    bgField.querySelector('input[type="color"]').addEventListener('input', function (e) {
+      item.bgColor = e.target.value;
+      bgField.querySelector('.inspector__swatch').style.background = item.bgColor;
+      var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-bg');
+      if (el) el.style.background = item.bgColor;
+    });
+    bodyEl.appendChild(bgField);
+
+    /* 삭제 */
+    var deleteWrap = document.createElement('div');
+    deleteWrap.style.marginTop = '8px';
+    deleteWrap.innerHTML =
+      '<button class="inspector__delete-btn" type="button">' + DELETE_SVG + '아이템 삭제</button>';
+    deleteWrap.querySelector('button').addEventListener('click', function () {
+      if (items.length <= 1) return;
+      detailEl.classList.remove('open');
+      currentDetailItem = null;
+      items = items.filter(function (it) { return it.id !== item.id; });
+      renderWidget();
+      renderInspectorItems();
+    });
+    bodyEl.appendChild(deleteWrap);
+  }
+
+  function openDetail(item) {
+    currentDetailItem = item;
+    var bodyEl = detailEl.querySelector('#fcDetailBody');
+    renderDetailBody(bodyEl, item);
+    detailEl.classList.add('open');
+  }
+
   /* ── Render inspector items ── */
   function renderInspectorItems() {
     itemListEl.innerHTML = '';
     items.forEach(function (item) {
       var row = document.createElement('div');
-      row.className = 'inspector__card-item';
+      row.className = 'inspector__item-row';
       row.dataset.id = item.id;
       row.innerHTML =
         '<span class="inspector__drag">' + DRAG_SVG + '</span>' +
-        '<div class="inspector__card-fields" style="flex-direction:column;gap:4px">' +
-          '<input class="inspector__card-name-input fc-title-input" type="text"' +
-            ' value="' + escAttr(item.title) + '" placeholder="타이틀">' +
-          '<input class="inspector__card-name-input fc-subtitle-input" type="text"' +
-            ' value="' + escAttr(item.subtitle) + '" placeholder="서브 텍스트">' +
-          '<input class="inspector__card-name-input fc-btnlabel-input" type="text"' +
-            ' value="' + escAttr(item.btnLabel) + '" placeholder="버튼 레이블">' +
-          '<div style="display:flex;align-items:center;gap:6px;margin-top:2px">' +
-            '<span style="font-size:11px;color:#868e96;flex-shrink:0">배경색</span>' +
-            '<span class="inspector__swatch fc-item-bg-swatch" style="background:' + escAttr(item.bgColor) + ';flex-shrink:0">' +
-              '<input type="color" class="inspector__color-native fc-item-bg-picker" value="' + escAttr(item.bgColor) + '">' +
-            '</span>' +
-          '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px;margin-top:2px">' +
-            '<span style="font-size:11px;color:#868e96;flex-shrink:0">이미지</span>' +
-            '<div class="inspector__img-upload' + (item.imgSrc ? ' inspector__img-upload--filled' : '') + '">' +
-              '<div class="inspector__img-thumb' + (item.imgSrc ? ' inspector__img-thumb--filled' : '') + '">' +
-                (item.imgSrc ? '<img src="' + escAttr(item.imgSrc) + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">' : UPLOAD_SVG) +
-              '</div>' +
-              '<button class="inspector__img-clear" type="button" title="이미지 제거">&#x2715;</button>' +
-              '<input type="file" accept="image/*" style="display:none">' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-        '<button class="inspector__card-delete" type="button" aria-label="삭제">' + DELETE_SVG + '</button>';
+        '<span class="inspector__item-name">' + esc(item.title || '새 카드') + '</span>' +
+        '<span class="inspector__item-arrow">' + ARROW_SVG + '</span>';
 
-      row.querySelector('.fc-title-input').addEventListener('input', function (e) {
-        item.title = e.target.value;
-        var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-title');
-        if (el) el.textContent = item.title;
-      });
-      row.querySelector('.fc-subtitle-input').addEventListener('input', function (e) {
-        item.subtitle = e.target.value;
-        var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-desc');
-        if (el) el.textContent = item.subtitle;
-      });
-      row.querySelector('.fc-btnlabel-input').addEventListener('input', function (e) {
-        item.btnLabel = e.target.value;
-        var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-btn-label');
-        if (el) el.textContent = item.btnLabel;
-      });
-      row.querySelector('.fc-item-bg-picker').addEventListener('input', function (e) {
-        item.bgColor = e.target.value;
-        row.querySelector('.fc-item-bg-swatch').style.background = item.bgColor;
-        var el = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-bg');
-        if (el) el.style.background = item.bgColor;
-      });
-      /* 이미지 업로드 */
-      (function () {
-        var uploadWrap = row.querySelector('.inspector__img-upload');
-        var thumb      = row.querySelector('.inspector__img-thumb');
-        var clearBtn   = row.querySelector('.inspector__img-clear');
-        var fileInput  = row.querySelector('input[type="file"]');
-        thumb.addEventListener('click', function () { fileInput.click(); });
-        fileInput.addEventListener('change', function (e) {
-          var file = e.target.files[0];
-          if (!file) return;
-          var reader = new FileReader();
-          reader.onload = function (ev) {
-            item.imgSrc = ev.target.result;
-            var bgEl = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-bg');
-            if (bgEl) {
-              var imgEl = bgEl.querySelector('img');
-              if (!imgEl) { imgEl = document.createElement('img'); imgEl.alt = ''; bgEl.appendChild(imgEl); }
-              imgEl.src = item.imgSrc;
-            }
-            thumb.innerHTML = '<img src="' + item.imgSrc + '" alt="" style="width:100%;height:100%;object-fit:cover;display:block;">';
-            thumb.classList.add('inspector__img-thumb--filled');
-            uploadWrap.classList.add('inspector__img-upload--filled');
-            fileInput.value = '';
-          };
-          reader.readAsDataURL(file);
-        });
-        clearBtn.addEventListener('click', function (e) {
-          e.stopPropagation();
-          item.imgSrc = '';
-          var bgEl = listEl.querySelector('.flex-card-item[data-id="' + item.id + '"] .flex-card-bg');
-          if (bgEl) { var imgEl = bgEl.querySelector('img'); if (imgEl) imgEl.remove(); }
-          thumb.innerHTML = UPLOAD_SVG;
-          thumb.classList.remove('inspector__img-thumb--filled');
-          uploadWrap.classList.remove('inspector__img-upload--filled');
-          fileInput.value = '';
-        });
-      })();
-      row.querySelector('.inspector__card-delete').addEventListener('click', function () {
-        if (items.length <= 1) return;
-        items = items.filter(function (it) { return it.id !== item.id; });
-        renderWidget();
-        renderInspectorItems();
+      row.addEventListener('click', function (e) {
+        if (e.target.closest('.inspector__drag')) return;
+        openDetail(item);
       });
 
       setupDragDrop(row, item.id);
@@ -290,7 +386,7 @@
     });
   }
   function clearDragIndicators() {
-    itemListEl.querySelectorAll('.inspector__card-item').forEach(function (r) {
+    itemListEl.querySelectorAll('.inspector__item-row').forEach(function (r) {
       r.classList.remove('drag-over-top', 'drag-over-bottom');
     });
   }
@@ -298,8 +394,10 @@
   /* ── Add item ── */
   document.getElementById('addFcItem').addEventListener('click', function () {
     var colorIdx = items.length % BG_COLORS.length;
-    items.push({ id: nextId++, title: 'Please Enter Card Title', subtitle: 'Please Enter Card Sub-Title.', btnLabel: 'View More', bgColor: BG_COLORS[colorIdx], imgSrc: '' });
+    var newItem = { id: nextId++, title: 'Please Enter Card Title', subtitle: 'Please Enter Card Sub-Title.', btnLabel: 'View More', bgColor: BG_COLORS[colorIdx], imgSrc: '' };
+    items.push(newItem);
     renderWidget(); renderInspectorItems();
+    openDetail(newItem);
   });
 
   /* ── Control helpers ── */
@@ -368,6 +466,7 @@
   });
 
   /* ── Init ── */
+  detailEl = createDetailPanel();
   renderWidget();
   renderInspectorItems();
 

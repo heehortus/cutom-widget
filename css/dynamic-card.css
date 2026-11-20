@@ -14,7 +14,7 @@
 
 /* ── Root ── */
 .iw-cardstack {
-  --color-card-bg:  var(--clr-pale);
+  --color-card-bg:  var(--clr-400);
   --color-title:    var(--clr-white);
   --color-arrow:    var(--clr-dark);
   --color-arrow-bg: var(--clr-pale-md);
@@ -39,7 +39,7 @@
   transition: opacity 300ms ease;
 }
 
-.iw-cardstack[data-draggable='true'] .iw-cardstack__nav {
+.iw-cardstack[data-state='spread'] .iw-cardstack__nav {
   opacity: 1;
   visibility: visible;
 }

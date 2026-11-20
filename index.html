@@ -40,8 +40,9 @@
   <!-- ── Mobile Nav Open Button ── -->
   <button class="widget-nav-open-btn" id="navOpenBtn" type="button" aria-label="패널 열기">
     <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="16" height="16">
-      <rect x="2" y="2" width="12" height="12" rx="2"/>
-      <line x1="6" y1="2" x2="6" y2="14"/>
+      <line x1="2" y1="4" x2="14" y2="4"/>
+      <line x1="2" y1="8" x2="14" y2="8"/>
+      <line x1="2" y1="12" x2="14" y2="12"/>
     </svg>
   </button>
 
@@ -65,12 +66,12 @@
 
       <button class="widget-nav__item active" data-widget="card" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">카드</span>
+        <span class="widget-nav__label">그라디언트 카드</span>
       </button>
 
       <button class="widget-nav__item" data-widget="banner" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">배너</span>
+        <span class="widget-nav__label">배너 + 카드</span>
       </button>
 
       <button class="widget-nav__item" data-widget="faq" type="button">
@@ -90,7 +91,7 @@
 
       <button class="widget-nav__item" data-widget="horizon-scroll-card" type="button">
         <div class="widget-nav__thumb"></div>
-        <span class="widget-nav__label">호라이즌 스크롤</span>
+        <span class="widget-nav__label">가로 스크롤 카드</span>
       </button>
 
       <button class="widget-nav__item" data-widget="focus-card" type="button">
@@ -113,6 +114,14 @@
 
   <!-- ── Widget Views ── -->
   <div class="widget-views" id="widgetViews"></div>
+
+  <!-- ── Inspector Reopen Button ── -->
+  <button class="inspector-open-btn" id="inspectorOpenBtn" type="button" aria-label="인스펙터 열기">
+    <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" width="16" height="16">
+      <rect x="2" y="2" width="12" height="12" rx="2"/>
+      <line x1="10" y1="2" x2="10" y2="14"/>
+    </svg>
+  </button>
 
 </div><!-- /.app -->
 </div><!-- /#page-editor -->
