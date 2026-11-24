@@ -20,7 +20,8 @@
     { id: 'value-card',          file: 'widgets/value-card.html',          js: 'js/value-card.js',           css: 'css/value-card.css' },
     { id: 'hero-main-slide',     file: 'widgets/hero-main-slide.html',     js: 'js/hero-main-slide.js',      css: 'css/hero-main-slide.css' },
     { id: 'slide-card',          file: 'widgets/slide-card.html',          js: 'js/slide-card.js',           css: 'css/slide-card.css' },
-    { id: 'logo-marquee',        file: 'widgets/logo-marquee.html',        js: 'js/logo-marquee.js',         css: 'css/logo-marquee.css' }
+    { id: 'logo-marquee',        file: 'widgets/logo-marquee.html',        js: 'js/logo-marquee.js',         css: 'css/logo-marquee.css' },
+    { id: 'word-shade',          file: 'widgets/word-shade.html',          js: 'js/word-shade.js',           css: 'css/word-shade.css' }
   ];
 
   /* ── CSS loader ─────────────────────── */
@@ -56,7 +57,16 @@
 
         var main = doc.querySelector('.editor__canvas');
         var aside = doc.querySelector('.inspector');
-        if (main)  view.appendChild(document.adoptNode(main));
+
+        if (main) {
+          /* Adopt main into current doc, then wrap content in .vp-frame */
+          var adoptedMain = document.adoptNode(main);
+          var frame = document.createElement('div');
+          frame.className = 'vp-frame';
+          while (adoptedMain.firstChild) frame.appendChild(adoptedMain.firstChild);
+          adoptedMain.appendChild(frame);
+          view.appendChild(adoptedMain);
+        }
         if (aside) view.appendChild(document.adoptNode(aside));
 
         document.getElementById('widgetViews').appendChild(view);
@@ -126,12 +136,34 @@
     }
   }
 
+  /* ── Viewport Toolbar ──────────────── */
+  function setInspW(px) {
+    document.documentElement.style.setProperty('--vp-insp-w', px + 'px');
+  }
+
+  function initVpToolbar() {
+    document.querySelectorAll('.vp-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var vp = btn.dataset.vp;
+
+        /* Update active button state */
+        document.querySelectorAll('.vp-btn').forEach(function (b) {
+          b.classList.toggle('active', b.dataset.vp === vp);
+        });
+
+        /* Apply viewport to active canvas */
+        var canvas = document.querySelector('.widget-view.active .editor__canvas');
+        if (canvas) canvas.setAttribute('data-vp', vp);
+      });
+    });
+  }
+
   /* ── Mobile Inspector Reopen ─────── */
   function initMobileInspector() {
     var openBtn = document.getElementById('inspectorOpenBtn');
     if (!openBtn) return;
 
-    /* Intercept .inspector__close clicks in capture phase on mobile.
+    /* Intercept .inspector__close clicks in capture phase.
        This runs before widget-specific bubble-phase handlers,
        preventing display:none and instead letting us manage open/close. */
     document.addEventListener('click', function (e) {
@@ -144,6 +176,7 @@
       if (inspector) {
         inspector.classList.add('inspector--hidden');
         openBtn.classList.add('visible');
+        setInspW(0);
       }
     }, true /* capture */);
 
@@ -155,16 +188,20 @@
       if (inspector) {
         inspector.classList.remove('inspector--hidden');
         openBtn.classList.remove('visible');
+        setInspW(300);
       }
     });
 
-    /* When switching widgets on mobile, reset inspector visibility */
+    /* When switching widgets, reset inspector visibility */
     document.querySelectorAll('.widget-nav__item').forEach(function (btn) {
       btn.addEventListener('click', function () {
         openBtn.classList.remove('visible');
         var target = btn.dataset.widget;
         var inspector = document.querySelector('#view-' + target + ' .inspector');
-        if (inspector) inspector.classList.remove('inspector--hidden');
+        if (inspector) {
+          inspector.classList.remove('inspector--hidden');
+          setInspW(300);
+        }
       });
     });
   }
@@ -172,6 +209,7 @@
   document.addEventListener('DOMContentLoaded', function () {
     initNav();
     initNavToggle();
+    initVpToolbar();
     initMobileInspector();
     loadAllWidgets();
   });

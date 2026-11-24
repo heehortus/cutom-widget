@@ -433,6 +433,10 @@
 }
 
 /* ── Viewport Toolbar ── */
+:root {
+  --vp-insp-w: 300px;
+}
+
 .widget-views {
   position: relative;
 }
@@ -441,11 +445,12 @@
   position: absolute;
   top: 12px;
   left: 0;
-  right: 0;
+  right: var(--vp-insp-w);
   display: flex;
   justify-content: center;
   pointer-events: none;
   z-index: 50;
+  transition: right 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .vp-toolbar__inner {
@@ -490,14 +495,15 @@
 
 /* ── Viewport frame ── */
 .vp-frame {
-  /* Full-width transparent wrapper in desktop mode */
+  /* Full-width wrapper — stretches to fill canvas in both axes */
+  flex: 1;
+  align-self: stretch;
   width: 100%;
-  min-height: 0;
-  container-type: inline-size;
-  /* Pass canvas flex alignment through to widget content */
   display: flex;
   align-items: inherit;
   justify-content: inherit;
+  container-type: inline-size;
+  transition: max-width 0.25s ease;
 }
 
 .editor__canvas[data-vp="tablet"] .vp-frame {

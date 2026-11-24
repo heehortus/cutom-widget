@@ -19,6 +19,7 @@
     { id: 'hero-main-slide',                                name: '히어로 슬라이드',        category: 'hero',    catLabel: '히어로',  desc: '전체 화면 히어로 메인 슬라이드' },
     { id: 'slide-card',                                     name: '슬라이드 카드',         category: 'card',    catLabel: '카드',    desc: '이미지 슬라이드 카드' },
     { id: 'logo-marquee',                                   name: '로고 마퀴',             category: 'banner',  catLabel: '배너',    desc: '인피니티 로고 마퀴' },
+    { id: 'word-shade',                                     name: '워드 쉐이드',            category: 'text',    catLabel: '텍스트',  desc: '글자별 호버 딤 텍스트 효과' },
   ];
 
   const THUMB_HTML = {
