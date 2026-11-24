@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>로고 마퀴 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/logo-marquee.css">
+</head>
+<body>
+<div class="app">
+
+      <main class="editor__canvas editor__canvas--logo-marquee">
+        <div id="logoMarqueeWrap"></div>
+      </main>
+
+      <aside class="inspector" id="logoMarqueeInspector">
+        <div class="inspector__head">
+          <span class="inspector__title">로고 마퀴</span>
+          <button class="inspector__close" id="lmInspectorClose" aria-label="닫기">&#x2715;</button>
+        </div>
+        <div class="inspector__body">
+
+          <!-- 헤더 텍스트 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>헤더 텍스트</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀 텍스트</label>
+                <input type="text" class="inspector__card-name-input" id="lmTitleText" placeholder="타이틀를 입력하세요">
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="lmTitleSize" value="42" min="12" max="120">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">타이틀 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="lmTitleSwatch" style="background:#212529">
+                    <input type="color" class="inspector__color-native" id="lmTitlePicker" value="#212529">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="lmTitleHex" value="#212529" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="lmTitleOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">설명 텍스트</label>
+                <input type="text" class="inspector__card-name-input" id="lmDescText" placeholder="설명을 입력하세요">
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">설명 크기</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="lmDescSize" value="18" min="8" max="60">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">설명 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="lmDescSwatch" style="background:#6b7280">
+                    <input type="color" class="inspector__color-native" id="lmDescPicker" value="#6b7280">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="lmDescHex" value="#6b7280" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="lmDescOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">텍스트 정렬</label>
+                <div class="inspector__layout-toggle" id="lmAlignSegment">
+                  <button class="inspector__layout-btn" type="button" data-value="left">왼쪽</button>
+                  <button class="inspector__layout-btn active" type="button" data-value="center">가운데</button>
+                  <button class="inspector__layout-btn" type="button" data-value="right">오른쪽</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 로고 목록 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>로고 목록</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <button class="inspector__sec-add" id="lmAddLogo" type="button">+ 로고 추가</button>
+              <div id="lmLogoList"></div>
+            </div>
+          </div>
+
+          <!-- 마퀴 설정 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>마퀴 설정</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+
+              <div class="inspector__field">
+                <label class="inspector__field-label">속도</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="lmSpeed" value="20" min="2" max="120">
+                  <span class="inspector__unit">초</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">로고 너비</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="lmLogoW" value="120" min="40" max="400">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">로고 높이</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="lmLogoH" value="48" min="16" max="200">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">간격</label>
+                <div class="inspector__num-row">
+                  <input class="inspector__num-input" type="number" id="lmGap" value="60" min="0" max="240">
+                  <span class="inspector__unit">px</span>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">방향</label>
+                <div class="inspector__layout-toggle" id="lmDirSegment">
+                  <button class="inspector__layout-btn active" type="button" data-value="left">왼쪽</button>
+                  <button class="inspector__layout-btn" type="button" data-value="right">오른쪽</button>
+                </div>
+              </div>
+              <div class="inspector__field">
+                <label class="inspector__field-label">호버 일시정지</label>
+                <button class="inspector__onoff active" id="lmPauseHover" type="button" aria-pressed="true"></button>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- 배경 섹션 -->
+          <div class="inspector__section collapsed">
+            <button class="inspector__sec-toggle" type="button">
+              <span>배경</span>
+              <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+            </button>
+            <div class="inspector__sec-body">
+              <div class="inspector__field">
+                <label class="inspector__field-label">배경 컬러</label>
+                <div class="inspector__color-row">
+                  <span class="inspector__swatch" id="lmBgSwatch" style="background:#ffffff">
+                    <input type="color" class="inspector__color-native" id="lmBgPicker" value="#ffffff">
+                  </span>
+                  <input type="text" class="inspector__hex-input" id="lmBgHex" value="#ffffff" maxlength="7" spellcheck="false">
+                  <input type="number" class="inspector__opacity-input" id="lmBgOpacity" value="100" min="0" max="100">
+                  <span class="inspector__pct">%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /.inspector__body -->
+        <div class="inspector__footer">
+          <div class="inspector__footer-actions">
+            <button class="inspector__footer-btn" id="lmReset" type="button">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <path d="M13 8A5 5 0 1 1 8 3h3"/>
+                <polyline points="11,1 11,5 7,5"/>
+              </svg>
+              초기화
+            </button>
+            <button class="inspector__footer-btn" id="lmReplay" type="button">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+                <polygon points="4,2 14,8 4,14" fill="currentColor" stroke="none"/>
+              </svg>
+              다시 재생
+            </button>
+          </div>
+        </div>
+      </aside>
+
+</div>
+<script src="../js/logo-marquee.js"></script>
+</body>
+</html>

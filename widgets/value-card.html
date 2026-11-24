@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Value 카드 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/value-card.css">
+</head>
+<body>
+<div class="app">
+
+  <main class="editor__canvas editor__canvas--value-card">
+    <div class="vc-section" id="valueCardWrap"></div>
+  </main>
+
+  <aside class="inspector" id="valueCardInspector">
+    <div class="inspector__head">
+      <span class="inspector__title">Value 카드</span>
+      <button class="inspector__close" id="vcInspectorClose" aria-label="닫기">&#x2715;</button>
+    </div>
+    <div class="inspector__body">
+
+      <!-- 카드 목록 -->
+      <div class="inspector__section">
+        <button class="inspector__sec-toggle" type="button">
+          <span>카드 목록</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <button class="inspector__sec-add" id="vcAddCard" type="button">+ 카드 추가</button>
+          <div id="vcCardList"></div>
+        </div>
+      </div>
+
+      <!-- 콘텐츠 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>콘텐츠</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+
+          <div class="inspector__field">
+            <label class="inspector__field-label">타이틀</label>
+            <input class="inspector__card-name-input" type="text" id="vcTitle" placeholder="타이틀" style="width:100%">
+          </div>
+
+          <div class="inspector__field">
+            <label class="inspector__field-label">설명</label>
+            <textarea class="vc-desc-input" id="vcDesc" rows="3" placeholder="설명"></textarea>
+          </div>
+
+          <p class="inspector__group-label">링크 버튼</p>
+
+          <div class="inspector__field">
+            <label class="inspector__field-label">표시</label>
+            <button class="inspector__onoff active" id="vcLinkToggle" type="button"></button>
+          </div>
+
+          <div id="vcLinkFields">
+            <div class="inspector__field">
+              <label class="inspector__field-label">라벨</label>
+              <input class="inspector__card-name-input" type="text" id="vcLinkLabel" value="View More" placeholder="View More" style="width:100%">
+            </div>
+            <div class="inspector__field">
+              <label class="inspector__field-label">URL</label>
+              <input class="inspector__card-name-input" type="text" id="vcLinkUrl" placeholder="https://" style="width:100%">
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 텍스트 크기 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>텍스트 크기</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+
+          <div class="inspector__field">
+            <label class="inspector__field-label">타이틀</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="vcTitleSize" value="40" min="12" max="80">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+
+          <div class="inspector__field">
+            <label class="inspector__field-label">설명</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="vcDescSize" value="20" min="10" max="40">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+
+          <div class="inspector__field">
+            <label class="inspector__field-label">카드 타이틀</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="vcCardTitleSize" value="26" min="12" max="60">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 스타일 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>스타일</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+
+          <p class="inspector__group-label">타이틀 컬러</p>
+          <div class="inspector__field">
+            <label class="inspector__field-label">컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="vcTitleSwatch" style="background:#212529">
+                <input type="color" class="inspector__color-native" id="vcTitlePicker" value="#212529">
+              </span>
+              <input type="text" class="inspector__hex-input" id="vcTitleHex" value="#212529" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="vcTitleOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+
+          <p class="inspector__group-label">설명 컬러</p>
+          <div class="inspector__field">
+            <label class="inspector__field-label">컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="vcDescSwatch" style="background:#6b7280">
+                <input type="color" class="inspector__color-native" id="vcDescPicker" value="#6b7280">
+              </span>
+              <input type="text" class="inspector__hex-input" id="vcDescHex" value="#6B7280" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="vcDescOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+
+          <p class="inspector__group-label">카드 타이틀 컬러</p>
+          <div class="inspector__field">
+            <label class="inspector__field-label">컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="vcCardTitleSwatch" style="background:#ffffff">
+                <input type="color" class="inspector__color-native" id="vcCardTitlePicker" value="#ffffff">
+              </span>
+              <input type="text" class="inspector__hex-input" id="vcCardTitleHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="vcCardTitleOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+
+          <p class="inspector__group-label">딤 오버레이</p>
+          <div class="inspector__field">
+            <label class="inspector__field-label">컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="vcOverlaySwatch" style="background:rgba(0,0,0,.45)">
+                <input type="color" class="inspector__color-native" id="vcOverlayPicker" value="#000000">
+              </span>
+              <input type="text" class="inspector__hex-input" id="vcOverlayHex" value="#000000" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="vcOverlayOpacity" value="45" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /.inspector__body -->
+    <div class="inspector__footer">
+      <div class="inspector__footer-actions">
+        <button class="inspector__footer-btn" id="vcReset" type="button">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M2.5 8a5.5 5.5 0 1 0 1.1-3.3"/>
+            <polyline points="2.5,2 2.5,5.5 6,5.5"/>
+          </svg>
+          초기화
+        </button>
+        <button class="inspector__footer-btn" id="vcReplay" type="button">
+          <svg viewBox="0 0 16 16" fill="currentColor" width="12" height="12">
+            <polygon points="4,2 14,8 4,14"/>
+          </svg>
+          다시 재생
+        </button>
+      </div>
+    </div>
+  </aside>
+
+</div>
+<script src="../js/value-card.js"></script>
+</body>
+</html>

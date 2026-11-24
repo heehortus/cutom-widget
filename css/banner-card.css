@@ -294,7 +294,7 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .banner-widget {
     width: 100%;
     flex-direction: column;

@@ -23,6 +23,7 @@
 .card-list.layout-row {
   flex-direction: row;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .card-list.layout-column {
@@ -115,7 +116,7 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 640px) {
+@container (max-width: 640px) {
   .card-list {
     flex-wrap: wrap;
     padding: 20px;

@@ -207,7 +207,7 @@
 .flex-card-item:focus-within .flex-card-desc { opacity: 1; transform: translateY(0); }
 
 /* ── 반응형 ── */
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .flex-card-badge { display: none; }
   .flex-card-desc { opacity: 1; transform: translateY(-2px); }
   .flex-card-list { flex-direction: column; height: auto; }

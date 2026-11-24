@@ -124,11 +124,12 @@
 .wg-cc__card:hover .wg-cc__title { transform: translateY(-4px); }
 
 /* ── 반응형 ── */
-@media (max-width: 1024px) {
+@container (max-width: 1024px) {
   .wg-cc { flex-wrap: wrap; }
   .wg-cc__card {
     flex: 1 1 45%;
     padding: 32px;
+    aspect-ratio: 4 / 3;
   }
   .wg-cc__card:nth-child(2),
   .wg-cc__card:nth-child(4) { margin-top: 0; }
@@ -136,7 +137,7 @@
   .wg-cc__title { font-size: 26px; }
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .wg-cc__card {
     transition: opacity 0.35s ease, transform 0.35s ease;
   }
@@ -161,8 +162,11 @@
   }
 }
 
-@media (max-width: 600px) {
-  .wg-cc__card { flex: 1 1 100%; }
+@container (max-width: 600px) {
+  .wg-cc__card {
+    flex: 1 1 100%;
+    aspect-ratio: 16 / 9;
+  }
 }
 
 @media (max-width: 640px) {

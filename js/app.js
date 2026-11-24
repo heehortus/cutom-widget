@@ -15,7 +15,12 @@
     { id: 'horizon-scroll-card', file: 'widgets/horizon-scroll-card.html', js: 'js/horizon-scroll-card.js',  css: 'css/horizon-scroll-card.css' },
     { id: 'focus-card',          file: 'widgets/focus-card.html',          js: 'js/focus-card.js',           css: 'css/focus-card.css' },
     { id: 'focus-card-2',        file: 'widgets/focus-card-2.html',        js: 'js/focus-card-2.js',         css: 'css/focus-card-2.css' },
-    { id: 'image-faq',           file: 'widgets/image-faq.html',           js: 'js/image-faq.js',            css: 'css/image-faq.css' }
+    { id: 'image-faq',           file: 'widgets/image-faq.html',           js: 'js/image-faq.js',            css: 'css/image-faq.css' },
+    { id: 'map',                 file: 'widgets/map.html',                 js: 'js/map.js',                  css: 'css/map.css' },
+    { id: 'value-card',          file: 'widgets/value-card.html',          js: 'js/value-card.js',           css: 'css/value-card.css' },
+    { id: 'hero-main-slide',     file: 'widgets/hero-main-slide.html',     js: 'js/hero-main-slide.js',      css: 'css/hero-main-slide.css' },
+    { id: 'slide-card',          file: 'widgets/slide-card.html',          js: 'js/slide-card.js',           css: 'css/slide-card.css' },
+    { id: 'logo-marquee',        file: 'widgets/logo-marquee.html',        js: 'js/logo-marquee.js',         css: 'css/logo-marquee.css' }
   ];
 
   /* ── CSS loader ─────────────────────── */

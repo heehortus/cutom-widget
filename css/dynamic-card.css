@@ -161,7 +161,7 @@
 }
 
 /* ── Responsive ── */
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .iw-cardstack .iw-cardstack__card .iw-cardstack__title {
     padding: 20px;
   }

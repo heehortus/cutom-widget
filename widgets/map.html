@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>지도 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/map.css">
+</head>
+<body>
+<div class="app">
+
+  <main class="editor__canvas editor__canvas--map">
+    <div class="map-widget" id="mapWidget"></div>
+  </main>
+
+  <aside class="inspector" id="mapInspector">
+    <div class="inspector__head">
+      <span class="inspector__title">지도 위젯</span>
+      <button class="inspector__close" id="mapInspectorClose" aria-label="닫기">&#x2715;</button>
+    </div>
+    <div class="inspector__body">
+
+      <!-- 지도 제공자 -->
+      <div class="inspector__section">
+        <button class="inspector__sec-toggle" type="button">
+          <span>지도 제공자</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="map-provider-toggle">
+            <button class="map-provider-toggle__btn map-provider-toggle__btn--active" id="mapProviderGoogle" type="button">구글맵</button>
+            <button class="map-provider-toggle__btn" id="mapProviderKakao" type="button">카카오맵</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 구글맵: 주소 검색 -->
+      <div class="inspector__section" id="mapAddressSection">
+        <button class="inspector__sec-toggle" type="button">
+          <span>주소 검색</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="map-search-row">
+            <input
+              class="map-search-row__input"
+              type="text"
+              id="mapAddressInput"
+              placeholder="예: 서울특별시청"
+              autocomplete="off"
+            >
+            <button class="map-search-row__btn" id="mapSearchBtn" type="button">검색</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카카오맵: 코드 붙여넣기 -->
+      <div class="inspector__section" id="mapKakaoSection" style="display:none">
+        <button class="inspector__sec-toggle" type="button">
+          <span>카카오맵 코드</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <p class="inspector__hint">
+            map.kakao.com → 장소 검색 →
+            <strong>공유 → HTML 태그 복사 → 소스 생성하기</strong>
+            → 코드 전체 복사 후 붙여넣기
+          </p>
+          <textarea
+            class="map-code-textarea"
+            id="mapKakaoCode"
+            rows="5"
+            placeholder="카카오맵 HTML 코드를 붙여넣으세요"
+            spellcheck="false"
+          ></textarea>
+          <button class="map-code-apply-btn" id="mapKakaoCodeApply" type="button">지도 적용</button>
+          <p class="map-search-status" id="mapKakaoStatus"></p>
+        </div>
+      </div>
+
+      <!-- 구글맵 API 키 (선택) -->
+      <div class="inspector__section collapsed" id="mapApiSection">
+        <button class="inspector__sec-toggle" type="button">
+          <span>API 키 설정</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <p class="inspector__hint">구글맵 Embed API 키 (선택 — 없어도 기본 작동)</p>
+          <div class="map-api-row">
+            <input
+              class="map-api-row__input"
+              type="text"
+              id="mapApiKeyInput"
+              placeholder="Google Maps API 키"
+              autocomplete="off"
+            >
+            <button class="map-api-row__btn" id="mapApiKeyApply" type="button">적용</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 크기 설정 -->
+      <div class="inspector__section">
+        <button class="inspector__sec-toggle" type="button">
+          <span>크기 설정</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">가로</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="mapWidth" value="600" min="200" max="1400">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">세로</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="mapHeight" value="450" min="150" max="1000">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 지도 옵션 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>지도 옵션</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">확대 레벨</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="mapZoomLevel" value="3" min="1" max="5">
+              <span class="inspector__unit">/ 5</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 스타일 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>스타일</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <polyline points="4,10 8,6 12,10"/>
+          </svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">모서리 둥글기</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="mapBorderRadius" value="10" min="0" max="60">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">그림자</label>
+            <button class="inspector__onoff active" id="mapShadowToggle" type="button"></button>
+          </div>
+          <div id="mapShadowOptions">
+            <div class="inspector__field">
+              <label class="inspector__field-label">번짐</label>
+              <div class="inspector__num-row">
+                <input class="inspector__num-input" type="number" id="mapShadowBlur" value="16" min="0" max="60">
+                <span class="inspector__unit">px</span>
+              </div>
+            </div>
+            <div class="inspector__field">
+              <label class="inspector__field-label">Y 거리</label>
+              <div class="inspector__num-row">
+                <input class="inspector__num-input" type="number" id="mapShadowY" value="2" min="0" max="40">
+                <span class="inspector__unit">px</span>
+              </div>
+            </div>
+            <div class="inspector__field">
+              <label class="inspector__field-label">불투명도</label>
+              <div class="inspector__num-row">
+                <input class="inspector__num-input" type="number" id="mapShadowOpacity" value="12" min="0" max="100">
+                <span class="inspector__unit">%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /.inspector__body -->
+    <div class="inspector__footer">
+      <button class="inspector__delete-btn" id="mapDelete" type="button">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
+          <polyline points="2,4 14,4"/>
+          <path d="M5,4V3a1,1,0,0,1,1-1h4a1,1,0,0,1,1,1V4"/>
+          <rect x="3" y="4" width="10" height="10" rx="1"/>
+          <line x1="6" y1="7" x2="6" y2="11"/>
+          <line x1="10" y1="7" x2="10" y2="11"/>
+        </svg>
+        위젯 삭제
+      </button>
+    </div>
+  </aside>
+
+</div>
+<script src="../js/map.js"></script>
+</body>
+</html>

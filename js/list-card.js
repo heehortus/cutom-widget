@@ -7,9 +7,12 @@
 
   /* ── State ──────────────────────────── */
 
-  var nextId = 2;
+  var nextId = 5;
   var cards  = [
-    { id: 1, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' }
+    { id: 1, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' },
+    { id: 2, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' },
+    { id: 3, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' },
+    { id: 4, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' }
   ];
 
   var UPLOAD_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="8,10 8,3"/><polyline points="5,6 8,3 11,6"/><path d="M3 12v.5A1.5 1.5 0 004.5 14h7a1.5 1.5 0 001.5-1.5V12"/></svg>';

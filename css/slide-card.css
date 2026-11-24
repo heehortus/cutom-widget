@@ -1,0 +1,270 @@
+/* =====================================
+   Slide Card Widget
+   ===================================== */
+
+/* ── Canvas override ── */
+.editor__canvas--slide-card {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ── Box-sizing scoped reset ── */
+.iw-root *,
+.iw-root *::before,
+.iw-root *::after {
+  box-sizing: border-box;
+}
+
+/* ── Widget root ── */
+.iw-root {
+  --card-radius:      12px;
+  --content-pad-v:    32px;
+  --content-pad-h:    38px;
+  --title-size:       24px;
+  --title-gap:        6px;
+  --subtitle-size:    16px;
+  --title-color:      #ffffff;
+  --subtitle-color:   #ffffff;
+  --arrow-color:      #4b515b;
+  --arrow-bg:         #ffffff;
+  --card-w:           342px;
+  --card-gap:         30px;
+  --card-ratio:       1.34;
+  --center-margin:    15px;
+  --center-scale:     1.15;
+  --card-transition:  0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  --hover-zoom:       1.08;
+  --btn-fade:         0.3s ease;
+
+  width: 100%;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  height: calc(var(--card-w) * var(--card-ratio) * var(--center-scale) + 60px);
+}
+
+.iw-root:not([data-center-scale="on"]) {
+  height: calc(var(--card-w) * var(--card-ratio) * 1.075 + 30px);
+}
+
+/* ── Viewport ── */
+.iw-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+/* ── Track ── */
+.iw-track {
+  display: flex;
+  align-items: center;
+  gap: var(--card-gap);
+  will-change: transform;
+  transition: transform var(--card-transition);
+  padding: 0 var(--card-gap);
+}
+
+/* ── Card ── */
+.iw-card {
+  flex-shrink: 0;
+  width: var(--card-w);
+  height: calc(var(--card-w) * var(--card-ratio));
+  border-radius: var(--card-radius);
+  overflow: hidden;
+  position: relative;
+  transition: transform var(--card-transition), box-shadow var(--card-transition);
+  cursor: pointer;
+}
+
+/* Center card scale — margin compensates for transform scale so gap stays intact */
+.iw-root[data-center-scale="on"] .iw-card[data-center="true"] {
+  transform: scale(var(--center-scale));
+  z-index: 2;
+  margin-left:  calc(var(--card-w) * (var(--center-scale) - 1) / 2);
+  margin-right: calc(var(--card-w) * (var(--center-scale) - 1) / 2);
+}
+
+/* Hover zoom */
+.iw-root[data-hover-scale="on"] .iw-card:hover {
+  transform: scale(var(--hover-zoom));
+  z-index: 3;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.22);
+}
+
+.iw-root[data-center-scale="on"][data-hover-scale="on"] .iw-card[data-center="true"]:hover {
+  transform: scale(calc(var(--center-scale) * var(--hover-zoom)));
+  z-index: 4;
+}
+
+/* Card as link */
+.iw-card-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ── Card background ── */
+.iw-card-bg {
+  position: absolute;
+  inset: 0;
+  background: #e9ecef;
+  overflow: hidden;
+}
+
+.iw-card-bg img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* ── Overlay ── */
+.iw-card-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* ── Content ── */
+.iw-card-content {
+  position: absolute;
+  inset: 0;
+  padding: var(--content-pad-v) var(--content-pad-h);
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+/* Position variants */
+.iw-root[data-position="top-left"]    .iw-card-content { justify-content: flex-start; align-items: flex-start;   }
+.iw-root[data-position="top-center"]  .iw-card-content { justify-content: flex-start; align-items: center;        text-align: center; }
+.iw-root[data-position="top-right"]   .iw-card-content { justify-content: flex-start; align-items: flex-end;     text-align: right; }
+.iw-root[data-position="mid-left"]    .iw-card-content { justify-content: center;     align-items: flex-start;   }
+.iw-root[data-position="mid-center"]  .iw-card-content { justify-content: center;     align-items: center;        text-align: center; }
+.iw-root[data-position="mid-right"]   .iw-card-content { justify-content: center;     align-items: flex-end;     text-align: right; }
+.iw-root[data-position="bot-left"]    .iw-card-content { justify-content: flex-end;   align-items: flex-start;   }
+.iw-root[data-position="bot-center"]  .iw-card-content { justify-content: flex-end;   align-items: center;        text-align: center; }
+.iw-root[data-position="bot-right"]   .iw-card-content { justify-content: flex-end;   align-items: flex-end;     text-align: right; }
+
+.iw-card-title {
+  font-size: var(--title-size);
+  font-weight: 600;
+  color: var(--title-color);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  word-break: keep-all;
+}
+
+.iw-card-subtitle {
+  margin-top: var(--title-gap);
+  font-size: var(--subtitle-size);
+  font-weight: 400;
+  color: var(--subtitle-color);
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  word-break: keep-all;
+}
+
+/* ── Arrow buttons ── */
+.iw-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: none;
+  background: var(--arrow-bg);
+  color: var(--arrow-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity var(--btn-fade), transform var(--btn-fade);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.12);
+  outline: none;
+}
+
+.iw-btn:hover {
+  opacity: 0.85;
+  transform: translateY(-50%) scale(1.06);
+}
+
+#iw-prev { left: 12px; }
+#iw-next { right: 12px; }
+
+/* Show/hide arrow SVGs based on data-arrow attribute */
+.iw-root[data-arrow="chevron"] .iw-arrow-line,
+.iw-root[data-arrow="arrow"]   .iw-arrow-chevron {
+  display: none;
+}
+
+.iw-root[data-arrow="chevron"] .iw-arrow-chevron,
+.iw-root[data-arrow="arrow"]   .iw-arrow-line {
+  display: block;
+}
+
+/* ── Entrance animations ── */
+.iw-root[data-anim]:not([data-anim="none"]) .iw-card {
+  opacity: 0;
+}
+
+.iw-root[data-anim="fade"]         .iw-card { transform: none; }
+.iw-root[data-anim="slide-up"]     .iw-card { transform: translateY(40px); }
+.iw-root[data-anim="slide-down"]   .iw-card { transform: translateY(-40px); }
+.iw-root[data-anim="slide-left"]   .iw-card { transform: translateX(40px); }
+.iw-root[data-anim="slide-right"]  .iw-card { transform: translateX(-40px); }
+.iw-root[data-anim="zoom-in"]      .iw-card { transform: scale(0.88); }
+
+.iw-root[data-anim]:not([data-anim="none"]) .iw-card[data-state="animated"] {
+  opacity: 1;
+  transform: none !important;
+  transition:
+    opacity var(--anim-duration, 0.7s) ease var(--anim-delay, 0s),
+    transform var(--anim-duration, 0.7s) ease var(--anim-delay, 0s);
+}
+
+/* Keep center-scale transform when animated */
+.iw-root[data-center-scale="on"][data-anim]:not([data-anim="none"]) .iw-card[data-center="true"][data-state="animated"] {
+  transform: scale(var(--center-scale)) !important;
+}
+
+/* ── Placeholder bg when no image ── */
+.iw-card-bg { background: #343a40; }
+
+/* ── Placeholder text ── */
+.sc-ph { opacity: 0.35; }
+
+/* ── Gallery thumbnail ── */
+.gthumb--slide-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px 8px;
+  background: #f1f3f5;
+  overflow: hidden;
+}
+
+.gthumb--slide-card .gthumb__card {
+  flex-shrink: 0;
+  border-radius: 6px;
+}
+
+.gthumb--slide-card .gthumb__card:nth-child(1),
+.gthumb--slide-card .gthumb__card:nth-child(3) { width: 56px; height: 72px; background: #adb5bd; opacity: .6; }
+
+.gthumb--slide-card .gthumb__card:nth-child(2) { width: 70px; height: 90px; background: #868e96; transform: scale(1.12); z-index: 1; }

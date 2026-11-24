@@ -386,6 +386,14 @@ body {
   flex-shrink: 0;
 }
 
+/* ── Hint ── */
+.inspector__hint {
+  font-size: 14px;
+  color: var(--clr-500);
+  line-height: 1.5;
+  margin: 4px 0 0;
+}
+
 /* ── Group label ── */
 .inspector__group-label {
   margin-top: 18px;
@@ -532,6 +540,76 @@ body {
   background: var(--clr-danger-bg);
   color: var(--clr-danger);
 }
+
+.inspector__footer-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.inspector__footer-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--clr-600);
+  cursor: pointer;
+  border-radius: 7px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.inspector__footer-btn:hover {
+  background: var(--clr-100);
+  color: var(--clr-900);
+}
+
+/* ── Inspector: Select dropdown ── */
+.inspector__select {
+  width: 100%;
+  padding: 8px 28px 8px 10px;
+  border: 1px solid var(--clr-300);
+  border-radius: 7px;
+  font-size: 13px;
+  color: var(--clr-900);
+  background: var(--clr-white);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23adb5bd' stroke-width='2' stroke-linecap='round'%3E%3Cpolyline points='4,6 8,10 12,6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 8px center;
+  background-size: 14px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+.inspector__select:focus { border-color: var(--clr-700); }
+
+/* ── Inspector: Segment control ── */
+.inspector__segment {
+  display: flex;
+  border: 1px solid var(--clr-300);
+  border-radius: 7px;
+  overflow: hidden;
+}
+.inspector__seg-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-left: 1px solid var(--clr-300);
+  background: none;
+  font-size: 13px;
+  color: var(--clr-600);
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: inherit;
+}
+.inspector__seg-btn:first-child { border-left: none; }
+.inspector__seg-btn.active { background: var(--clr-900); color: var(--clr-white); }
+.inspector__seg-btn:hover:not(.active) { background: var(--clr-100); color: var(--clr-900); }
 
 /* =====================================
    Gallery — Widget List Landing Page
@@ -730,6 +808,28 @@ body {
   height: 192px;
   position: relative;
   overflow: hidden;
+  background: var(--clr-100);
+}
+
+/* iframe preview — loading shimmer */
+.wg-card__thumb[data-iframe-src]:not(.loaded)::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--clr-100) 25%, var(--clr-200) 50%, var(--clr-100) 75%);
+  background-size: 200% 100%;
+  animation: wgThumbShimmer 1.4s ease infinite;
+  z-index: 0;
+}
+
+.wg-card__thumb[data-iframe-src] iframe {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes wgThumbShimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }
 
 /* ── Meta ── */

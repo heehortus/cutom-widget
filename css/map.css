@@ -1,0 +1,303 @@
+/* =====================================
+   Map Widget Styles
+   ===================================== */
+
+/* ── Canvas override ── */
+.editor__canvas--map {
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Map widget container ── */
+.map-widget {
+  position: relative;
+  width: 600px;
+  height: 450px;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0,0,0,.12);
+  background: var(--clr-100, #f0f0f0);
+  flex-shrink: 0;
+}
+
+.map-widget iframe {
+  display: block;
+  border: none;
+}
+
+/* roughmap 이 생성하는 내부 요소가 컨테이너를 꽉 채우도록 */
+.map-widget .root_daum_roughmap {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.map-widget .root_daum_roughmap iframe {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* ── Placeholder ── */
+.map-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  gap: 12px;
+  background: var(--clr-100, #f5f5f5);
+}
+
+.map-placeholder__icon {
+  width: 40px;
+  height: 40px;
+  color: var(--clr-400, #9ca3af);
+}
+
+.map-placeholder__icon--spin {
+  animation: map-spin 1s linear infinite;
+}
+
+@keyframes map-spin {
+  to { transform: rotate(360deg); }
+}
+
+.map-placeholder__msg {
+  font-size: 13px;
+  color: var(--clr-500, #6b7280);
+  font-weight: 500;
+  text-align: center;
+  padding: 0 16px;
+  white-space: pre-line;
+  line-height: 1.6;
+}
+
+/* ── Inspector: Provider toggle ── */
+.map-provider-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.map-provider-toggle__btn {
+  padding: 7px 0;
+  border-radius: 7px;
+  border: 1.5px solid var(--clr-200, #e5e7eb);
+  background: var(--clr-50, #fafafa);
+  color: var(--clr-500, #6b7280);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.map-provider-toggle__btn:hover {
+  border-color: var(--clr-400, #9ca3af);
+  color: var(--clr-700, #374151);
+}
+
+.map-provider-toggle__btn--active {
+  background: var(--clr-900, #111827);
+  border-color: var(--clr-900, #111827);
+  color: #fff;
+}
+
+/* ── Inspector: Search row ── */
+.map-search-row {
+  display: flex;
+  gap: 6px;
+}
+
+.map-search-row__input {
+  flex: 1;
+  height: 32px;
+  padding: 0 10px;
+  border: 1.5px solid var(--clr-200, #e5e7eb);
+  border-radius: 7px;
+  font-size: 12px;
+  color: var(--clr-800, #1f2937);
+  background: var(--clr-50, #fafafa);
+  outline: none;
+  transition: border-color .15s;
+  min-width: 0;
+}
+
+.map-search-row__input::placeholder {
+  color: var(--clr-400, #9ca3af);
+}
+
+.map-search-row__input:focus {
+  border-color: var(--clr-500, #6b7280);
+  background: #fff;
+}
+
+.map-search-row__btn {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 7px;
+  border: none;
+  background: var(--clr-900, #111827);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.map-search-row__btn:hover {
+  background: var(--clr-700, #374151);
+}
+
+/* ── Inspector: Search status ── */
+.map-search-status {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: var(--clr-500, #6b7280);
+  min-height: 14px;
+}
+
+/* ── Inspector: API key row ── */
+.map-api-row {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.map-api-row__input {
+  flex: 1;
+  height: 32px;
+  padding: 0 10px;
+  border: 1.5px solid var(--clr-200, #e5e7eb);
+  border-radius: 7px;
+  font-size: 11px;
+  color: var(--clr-800, #1f2937);
+  background: var(--clr-50, #fafafa);
+  outline: none;
+  font-family: monospace;
+  transition: border-color .15s;
+  min-width: 0;
+}
+
+.map-api-row__input::placeholder {
+  color: var(--clr-400, #9ca3af);
+  font-family: inherit;
+}
+
+.map-api-row__input:focus {
+  border-color: var(--clr-500, #6b7280);
+  background: #fff;
+}
+
+.map-api-row__btn {
+  flex-shrink: 0;
+  height: 32px;
+  padding: 0 10px;
+  border-radius: 7px;
+  border: 1.5px solid var(--clr-200, #e5e7eb);
+  background: var(--clr-50, #fafafa);
+  color: var(--clr-700, #374151);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all .15s;
+}
+
+.map-api-row__btn:hover {
+  border-color: var(--clr-500, #6b7280);
+  background: var(--clr-100, #f0f0f0);
+}
+
+/* ── Kakao code textarea ── */
+.map-code-textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 10px;
+  margin-top: 8px;
+  border: 1.5px solid var(--clr-200, #e5e7eb);
+  border-radius: 7px;
+  font-size: 11px;
+  font-family: monospace;
+  color: var(--clr-700, #374151);
+  background: var(--clr-50, #fafafa);
+  resize: vertical;
+  outline: none;
+  line-height: 1.5;
+  transition: border-color .15s;
+}
+
+.map-code-textarea::placeholder {
+  color: var(--clr-400, #9ca3af);
+  font-family: inherit;
+}
+
+.map-code-textarea:focus {
+  border-color: var(--clr-500, #6b7280);
+  background: #fff;
+}
+
+.map-code-apply-btn {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 0;
+  border-radius: 7px;
+  border: none;
+  background: var(--clr-900, #111827);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+
+.map-code-apply-btn:hover {
+  background: var(--clr-700, #374151);
+}
+
+/* ── Gallery thumbnail ── */
+.gthumb--map {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: #e8f0e8;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.gthumb--map::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(100,160,100,.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,160,100,.25) 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.gthumb__map-pin {
+  position: relative;
+  z-index: 1;
+  width: 24px;
+  height: 24px;
+  background: #e63946;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 8px rgba(0,0,0,.25);
+}
+
+.gthumb__map-pin::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: #fff;
+  border-radius: 50%;
+}

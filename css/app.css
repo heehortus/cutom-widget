@@ -14,6 +14,7 @@
   display: flex;
   min-width: 0;
   overflow: hidden;
+  position: relative;
 }
 
 .widget-view {
@@ -429,4 +430,84 @@
   .widget-view {
     flex-direction: column;
   }
+}
+
+/* ── Viewport Toolbar ── */
+.widget-views {
+  position: relative;
+}
+
+.vp-toolbar {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.vp-toolbar__inner {
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--clr-white);
+  border: 1px solid var(--clr-200);
+  border-radius: 10px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, .08);
+}
+
+.vp-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--clr-500);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+}
+
+.vp-btn:hover {
+  background: var(--clr-100);
+  color: var(--clr-700);
+}
+
+.vp-btn.active {
+  background: var(--clr-200);
+  color: var(--clr-900);
+}
+
+@media (max-width: 640px) {
+  .vp-toolbar { display: none; }
+}
+
+/* ── Viewport frame ── */
+.vp-frame {
+  /* Full-width transparent wrapper in desktop mode */
+  width: 100%;
+  min-height: 0;
+  container-type: inline-size;
+  /* Pass canvas flex alignment through to widget content */
+  display: flex;
+  align-items: inherit;
+  justify-content: inherit;
+}
+
+.editor__canvas[data-vp="tablet"] .vp-frame {
+  max-width: 768px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.editor__canvas[data-vp="mobile"] .vp-frame {
+  max-width: 393px;
+  margin: 0 auto;
+  overflow: hidden;
 }

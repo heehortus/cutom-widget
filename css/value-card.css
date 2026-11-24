@@ -1,0 +1,223 @@
+/* =====================================
+   Value Card Widget Styles
+   ===================================== */
+
+/* ── Canvas override ── */
+.editor__canvas--value-card {
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0;
+  overflow-y: auto;
+}
+
+.editor__canvas--value-card .vp-frame {
+  min-height: 100%;
+  padding: 48px 24px;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ── Section ── */
+.vc-section {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Header ── */
+.vc-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.vc-title {
+  flex: 1;
+  font-size: var(--vc-title-size, 40px);
+  color: var(--vc-title-color, var(--clr-900));
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+.vc-header__right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.vc-desc {
+  font-size: var(--vc-desc-size, 20px);
+  color: var(--vc-desc-color, var(--clr-body));
+  line-height: 1.6;
+  margin: 0 0 24px;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+.vc-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--vc-title-color, var(--clr-900));
+  text-decoration: none;
+  transition: opacity .2s;
+}
+
+.vc-link:hover { opacity: .6; }
+
+@container (max-width: 640px) {
+  .vc-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+/* ── Grid ── */
+.vc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+/* ── Card ── */
+.vc-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  aspect-ratio: 3/4;
+  background: var(--clr-pale);
+}
+
+.vc-card__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform .4s ease;
+}
+
+.vc-card:hover .vc-card__img {
+  transform: scale(1.04);
+}
+
+.vc-card__overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--vc-overlay-color, rgba(0, 0, 0, .45));
+}
+
+.vc-card__title {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px 20px;
+  font-size: var(--vc-card-title-size, 26px);
+  color: var(--vc-card-title-color, var(--clr-white));
+  font-weight: 700;
+  line-height: 1.3;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+
+/* ── Placeholder (no image) ── */
+.vc-card__placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--clr-500);
+}
+
+/* ── Animation ── */
+@keyframes vcFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.vc-header {
+  animation: vcFadeUp 0.6s ease both;
+}
+
+.vc-card {
+  animation: vcFadeUp 0.55s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vc-header,
+  .vc-card { animation: none; }
+}
+
+/* ── Placeholders ── */
+.vc-ph {
+  color: #000;
+  opacity: 0.3;
+}
+
+.vc-card-ph {
+  color: #fff;
+  opacity: 0.4;
+}
+
+/* ── Inspector: desc textarea ── */
+.vc-desc-input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid var(--clr-300);
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 13px;
+  color: var(--clr-900);
+  outline: none;
+  background: var(--clr-white);
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color .15s;
+  font-family: inherit;
+}
+
+.vc-desc-input:focus {
+  border-color: var(--clr-700);
+}
+
+/* ── Gallery thumbnail ── */
+.gthumb--value-card {
+  display: flex;
+  gap: 4px;
+  padding: 8px 10px 10px;
+  align-items: flex-end;
+  background: var(--clr-50);
+  border-radius: 6px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.gthumb--value-card .gthumb__card {
+  flex: 1;
+  border-radius: 4px;
+  background: var(--clr-400);
+}
+
+.gthumb--value-card .gthumb__card:nth-child(1) { height: 48px; }
+.gthumb--value-card .gthumb__card:nth-child(2) { height: 56px; }
+.gthumb--value-card .gthumb__card:nth-child(3) { height: 44px; }
+.gthumb--value-card .gthumb__card:nth-child(4) { height: 52px; }

@@ -205,7 +205,7 @@
   outline-offset: 3px;
 }
 
-@media (max-width: 991px) {
+@container (max-width: 991px) {
   .iw-dir {
     --bleed-size: 40px;
     --track-gap: 20px;
@@ -216,7 +216,7 @@
   .iw-dir .iw-dir__card .iw-dir__title { font-size: min(var(--title-size), 28px); }
 }
 
-@media (max-width: 768px) {
+@container (max-width: 768px) {
   .iw-dir {
     --bleed-size: 16px;
     --track-gap: 14px;

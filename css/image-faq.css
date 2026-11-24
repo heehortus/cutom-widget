@@ -162,7 +162,7 @@
 }
 
 /* ── 반응형 ── */
-@media (max-width: 900px) {
+@container (max-width: 900px) {
   .wg-ac { flex-direction: column; }
   .wg-ac__left { align-self: auto; }
   .wg-ac__img-wrap { min-height: 240px; }
