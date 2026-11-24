@@ -1,0 +1,143 @@
+/* =====================================
+   Hover Image Reveal Widget
+   ===================================== */
+
+/* Canvas */
+.editor__canvas--hover-image-reveal {
+  align-items: stretch;
+  background: #0a0a0a;
+  background-image: none;
+}
+
+#hoverImageRevealWrap {
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+  align-items: stretch;
+}
+
+/* Root */
+.hir-root {
+  --hir-font-size:      48px;
+  --hir-font-weight:    800;
+  --hir-letter-spacing: 0.06em;
+  --hir-line-height:    1.1;
+  --hir-item-gap:       12px;
+  --hir-text-color:     rgba(255,255,255,0.28);
+  --hir-text-active:    #ffffff;
+  --hir-card-radius:    14px;
+
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  padding: 56px 72px;
+}
+
+/* Item list */
+.hir-list {
+  width: 100%;
+}
+
+.hir-item {
+  padding: var(--hir-item-gap) 0;
+  cursor: default;
+  user-select: none;
+}
+
+.hir-item__text {
+  display: block;
+  font-size: calc(var(--hir-font-size) * var(--hir-font-scale, 1));
+  font-weight: var(--hir-font-weight);
+  letter-spacing: var(--hir-letter-spacing);
+  text-transform: uppercase;
+  color: var(--hir-text-color);
+  transition: color 0.2s ease;
+  line-height: var(--hir-line-height);
+}
+
+.hir-root.has-hover .hir-item__text {
+  opacity: 0.6;
+}
+
+.hir-item.active .hir-item__text {
+  color: var(--hir-text-active);
+  opacity: 1;
+}
+
+/* Image card */
+.hir-card {
+  position: absolute;
+  width: 240px;
+  height: 320px;
+  border-radius: var(--hir-card-radius);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+}
+
+.hir-card.entering {
+  animation: hir-bounce-in 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  pointer-events: auto;
+}
+
+.hir-card.leaving {
+  animation: hir-bounce-out 0.18s ease-in forwards;
+}
+
+@keyframes hir-bounce-in {
+  from { opacity: 0; transform: scale(0.68); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes hir-bounce-out {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.82); }
+}
+
+.hir-card[data-ratio="square"] {
+  width: 280px;
+  height: 280px;
+}
+
+.hir-card[data-ratio="landscape"] {
+  width: 320px;
+  height: 213px;
+}
+
+.hir-card__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hir-card__ph {
+  width: 100%;
+  height: 100%;
+  background: #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hir-card__ph svg {
+  color: #555;
+}
+
+/* ── Mobile ── */
+@container (max-width: 480px) {
+  .hir-root {
+    --hir-font-scale: 0.52;
+    padding: 32px 20px;
+  }
+}
+
+@container (max-width: 768px) and (min-width: 481px) {
+  .hir-root {
+    --hir-font-scale: 0.72;
+    padding: 44px 40px;
+  }
+}

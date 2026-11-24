@@ -72,35 +72,7 @@
   line-height: 1.6;
 }
 
-/* ── Inspector: Provider toggle ── */
-.map-provider-toggle {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 6px;
-}
 
-.map-provider-toggle__btn {
-  padding: 7px 0;
-  border-radius: 7px;
-  border: 1.5px solid var(--clr-200, #e5e7eb);
-  background: var(--clr-50, #fafafa);
-  color: var(--clr-500, #6b7280);
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all .15s;
-}
-
-.map-provider-toggle__btn:hover {
-  border-color: var(--clr-400, #9ca3af);
-  color: var(--clr-700, #374151);
-}
-
-.map-provider-toggle__btn--active {
-  background: var(--clr-900, #111827);
-  border-color: var(--clr-900, #111827);
-  color: #fff;
-}
 
 /* ── Inspector: Search row ── */
 .map-search-row {

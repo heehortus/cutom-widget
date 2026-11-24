@@ -21,7 +21,9 @@
     { id: 'hero-main-slide',     file: 'widgets/hero-main-slide.html',     js: 'js/hero-main-slide.js',      css: 'css/hero-main-slide.css' },
     { id: 'slide-card',          file: 'widgets/slide-card.html',          js: 'js/slide-card.js',           css: 'css/slide-card.css' },
     { id: 'logo-marquee',        file: 'widgets/logo-marquee.html',        js: 'js/logo-marquee.js',         css: 'css/logo-marquee.css' },
-    { id: 'word-shade',          file: 'widgets/word-shade.html',          js: 'js/word-shade.js',           css: 'css/word-shade.css' }
+    { id: 'word-shade',          file: 'widgets/word-shade.html',          js: 'js/word-shade.js',           css: 'css/word-shade.css' },
+    { id: 'spin-carousel',       file: 'widgets/spin-carousel.html',       js: 'js/spin-carousel.js',        css: 'css/spin-carousel.css' },
+    { id: 'hover-image-reveal',  file: 'widgets/hover-image-reveal.html',  js: 'js/hover-image-reveal.js',   css: 'css/hover-image-reveal.css' }
   ];
 
   /* ── CSS loader ─────────────────────── */

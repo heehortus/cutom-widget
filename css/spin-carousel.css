@@ -1,0 +1,87 @@
+/* =====================================
+   Spin Carousel Widget
+   ===================================== */
+
+/* Canvas */
+#spinCarouselWrap {
+  flex: 1;
+  align-self: stretch;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Root */
+.sc-root {
+  --sc-speed:   12s;
+  --sc-card-w:  220px;
+  --sc-card-h:  293px;
+
+  width: 740px;
+  height: 500px;
+  border-radius: 16px;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+/* Stage — holds perspective */
+.sc-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+
+/* Scene — rotates */
+.sc-scene {
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  animation: sc-spin-left var(--sc-speed) linear infinite;
+}
+
+.sc-root[data-direction="right"] .sc-scene {
+  animation-name: sc-spin-right;
+}
+
+@keyframes sc-spin-left {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(360deg); }
+}
+@keyframes sc-spin-right {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(-360deg); }
+}
+
+/* Card */
+.sc-card {
+  position: absolute;
+  width: var(--sc-card-w);
+  height: var(--sc-card-h);
+  left: calc(var(--sc-card-w) / -2);
+  top: calc(var(--sc-card-h) / -2);
+  border-radius: 16px;
+  overflow: hidden;
+  backface-visibility: visible;
+}
+
+.sc-card--ph {
+  background: #dde1e6;
+}
+
+.sc-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+

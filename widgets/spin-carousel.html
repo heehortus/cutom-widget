@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>스핀 캐러셀 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/spin-carousel.css">
+</head>
+<body>
+<div class="app">
+
+  <main class="editor__canvas">
+    <div id="spinCarouselWrap"></div>
+  </main>
+
+  <aside class="inspector" id="spinCarouselInspector">
+    <div class="inspector__head">
+      <span class="inspector__title">스핀 캐러셀</span>
+      <button class="inspector__close" id="scInspectorClose" aria-label="닫기">&#x2715;</button>
+    </div>
+    <div class="inspector__body">
+
+      <!-- 카드 목록 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>카드 목록</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <button class="inspector__sec-add" id="scAddCard" type="button">+ 카드 추가</button>
+          <div id="scCardList"></div>
+        </div>
+      </div>
+
+      <!-- 회전 설정 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>회전 설정</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">속도</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="scSpeed" value="12" min="2" max="60">
+              <span class="inspector__unit">초</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">방향</label>
+            <div class="inspector__layout-toggle" id="scDirectionSegment">
+              <button class="inspector__layout-btn active" type="button" data-value="left">왼쪽</button>
+              <button class="inspector__layout-btn" type="button" data-value="right">오른쪽</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 비율 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>카드 비율</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <div class="inspector__layout-toggle" id="scRatioSegment">
+              <button class="inspector__layout-btn active" type="button" data-value="portrait">세로형</button>
+              <button class="inspector__layout-btn" type="button" data-value="square">정방형</button>
+              <button class="inspector__layout-btn" type="button" data-value="landscape">가로형</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+    <div class="inspector__footer">
+      <div class="inspector__footer-actions">
+        <button class="inspector__footer-btn" id="scReset" type="button">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M2.5 8a5.5 5.5 0 1 0 1.1-3.3"/>
+            <polyline points="2.5,2 2.5,5.5 6,5.5"/>
+          </svg>
+          초기화
+        </button>
+      </div>
+    </div>
+  </aside>
+
+</div>
+<script src="../js/spin-carousel.js"></script>
+</body>
+</html>

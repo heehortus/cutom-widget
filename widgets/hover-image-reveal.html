@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>호버 이미지 리빌 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/hover-image-reveal.css">
+</head>
+<body>
+<div class="app">
+
+  <main class="editor__canvas editor__canvas--hover-image-reveal">
+    <div id="hoverImageRevealWrap"></div>
+  </main>
+
+  <aside class="inspector" id="hirInspector">
+    <div class="inspector__head">
+      <span class="inspector__title">호버 이미지 리빌</span>
+      <button class="inspector__close" id="hirInspectorClose" aria-label="닫기">&#x2715;</button>
+    </div>
+    <div class="inspector__body">
+
+      <!-- 아이템 목록 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>아이템 목록</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <button class="inspector__sec-add" id="hirAddItem" type="button">+ 아이템 추가</button>
+          <div id="hirItemList"></div>
+        </div>
+      </div>
+
+      <!-- 텍스트 설정 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>텍스트 설정</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">폰트 크기</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="hirFontSize" value="48" min="16" max="120">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">폰트 굵기</label>
+            <div class="inspector__layout-toggle" id="hirWeightSegment">
+              <button class="inspector__layout-btn" type="button" data-value="400">Regular</button>
+              <button class="inspector__layout-btn" type="button" data-value="700">Bold</button>
+              <button class="inspector__layout-btn active" type="button" data-value="800">ExtraBold</button>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">자간</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="hirLetterSpacing" value="0.06" min="-0.1" max="1" step="0.01">
+              <span class="inspector__unit">em</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">줄간격</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="hirLineHeight" value="1.1" min="0.8" max="3" step="0.1">
+              <span class="inspector__unit">em</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">아이템 간격</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="hirItemGap" value="12" min="0" max="60">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">텍스트 색상</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="hirTextSwatch" style="background:#ffffff">
+                <input type="color" class="inspector__color-native" id="hirTextPicker" value="#ffffff">
+              </span>
+              <input type="text" class="inspector__hex-input" id="hirTextHex" value="#FFFFFF" maxlength="7" spellcheck="false">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 카드 설정 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>카드 설정</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">카드 비율</label>
+            <div class="inspector__layout-toggle" id="hirRatioSegment">
+              <button class="inspector__layout-btn active" type="button" data-value="portrait">세로형</button>
+              <button class="inspector__layout-btn" type="button" data-value="square">정방형</button>
+              <button class="inspector__layout-btn" type="button" data-value="landscape">가로형</button>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">모서리 반경</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="hirCardRadius" value="14" min="0" max="60">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="inspector__footer">
+      <div class="inspector__footer-actions">
+        <button class="inspector__footer-btn" id="hirReset" type="button">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M2.5 8a5.5 5.5 0 1 0 1.1-3.3"/>
+            <polyline points="2.5,2 2.5,5.5 6,5.5"/>
+          </svg>
+          초기화
+        </button>
+      </div>
+    </div>
+  </aside>
+
+</div>
+<script src="../js/hover-image-reveal.js"></script>
+</body>
+</html>

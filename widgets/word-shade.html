@@ -19,15 +19,7 @@
       <span class="inspector__title">워드 쉐이드</span>
       <button class="inspector__close" id="wsInspectorClose" aria-label="닫기">&#x2715;</button>
     </div>
-
-    <!-- 탭 바 -->
-    <div class="inspector__tabs">
-      <button class="inspector__tab active" data-tab="settings" type="button">설정</button>
-      <button class="inspector__tab" data-tab="effects" type="button">이펙트</button>
-    </div>
-
-    <!-- 설정 패널 -->
-    <div class="inspector__tab-panel active" id="wsPanelSettings">
+    <div class="inspector__body">
 
       <!-- 텍스트 섹션 -->
       <div class="inspector__section collapsed">
@@ -99,11 +91,6 @@
         </div>
       </div>
 
-    </div><!-- /#wsPanelSettings -->
-
-    <!-- 이펙트 패널 -->
-    <div class="inspector__tab-panel" id="wsPanelEffects">
-
       <!-- 호버 딤 섹션 -->
       <div class="inspector__section collapsed">
         <button class="inspector__sec-toggle" type="button">
@@ -138,8 +125,7 @@
         </div>
       </div>
 
-    </div><!-- /#wsPanelEffects -->
-
+    </div><!-- /.inspector__body -->
     <div class="inspector__footer">
       <div class="inspector__footer-actions">
         <button class="inspector__footer-btn" id="wsReset" type="button">

@@ -11,7 +11,6 @@
   /* ── State ── */
   var state = {
     provider:    'google',
-    googleApiKey: '',
     address:      '서울특별시청',
     width:        600,
     height:       450,
@@ -55,10 +54,6 @@
   function googleEmbedUrl() {
     var q = encodeURIComponent(state.address);
     var z = googleZoom();
-    if (state.googleApiKey) {
-      return 'https://www.google.com/maps/embed/v1/place?key=' +
-        encodeURIComponent(state.googleApiKey) + '&q=' + q + '&language=ko&zoom=' + z;
-    }
     return 'https://maps.google.com/maps?q=' + q + '&output=embed&hl=ko&z=' + z;
   }
 
@@ -261,16 +256,14 @@
     if (!gBtn || !kBtn) return;
 
     var isGoogle = state.provider === 'google';
-    gBtn.classList.toggle('map-provider-toggle__btn--active', isGoogle);
-    kBtn.classList.toggle('map-provider-toggle__btn--active', !isGoogle);
+    gBtn.classList.toggle('active', isGoogle);
+    kBtn.classList.toggle('active', !isGoogle);
 
     var addrSec = document.getElementById('mapAddressSection');
     var kakaoSec = document.getElementById('mapKakaoSection');
-    var apiSec   = document.getElementById('mapApiSection');
 
     if (addrSec)  addrSec.style.display  = isGoogle ? '' : 'none';
     if (kakaoSec) kakaoSec.style.display = isGoogle ? 'none' : '';
-    if (apiSec)   apiSec.style.display   = isGoogle ? '' : 'none';
   }
 
   /* ── Inspector 섹션 토글 ── */
@@ -304,11 +297,6 @@
       renderWidget();
     });
 
-    /* 구글맵 API 키 */
-    document.getElementById('mapApiKeyApply').addEventListener('click', function () {
-      state.googleApiKey = (document.getElementById('mapApiKeyInput').value || '').trim();
-      if (state.provider === 'google') renderWidget();
-    });
 
     /* 구글맵 주소 검색 */
     function doSearch() {

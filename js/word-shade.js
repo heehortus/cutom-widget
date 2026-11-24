@@ -50,7 +50,7 @@
       return '<span class="ws-word">' + chars + '</span>';
     });
 
-    var inner = wordSpans.join('<span class="ws-space"> </span>');
+    var inner = wordSpans.join(' ');
 
     wrap.innerHTML =
       '<div class="ws-root" id="wsRoot">' +
@@ -121,22 +121,8 @@
   /* ── Inspector bindings ── */
   function bindInspector() {
 
-    // Tab switching
-    var inspector = document.getElementById('wordShadeInspector');
-    if (inspector) {
-      inspector.querySelectorAll('.inspector__tab').forEach(function (tab) {
-        tab.addEventListener('click', function () {
-          inspector.querySelectorAll('.inspector__tab').forEach(function (t) { t.classList.remove('active'); });
-          inspector.querySelectorAll('.inspector__tab-panel').forEach(function (p) { p.classList.remove('active'); });
-          tab.classList.add('active');
-          var panelId = tab.dataset.tab === 'settings' ? 'wsPanelSettings' : 'wsPanelEffects';
-          var panel = document.getElementById(panelId);
-          if (panel) panel.classList.add('active');
-        });
-      });
-    }
-
     // Section toggles
+    var inspector = document.getElementById('wordShadeInspector');
     if (inspector) {
       inspector.querySelectorAll('.inspector__sec-toggle').forEach(function (btn) {
         btn.addEventListener('click', function () {

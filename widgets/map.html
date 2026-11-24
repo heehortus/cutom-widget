@@ -30,9 +30,9 @@
           </svg>
         </button>
         <div class="inspector__sec-body">
-          <div class="map-provider-toggle">
-            <button class="map-provider-toggle__btn map-provider-toggle__btn--active" id="mapProviderGoogle" type="button">구글맵</button>
-            <button class="map-provider-toggle__btn" id="mapProviderKakao" type="button">카카오맵</button>
+          <div class="inspector__layout-toggle">
+            <button class="inspector__layout-btn active" id="mapProviderGoogle" type="button">구글맵</button>
+            <button class="inspector__layout-btn" id="mapProviderKakao" type="button">카카오맵</button>
           </div>
         </div>
       </div>
@@ -82,29 +82,6 @@
           ></textarea>
           <button class="map-code-apply-btn" id="mapKakaoCodeApply" type="button">지도 적용</button>
           <p class="map-search-status" id="mapKakaoStatus"></p>
-        </div>
-      </div>
-
-      <!-- 구글맵 API 키 (선택) -->
-      <div class="inspector__section collapsed" id="mapApiSection">
-        <button class="inspector__sec-toggle" type="button">
-          <span>API 키 설정</span>
-          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
-            <polyline points="4,10 8,6 12,10"/>
-          </svg>
-        </button>
-        <div class="inspector__sec-body">
-          <p class="inspector__hint">구글맵 Embed API 키 (선택 — 없어도 기본 작동)</p>
-          <div class="map-api-row">
-            <input
-              class="map-api-row__input"
-              type="text"
-              id="mapApiKeyInput"
-              placeholder="Google Maps API 키"
-              autocomplete="off"
-            >
-            <button class="map-api-row__btn" id="mapApiKeyApply" type="button">적용</button>
-          </div>
         </div>
       </div>
 

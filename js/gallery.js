@@ -20,6 +20,8 @@
     { id: 'slide-card',                                     name: '슬라이드 카드',         category: 'card',    catLabel: '카드',    desc: '이미지 슬라이드 카드' },
     { id: 'logo-marquee',                                   name: '로고 마퀴',             category: 'history', catLabel: '히스토리', desc: '인피니티 로고 마퀴' },
     { id: 'word-shade',                                     name: '워드 쉐이드',            category: 'effect',  catLabel: '이펙트',  desc: '글자별 호버 딤 텍스트 효과' },
+    { id: 'spin-carousel',                                   name: '스핀 캐러셀',            category: 'card',    catLabel: '카드',    desc: '360도 회전 3D 카드 캐러셀' },
+    { id: 'hover-image-reveal',                              name: '호버 이미지 리빌',        category: 'effect',  catLabel: '이펙트',  desc: '텍스트 호버 시 이미지 카드 팝업' },
   ];
 
   const THUMB_HTML = {
@@ -115,6 +117,17 @@
     });
   }
 
+  /* ── Tab counts ── */
+  function renderTabCounts() {
+    const total = WIDGETS.length;
+    document.querySelectorAll('.gallery-tab').forEach(tab => {
+      const filter = tab.dataset.filter;
+      const count = filter === 'all' ? total : WIDGETS.filter(w => w.category === filter).length;
+      const label = tab.textContent.replace(/\s*\d+$/, '').trim();
+      tab.textContent = `${label} ${count}`;
+    });
+  }
+
   /* ── Tab filtering ── */
   function initTabs() {
     document.querySelectorAll('.gallery-tab').forEach(tab => {
@@ -144,6 +157,7 @@
 
   document.addEventListener('DOMContentLoaded', () => {
     renderGallery();
+    renderTabCounts();
     initTabs();
     initBackButton();
     initIframeThumbs();
