@@ -1,39 +1,41 @@
 /* =====================================
-   Map Widget — Google Maps / Kakao Maps
+   Map Widget — Google Maps
    ===================================== */
 (function () {
   'use strict';
 
   /* ── 상수 ── */
-  var ROUGHMAP_CDN = 'https://t1.kakaocdn.net/kakaomapweb/roughmap/loader/prod/roughmapLoader.js';
-  var GOOGLE_ZOOM  = [8, 11, 13, 15, 17];
+  var GOOGLE_ZOOM = [8, 11, 13, 15, 17];
 
-  /* ── State ── */
-  var state = {
-    provider:    'google',
-    address:      '서울특별시청',
-    width:        600,
-    height:       450,
-    zoomLevel:    3,
-    kakaoTs:  '',
-    kakaoKey: ''
+  var DEFAULT_STATE = {
+    title:      '오시는 길',
+    titleSize:  28,
+    titleAlign: 'left',
+    address:   '서울특별시청',
+    width:     1200,
+    height:    450,
+    zoomLevel: 3,
+    infoLayout: 'grid',
+    info: {
+      phone:   '000-0000-0000',
+      hours:   '평일 09:00 ~ 18:00 (점심 12:00 ~ 13:00) / 주말 · 공휴일 휴무',
+      email:   'info@info.com'
+    }
   };
 
-  /* ── Roughmap SDK 로딩 추적 ── */
-  var roughmapLoading  = false;
-  var roughmapWaiters  = [];
-
-  /* ── 사이즈 변경 디바운스 ── */
-  var sizeTimer = null;
-
-  /* ── 스타일 state ── */
-  var style = {
-    borderRadius: 10,
+  var DEFAULT_STYLE = {
+    borderRadius:  10,
     shadow:        true,
     shadowBlur:    16,
-    shadowY:        2,
+    shadowY:       2,
     shadowOpacity: 12
   };
+
+  /* ── State ── */
+  function clone(o) { return JSON.parse(JSON.stringify(o)); }
+
+  var state = clone(DEFAULT_STATE);
+  var style = Object.assign({}, DEFAULT_STYLE);
 
   /* ── Helpers ── */
   function esc(str) {
@@ -48,22 +50,19 @@
     return GOOGLE_ZOOM[Math.max(0, Math.min(4, state.zoomLevel - 1))];
   }
 
-  /* ══════════════════════════════════════
-     Google Maps — iframe embed
-  ══════════════════════════════════════ */
   function googleEmbedUrl() {
-    var q = encodeURIComponent(state.address);
-    var z = googleZoom();
-    return 'https://maps.google.com/maps?q=' + q + '&output=embed&hl=ko&z=' + z;
+    var q = encodeURIComponent(state.address.trim());
+    return 'https://maps.google.com/maps?q=' + q + '&output=embed&hl=ko&z=' + googleZoom();
   }
 
-  function renderGoogleMap() {
+  /* ── Render ── */
+  function renderWidget() {
     var el = document.getElementById('mapWidget');
     if (!el) return;
     el.style.width  = state.width  + 'px';
     el.style.height = state.height + 'px';
 
-    if (!state.address) { showPlaceholder(el, 'address'); return; }
+    if (!state.address.trim()) { showPlaceholder(el); return; }
 
     el.innerHTML =
       '<iframe src="' + esc(googleEmbedUrl()) + '"' +
@@ -73,164 +72,52 @@
       ' referrerpolicy="no-referrer-when-downgrade"></iframe>';
   }
 
-  /* ══════════════════════════════════════
-     Kakao Maps — roughmap (API 키 불필요)
-  ══════════════════════════════════════ */
+  /* ── 텍스트 ── */
+  function renderTitle() {
+    var t = document.getElementById('mapTitle');
+    if (!t) return;
+    t.textContent    = state.title;
+    t.hidden         = !state.title;
+    t.style.width    = state.width + 'px';
+    t.style.fontSize = state.titleSize + 'px';
+    t.style.textAlign = state.titleAlign;
 
-  /* Kakao "지도 퍼가기" HTML에서 timestamp / key 파싱 */
-  function parseKakaoCode(code) {
-    var ts  = code.match(/"timestamp"\s*:\s*"([^"]+)"/);
-    var key = code.match(/"key"\s*:\s*"([^"]+)"/);
-    if (ts && key) return { timestamp: ts[1], key: key[1] };
-    return null;
-  }
-
-  /* roughmapLoader 로드 → daum.roughmap.Lander 가 생길 때까지 폴링 */
-  function ensureRoughmapLander() {
-    if (window.daum && window.daum.roughmap && window.daum.roughmap.Lander) {
-      return Promise.resolve();
-    }
-
-    return new Promise(function (resolve, reject) {
-      roughmapWaiters.push({ resolve: resolve, reject: reject });
-      if (roughmapLoading) return; /* 이미 로딩 중이면 대기만 */
-
-      roughmapLoading = true;
-
-      /* 기존 스크립트 제거 */
-      var old = document.querySelector('script[data-roughmap-loader]');
-      if (old) old.remove();
-
-      var script = document.createElement('script');
-      script.setAttribute('data-roughmap-loader', '');
-      script.charset = 'UTF-8';
-      script.src = ROUGHMAP_CDN;
-      document.head.appendChild(script);
-
-      var tries = 0;
-      var timer = setInterval(function () {
-        if (window.daum && window.daum.roughmap && window.daum.roughmap.Lander) {
-          clearInterval(timer);
-          roughmapLoading = false;
-          roughmapWaiters.forEach(function (w) { w.resolve(); });
-          roughmapWaiters = [];
-        } else if (++tries > 150) {   /* 15초 타임아웃 */
-          clearInterval(timer);
-          roughmapLoading = false;
-          var e = new Error('roughmap timeout');
-          roughmapWaiters.forEach(function (w) { w.reject(e); });
-          roughmapWaiters = [];
-        }
-      }, 100);
+    document.querySelectorAll('#mapTitleAlign [data-align]').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-align') === state.titleAlign);
     });
   }
 
-  /* 실제 roughmap 렌더링 — SDK 로드 완료 후 호출 */
-  function doRenderRoughmap(ts, key, w, h) {
-    var container = document.getElementById('mapWidget');
-    if (!container) return;
+  /* ── 보조 텍스트 ── */
+  function renderInfo() {
+    var box = document.getElementById('mapInfo');
+    if (!box) return;
+    box.style.width = state.width + 'px';
+    box.classList.toggle('map-info--grid', state.infoLayout === 'grid');
+    box.classList.toggle('map-info--list', state.infoLayout === 'list');
 
-    container.style.width  = w + 'px';
-    container.style.height = h + 'px';
-    container.innerHTML    = '';   /* 이전 렌더링 완전 제거 */
+    box.querySelectorAll('[data-info]').forEach(function (dd) {
+      dd.textContent = state.info[dd.getAttribute('data-info')] || '';
+    });
 
-    var mapDiv = document.createElement('div');
-    mapDiv.id = 'daumRoughmapContainer' + ts;
-    mapDiv.className = 'root_daum_roughmap root_daum_roughmap_landing';
-    container.appendChild(mapDiv);
-
-    try {
-      new daum.roughmap.Lander({
-        'timestamp': ts,
-        'key':       key,
-        'mapWidth':  String(w),
-        'mapHeight': String(h)
-      }).render();
-    } catch (e) {
-      showPlaceholder(container, 'kakao-error');
-    }
+    document.querySelectorAll('#mapInfoLayout [data-layout]').forEach(function (b) {
+      b.classList.toggle('active', b.getAttribute('data-layout') === state.infoLayout);
+    });
   }
 
-  function renderKakaoMap() {
-    var el = document.getElementById('mapWidget');
-    if (!el) return;
-    el.style.width  = state.width  + 'px';
-    el.style.height = state.height + 'px';
-
-    if (!state.kakaoTs || !state.kakaoKey) {
-      showPlaceholder(el, 'kakao-code');
-      return;
-    }
-
-    var ts = state.kakaoTs, key = state.kakaoKey, w = state.width, h = state.height;
-
-    /* SDK 이미 로드된 경우 바로 렌더링 */
-    if (window.daum && window.daum.roughmap && window.daum.roughmap.Lander) {
-      doRenderRoughmap(ts, key, w, h);
-      return;
-    }
-
-    /* SDK 로드 필요 */
-    showPlaceholder(el, 'loading');
-
-    ensureRoughmapLander()
-      .then(function () { doRenderRoughmap(ts, key, w, h); })
-      .catch(function () {
-        var c = document.getElementById('mapWidget');
-        if (c) showPlaceholder(c, 'kakao-error');
-      });
+  function syncInfoInputs() {
+    document.querySelectorAll('[data-info-input]').forEach(function (input) {
+      input.value = state.info[input.getAttribute('data-info-input')] || '';
+    });
+    document.getElementById('mapAddressInput').value = state.address;
   }
 
-  /* ══════════════════════════════════════
-     Placeholder
-  ══════════════════════════════════════ */
-  var PH = {
-    'address': {
-      icon: mapPinSVG(),
-      msg: '주소를 검색하세요'
-    },
-    'kakao-code': {
-      icon: pasteSVG(),
-      msg: 'map.kakao.com → 장소 검색\n→ 공유 → HTML 태그 복사 → 소스 생성하기\n코드를 붙여넣고 적용하세요'
-    },
-    'loading': {
-      icon: spinnerSVG(),
-      msg: '지도를 불러오는 중…'
-    },
-    'not-found': {
-      icon: mapPinSVG(),
-      msg: '주소를 찾을 수 없습니다'
-    },
-    'kakao-error': {
-      icon: warnSVG(),
-      msg: 'timestamp / key가 올바르지 않습니다'
-    },
-    'kakao-parse-error': {
-      icon: warnSVG(),
-      msg: '코드에서 timestamp / key를 찾을 수 없습니다\n카카오맵 "HTML 태그 복사" 전체를 붙여넣으세요'
-    }
-  };
-
-  function showPlaceholder(el, type) {
-    var p = PH[type] || PH['loading'];
+  /* ── Placeholder ── */
+  function showPlaceholder(el) {
     el.innerHTML =
       '<div class="map-placeholder">' +
-        p.icon +
-        '<p class="map-placeholder__msg">' + esc(p.msg) + '</p>' +
+        '<svg class="map-placeholder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>' +
+        '<p class="map-placeholder__msg">주소를 검색하세요</p>' +
       '</div>';
-  }
-
-  function mapPinSVG() {
-    return '<svg class="map-placeholder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>';
-  }
-  function pasteSVG() {
-    return '<svg class="map-placeholder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2h-3"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/></svg>';
-  }
-  function spinnerSVG() {
-    return '<svg class="map-placeholder__icon map-placeholder__icon--spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2a10 10 0 0 1 10 10"/></svg>';
-  }
-  function warnSVG() {
-    return '<svg class="map-placeholder__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>';
   }
 
   /* ── 스타일 적용 ── */
@@ -243,35 +130,21 @@
       : 'none';
   }
 
-  /* ── Main render ── */
-  function renderWidget() {
-    if (state.provider === 'google') renderGoogleMap();
-    else                             renderKakaoMap();
-  }
-
-  /* ── Provider UI / 섹션 가시성 ── */
-  function updateProviderUI() {
-    var gBtn = document.getElementById('mapProviderGoogle');
-    var kBtn = document.getElementById('mapProviderKakao');
-    if (!gBtn || !kBtn) return;
-
-    var isGoogle = state.provider === 'google';
-    gBtn.classList.toggle('active', isGoogle);
-    kBtn.classList.toggle('active', !isGoogle);
-
-    var addrSec = document.getElementById('mapAddressSection');
-    var kakaoSec = document.getElementById('mapKakaoSection');
-
-    if (addrSec)  addrSec.style.display  = isGoogle ? '' : 'none';
-    if (kakaoSec) kakaoSec.style.display = isGoogle ? 'none' : '';
-  }
-
   /* ── Inspector 섹션 토글 ── */
   function initSectionToggles() {
     document.querySelectorAll('#mapInspector .inspector__sec-toggle').forEach(function (btn) {
       btn.addEventListener('click', function () {
         btn.closest('.inspector__section').classList.toggle('collapsed');
       });
+    });
+  }
+
+  /* 숫자 입력 공통 처리 */
+  function bindNumber(id, min, max, onValue, eventName) {
+    document.getElementById(id).addEventListener(eventName || 'input', function () {
+      var v = parseInt(this.value, 10);
+      if (isNaN(v)) return;
+      onValue(Math.max(min, Math.min(max, v)));
     });
   }
 
@@ -285,146 +158,75 @@
       document.getElementById('mapInspector').style.display = 'none';
     });
 
-    /* Provider 토글 */
-    document.getElementById('mapProviderGoogle').addEventListener('click', function () {
-      state.provider = 'google';
-      updateProviderUI();
-      renderWidget();
+    /* 텍스트 */
+    document.getElementById('mapTitleInput').addEventListener('input', function () {
+      state.title = this.value.trim();
+      renderTitle();
     });
-    document.getElementById('mapProviderKakao').addEventListener('click', function () {
-      state.provider = 'kakao';
-      updateProviderUI();
-      renderWidget();
+    bindNumber('mapTitleSize', 12, 64, function (v) {
+      state.titleSize = v;
+      renderTitle();
+    });
+    document.querySelectorAll('#mapTitleAlign [data-align]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.titleAlign = b.getAttribute('data-align');
+        renderTitle();
+      });
     });
 
+    /* 보조 텍스트 */
+    document.querySelectorAll('[data-info-input]').forEach(function (input) {
+      input.addEventListener('input', function () {
+        state.info[input.getAttribute('data-info-input')] = input.value;
+        renderInfo();
+      });
+    });
+    document.querySelectorAll('#mapInfoLayout [data-layout]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        state.infoLayout = b.getAttribute('data-layout');
+        renderInfo();
+      });
+    });
 
-    /* 구글맵 주소 검색 */
+    /* 주소 검색 */
+    /* 구글맵 검색 (건물·상호명) — 보조 텍스트 주소와는 별개 */
+    var searchInput = document.getElementById('mapAddressInput');
     function doSearch() {
-      var addr = (document.getElementById('mapAddressInput').value || '').trim();
-      if (!addr) return;
-      state.address = addr;
+      var q = (searchInput.value || '').trim();
+      if (!q) return;
+      state.address = q;
       renderWidget();
     }
     document.getElementById('mapSearchBtn').addEventListener('click', doSearch);
-    document.getElementById('mapAddressInput').addEventListener('keydown', function (e) {
+    searchInput.addEventListener('keydown', function (e) {
       if (e.key === 'Enter') doSearch();
     });
 
-    /* 카카오맵 코드 붙여넣기 적용 */
-    document.getElementById('mapKakaoCodeApply').addEventListener('click', function () {
-      var code   = (document.getElementById('mapKakaoCode').value || '').trim();
-      var status = document.getElementById('mapKakaoStatus');
-
-      if (!code) {
-        if (status) status.textContent = '코드를 붙여넣어 주세요.';
-        return;
-      }
-
-      var parsed = parseKakaoCode(code);
-      if (!parsed) {
-        if (status) status.textContent = 'timestamp / key를 찾을 수 없습니다.';
-        var el = document.getElementById('mapWidget');
-        if (el) showPlaceholder(el, 'kakao-parse-error');
-        return;
-      }
-
-      state.kakaoTs  = parsed.timestamp;
-      state.kakaoKey = parsed.key;
-      if (status) status.textContent = '';
-      renderWidget();
+    /* 크기 (iframe은 100%라 컨테이너 크기만 바꾸면 됨) */
+    bindNumber('mapWidth', 200, 1400, function (v) {
+      state.width = v;
+      document.getElementById('mapWidget').style.width = v + 'px';
+      renderTitle();
+      renderInfo();
+    });
+    bindNumber('mapHeight', 150, 1000, function (v) {
+      state.height = v;
+      document.getElementById('mapWidget').style.height = v + 'px';
     });
 
-    /* 가로 크기 */
-    document.getElementById('mapWidth').addEventListener('input', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      state.width = Math.max(200, Math.min(1400, v));
+    /* 확대 레벨 */
+    bindNumber('mapZoomLevel', 1, 5, function (v) {
+      state.zoomLevel = v;
+      if (state.address.trim()) renderWidget();
+    }, 'change');
 
-      if (state.provider === 'kakao' && state.kakaoTs) {
-        /* 카카오 roughmap: 300ms 디바운스 후 재렌더링 */
-        clearTimeout(sizeTimer);
-        sizeTimer = setTimeout(renderWidget, 300);
-      } else {
-        var el = document.getElementById('mapWidget');
-        if (el) el.style.width = state.width + 'px';
-      }
-    });
+    /* 스타일 */
+    bindNumber('mapBorderRadius', 0, 60,  function (v) { style.borderRadius  = v; applyStyle(); });
+    bindNumber('mapShadowBlur',   0, 60,  function (v) { style.shadowBlur    = v; applyStyle(); });
+    bindNumber('mapShadowY',      0, 40,  function (v) { style.shadowY       = v; applyStyle(); });
+    bindNumber('mapShadowOpacity',0, 100, function (v) { style.shadowOpacity = v; applyStyle(); });
 
-    /* 세로 크기 */
-    document.getElementById('mapHeight').addEventListener('input', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      state.height = Math.max(150, Math.min(1000, v));
-
-      if (state.provider === 'kakao' && state.kakaoTs) {
-        clearTimeout(sizeTimer);
-        sizeTimer = setTimeout(renderWidget, 300);
-      } else {
-        var el = document.getElementById('mapWidget');
-        if (el) el.style.height = state.height + 'px';
-      }
-    });
-
-    /* 확대 레벨 (구글맵) */
-    document.getElementById('mapZoomLevel').addEventListener('change', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      state.zoomLevel = Math.max(1, Math.min(5, v));
-      if (state.provider === 'google' && state.address) renderWidget();
-    });
-
-    /* 위젯 초기화 */
-    document.getElementById('mapReset').addEventListener('click', function () {
-      state = {
-        provider:  'google',
-        address:   '서울특별시청',
-        width:     600,
-        height:    450,
-        zoomLevel: 3,
-        kakaoTs:   '',
-        kakaoKey:  ''
-      };
-      style = {
-        borderRadius: 10,
-        shadow:        true,
-        shadowBlur:    16,
-        shadowY:        2,
-        shadowOpacity: 12
-      };
-
-      /* 인스펙터 inputs 동기화 */
-      updateProviderUI();
-      document.getElementById('mapAddressInput').value  = '서울특별시청';
-      document.getElementById('mapKakaoCode').value     = '';
-      var kakaoStatus = document.getElementById('mapKakaoStatus');
-      if (kakaoStatus) kakaoStatus.textContent = '';
-      document.getElementById('mapWidth').value         = 600;
-      document.getElementById('mapHeight').value        = 450;
-      document.getElementById('mapZoomLevel').value     = 3;
-      document.getElementById('mapBorderRadius').value  = 10;
-      document.getElementById('mapShadowBlur').value    = 16;
-      document.getElementById('mapShadowY').value       = 2;
-      document.getElementById('mapShadowOpacity').value = 12;
-      var shadowToggle  = document.getElementById('mapShadowToggle');
-      var shadowOptions = document.getElementById('mapShadowOptions');
-      shadowToggle.classList.add('active');
-      shadowOptions.style.display = '';
-
-      var el = document.getElementById('mapWidget');
-      if (el) el.innerHTML = '';
-      renderWidget();
-    });
-
-    /* 모서리 둥글기 */
-    document.getElementById('mapBorderRadius').addEventListener('input', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      style.borderRadius = Math.max(0, Math.min(60, v));
-      applyStyle();
-    });
-
-    /* 그림자 토글 */
-    var shadowToggle = document.getElementById('mapShadowToggle');
+    var shadowToggle  = document.getElementById('mapShadowToggle');
     var shadowOptions = document.getElementById('mapShadowOptions');
     shadowToggle.addEventListener('click', function () {
       style.shadow = !style.shadow;
@@ -433,31 +235,33 @@
       applyStyle();
     });
 
-    /* 그림자 번짐 */
-    document.getElementById('mapShadowBlur').addEventListener('input', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      style.shadowBlur = Math.max(0, Math.min(60, v));
+    /* 위젯 초기화 */
+    document.getElementById('mapReset').addEventListener('click', function () {
+      state = clone(DEFAULT_STATE);
+      style = Object.assign({}, DEFAULT_STYLE);
+
+      document.getElementById('mapTitleInput').value    = DEFAULT_STATE.title;
+      document.getElementById('mapTitleSize').value     = DEFAULT_STATE.titleSize;
+      document.getElementById('mapWidth').value         = DEFAULT_STATE.width;
+      document.getElementById('mapHeight').value        = DEFAULT_STATE.height;
+      document.getElementById('mapZoomLevel').value     = DEFAULT_STATE.zoomLevel;
+      document.getElementById('mapBorderRadius').value  = DEFAULT_STYLE.borderRadius;
+      document.getElementById('mapShadowBlur').value    = DEFAULT_STYLE.shadowBlur;
+      document.getElementById('mapShadowY').value       = DEFAULT_STYLE.shadowY;
+      document.getElementById('mapShadowOpacity').value = DEFAULT_STYLE.shadowOpacity;
+      shadowToggle.classList.add('active');
+      shadowOptions.style.display = '';
+
+      syncInfoInputs();
+      renderTitle();
+      renderInfo();
+      renderWidget();
       applyStyle();
     });
 
-    /* 그림자 Y 거리 */
-    document.getElementById('mapShadowY').addEventListener('input', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      style.shadowY = Math.max(0, Math.min(40, v));
-      applyStyle();
-    });
-
-    /* 그림자 불투명도 */
-    document.getElementById('mapShadowOpacity').addEventListener('input', function () {
-      var v = parseInt(this.value, 10);
-      if (isNaN(v)) return;
-      style.shadowOpacity = Math.max(0, Math.min(100, v));
-      applyStyle();
-    });
-
-    updateProviderUI();
+    syncInfoInputs();
+    renderTitle();
+    renderInfo();
     renderWidget();
     applyStyle();
   }

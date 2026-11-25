@@ -15,7 +15,7 @@
     { id: 'focus-card',                                     name: '포커스 카드',           category: 'card',    catLabel: '카드',    desc: '이미지 포커스 카드' },
     { id: 'focus-card-2',                                   name: '포커스 카드 2',         category: 'card',    catLabel: '카드',    desc: '확장형 포커스 카드' },
     { id: 'image-faq',                                      name: '이미지 FAQ',            category: 'faq',     catLabel: 'FAQ',     desc: '이미지 + 아코디언 FAQ' },
-    { id: 'map',                                            name: '지도',                  category: 'utility', catLabel: '편의성',  desc: '구글맵 / 카카오맵 임베드 위젯' },
+    { id: 'map',                                            name: '지도',                  category: 'utility', catLabel: '편의성',  desc: '구글맵 임베드 위젯' },
     { id: 'value-card',                                     name: 'Value 카드',            category: 'card',    catLabel: '카드',    desc: '이미지 카드 그리드 섹션' },
     { id: 'hero-main-slide',                                name: '히어로 슬라이드',        category: 'hero',    catLabel: '히어로',  desc: '전체 화면 히어로 메인 슬라이드' },
     { id: 'slide-card',                                     name: '슬라이드 카드',         category: 'card',    catLabel: '카드',    desc: '이미지 슬라이드 카드' },

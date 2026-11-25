@@ -11,7 +11,16 @@
 <div class="app">
 
   <main class="editor__canvas editor__canvas--map">
-    <div class="map-widget" id="mapWidget"></div>
+    <div class="map-block">
+      <h2 class="map-title" id="mapTitle">오시는 길</h2>
+      <div class="map-widget" id="mapWidget"></div>
+      <dl class="map-info map-info--grid" id="mapInfo">
+        <div class="map-info__row"><dt class="map-info__label">주소</dt><dd class="map-info__value" data-info="address"></dd></div>
+        <div class="map-info__row"><dt class="map-info__label">대표전화</dt><dd class="map-info__value" data-info="phone"></dd></div>
+        <div class="map-info__row"><dt class="map-info__label">운영시간</dt><dd class="map-info__value" data-info="hours"></dd></div>
+        <div class="map-info__row"><dt class="map-info__label">이메일</dt><dd class="map-info__value" data-info="email"></dd></div>
+      </dl>
+    </div>
   </main>
 
   <aside class="inspector" id="mapInspector">
@@ -21,24 +30,43 @@
     </div>
     <div class="inspector__body">
 
-      <!-- 지도 제공자 -->
+      <!-- 텍스트 -->
       <div class="inspector__section">
         <button class="inspector__sec-toggle" type="button">
-          <span>지도 제공자</span>
+          <span>텍스트</span>
           <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <polyline points="4,10 8,6 12,10"/>
           </svg>
         </button>
         <div class="inspector__sec-body">
-          <div class="inspector__layout-toggle">
-            <button class="inspector__layout-btn active" id="mapProviderGoogle" type="button">구글맵</button>
-            <button class="inspector__layout-btn" id="mapProviderKakao" type="button">카카오맵</button>
+          <input
+            class="map-search-row__input map-title-input"
+            type="text"
+            id="mapTitleInput"
+            value="오시는 길"
+            placeholder="비워두면 텍스트가 숨겨집니다"
+            autocomplete="off"
+          >
+          <div class="inspector__field">
+            <label class="inspector__field-label">글자 크기</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="mapTitleSize" value="28" min="12" max="64">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">정렬</label>
+            <div class="inspector__layout-toggle" id="mapTitleAlign">
+              <button class="inspector__layout-btn active" data-align="left" type="button">왼쪽</button>
+              <button class="inspector__layout-btn" data-align="center" type="button">가운데</button>
+              <button class="inspector__layout-btn" data-align="right" type="button">오른쪽</button>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- 구글맵: 주소 검색 -->
-      <div class="inspector__section" id="mapAddressSection">
+      <!-- 주소 검색 -->
+      <div class="inspector__section">
         <button class="inspector__sec-toggle" type="button">
           <span>주소 검색</span>
           <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
@@ -51,7 +79,7 @@
               class="map-search-row__input"
               type="text"
               id="mapAddressInput"
-              placeholder="예: 서울특별시청"
+              placeholder="건물명 또는 상호명 (예: 서울특별시청)"
               autocomplete="off"
             >
             <button class="map-search-row__btn" id="mapSearchBtn" type="button">검색</button>
@@ -59,29 +87,35 @@
         </div>
       </div>
 
-      <!-- 카카오맵: 코드 붙여넣기 -->
-      <div class="inspector__section" id="mapKakaoSection" style="display:none">
+      <!-- 보조 텍스트 -->
+      <div class="inspector__section">
         <button class="inspector__sec-toggle" type="button">
-          <span>카카오맵 코드</span>
+          <span>보조 텍스트</span>
           <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <polyline points="4,10 8,6 12,10"/>
           </svg>
         </button>
         <div class="inspector__sec-body">
-          <p class="inspector__hint">
-            map.kakao.com → 장소 검색 →
-            <strong>공유 → HTML 태그 복사 → 소스 생성하기</strong>
-            → 코드 전체 복사 후 붙여넣기
-          </p>
-          <textarea
-            class="map-code-textarea"
-            id="mapKakaoCode"
-            rows="5"
-            placeholder="카카오맵 HTML 코드를 붙여넣으세요"
-            spellcheck="false"
-          ></textarea>
-          <button class="map-code-apply-btn" id="mapKakaoCodeApply" type="button">지도 적용</button>
-          <p class="map-search-status" id="mapKakaoStatus"></p>
+          <div class="inspector__layout-toggle" id="mapInfoLayout">
+            <button class="inspector__layout-btn active" data-layout="grid" type="button">2열 그리드</button>
+            <button class="inspector__layout-btn" data-layout="list" type="button">세로 나열</button>
+          </div>
+          <label class="map-info-field">
+            <span class="map-info-field__label">주소 (도로명)</span>
+            <input class="map-search-row__input" type="text" data-info-input="address" placeholder="예: 서울특별시 중구 세종대로 110" autocomplete="off">
+          </label>
+          <label class="map-info-field">
+            <span class="map-info-field__label">대표전화</span>
+            <input class="map-search-row__input" type="text" data-info-input="phone" autocomplete="off">
+          </label>
+          <label class="map-info-field">
+            <span class="map-info-field__label">운영시간</span>
+            <input class="map-search-row__input" type="text" data-info-input="hours" autocomplete="off">
+          </label>
+          <label class="map-info-field">
+            <span class="map-info-field__label">이메일</span>
+            <input class="map-search-row__input" type="text" data-info-input="email" autocomplete="off">
+          </label>
         </div>
       </div>
 

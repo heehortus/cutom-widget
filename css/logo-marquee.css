@@ -12,6 +12,12 @@
   padding: 0;
 }
 
+/* 위젯 래퍼는 캔버스 폭을 꽉 채움 (반복 세트 수 계산 기준) */
+#logoMarqueeWrap {
+  width: 100%;
+  min-width: 0;
+}
+
 /* Box-sizing */
 .lm-root *, .lm-root *::before, .lm-root *::after { box-sizing: border-box; }
 
@@ -19,17 +25,16 @@
 .lm-root {
   --lm-title-size:    42px;
   --lm-desc-size:     18px;
-  --lm-title-color:   #212529;
-  --lm-desc-color:    #6b7280;
-  --lm-bg:            #ffffff;
+  --lm-title-color:   var(--clr-900);
+  --lm-desc-color:    var(--clr-body);
   --lm-logo-w:        120px;
   --lm-logo-h:        48px;
   --lm-gap:           60px;
   --lm-speed:         20s;
+  --lm-shift:         1080px; /* 로고 한 세트의 폭 — JS가 계산해서 덮어씀 */
   --lm-section-gap:   40px;  /* gap between header and marquee */
 
   width: 100%;
-  background: var(--lm-bg);
   padding: 80px 0;
   overflow: hidden;
 }
@@ -82,21 +87,29 @@
 .lm-marquee::before { left: 0;  background: linear-gradient(to right, var(--lm-bg), transparent); }
 .lm-marquee::after  { right: 0; background: linear-gradient(to left,  var(--lm-bg), transparent); }
 
-/* Track */
+/* Track — 같은 로고 세트(.lm-group)를 화면 폭보다 넉넉하게 반복 */
 .lm-track {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
+  width: max-content;
   will-change: transform;
 }
 
+.lm-group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+/* 정확히 한 세트 폭만큼 이동 후 처음으로 → 이음매 없이 무한 반복 */
 @keyframes lm-scroll-left {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(calc(-1 * var(--lm-shift)), 0, 0); }
 }
 @keyframes lm-scroll-right {
-  from { transform: translateX(-50%); }
-  to   { transform: translateX(0); }
+  from { transform: translate3d(calc(-1 * var(--lm-shift)), 0, 0); }
+  to   { transform: translate3d(0, 0, 0); }
 }
 
 .lm-root[data-direction="left"]  .lm-track { animation: lm-scroll-left  var(--lm-speed) linear infinite; }
@@ -104,7 +117,7 @@
 
 .lm-root[data-pause-hover="on"] .lm-marquee:hover .lm-track { animation-play-state: paused; }
 
-/* Logo item */
+/* Logo item — 기본 흑백, 마우스를 올린 로고만 컬러 */
 .lm-item {
   flex-shrink: 0;
   width: var(--lm-logo-w);
@@ -113,6 +126,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  filter: grayscale(100%);
+  transition: filter 0.3s ease;
+}
+
+.lm-item:hover {
+  filter: grayscale(0%);
 }
 
 .lm-item img {
@@ -129,11 +148,16 @@
 /* Placeholder when no image */
 .lm-item--ph {
   border-radius: 8px;
-  background: #e9ecef;
-  color: #adb5bd;
+  background: var(--clr-200);
+  color: var(--clr-500);
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.08em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lm-root .lm-track { animation-play-state: paused; }
+  .lm-item { transition: none; }
 }
 
 /* Inspector footer action buttons */
@@ -150,18 +174,18 @@
   gap: 6px;
   padding: 10px;
   background: none;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   font-size: 13px;
-  color: #495057;
+  color: var(--clr-750);
   cursor: pointer;
   border-radius: 7px;
   transition: background 0.15s, color 0.15s, border-color 0.15s;
 }
 
 .inspector__footer-btn:hover {
-  background: #f1f3f5;
-  border-color: #ced4da;
-  color: #343a40;
+  background: var(--clr-100);
+  border-color: var(--clr-400);
+  color: var(--clr-800);
 }
 
 /* Inspector logo item row */
@@ -170,7 +194,7 @@
   align-items: center;
   gap: 8px;
   padding: 8px 0;
-  border-bottom: 1px solid #f8f9fa;
+  border-bottom: 1px solid var(--clr-50);
 }
 
 .lm-logo-row:last-child {
@@ -182,12 +206,12 @@
   height: 28px;
   flex-shrink: 0;
   border-radius: 4px;
-  background: #e9ecef;
+  background: var(--clr-200);
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #adb5bd;
+  color: var(--clr-500);
   font-size: 9px;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -204,17 +228,17 @@
   flex: 1;
   min-width: 0;
   font-size: 13px;
-  color: #343a40;
-  border: 1px solid #dee2e6;
+  color: var(--clr-800);
+  border: 1px solid var(--clr-300);
   border-radius: 5px;
   padding: 5px 8px;
-  background: #ffffff;
+  background: var(--clr-white);
   outline: none;
   transition: border-color 0.15s;
 }
 
 .lm-logo-row__alt:focus {
-  border-color: #868e96;
+  border-color: var(--clr-600);
 }
 
 .lm-logo-row__upload {
@@ -224,17 +248,17 @@
   justify-content: center;
   width: 28px;
   height: 28px;
-  border: 1px solid #dee2e6;
+  border: 1px solid var(--clr-300);
   border-radius: 5px;
-  background: #ffffff;
-  color: #868e96;
+  background: var(--clr-white);
+  color: var(--clr-600);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .lm-logo-row__upload:hover {
-  background: #f1f3f5;
-  color: #343a40;
+  background: var(--clr-100);
+  color: var(--clr-800);
 }
 
 .lm-logo-row__delete {
@@ -247,14 +271,14 @@
   border: none;
   border-radius: 5px;
   background: none;
-  color: #adb5bd;
+  color: var(--clr-500);
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
 
 .lm-logo-row__delete:hover {
-  background: #f1f3f5;
-  color: #343a40;
+  background: var(--clr-100);
+  color: var(--clr-800);
 }
 
 /* Gallery thumbnail */
@@ -265,10 +289,10 @@
   justify-content: center;
   gap: 10px;
   padding: 16px 12px;
-  background: #ffffff;
+  background: var(--clr-white);
   overflow: hidden;
 }
-.gthumb--logo-marquee .gthumb__title { width: 80px; height: 10px; background: #343a40; border-radius: 3px; }
-.gthumb--logo-marquee .gthumb__desc  { width: 60px; height: 7px; background: #ced4da; border-radius: 3px; }
+.gthumb--logo-marquee .gthumb__title { width: 80px; height: 10px; background: var(--clr-800); border-radius: 3px; }
+.gthumb--logo-marquee .gthumb__desc  { width: 60px; height: 7px; background: var(--clr-400); border-radius: 3px; }
 .gthumb--logo-marquee .gthumb__logos { display: flex; gap: 8px; margin-top: 4px; }
-.gthumb--logo-marquee .gthumb__logo  { width: 36px; height: 18px; background: #dee2e6; border-radius: 3px; }
+.gthumb--logo-marquee .gthumb__logo  { width: 36px; height: 18px; background: var(--clr-300); border-radius: 3px; }

@@ -49,6 +49,9 @@
   var currentDetailLogo  = null;
   var detailEl           = null;
 
+  /* 현재 렌더링된 로고 세트(그룹) 개수 — 리사이즈 시 비교용 */
+  var renderedGroups     = 0;
+
   /* ── DOM refs ── */
   var wrapEl      = document.getElementById('logoMarqueeWrap');
   var inspectorEl = document.getElementById('logoMarqueeInspector');
@@ -105,12 +108,21 @@
       (opacity / 100) + ')';
   }
 
+  /* ── Infinite loop helpers ──
+     로고 한 세트의 폭(= 한 바퀴 이동 거리)과,
+     화면 폭을 빈틈 없이 채우는 데 필요한 세트 개수를 계산 */
+  function setWidth() {
+    return Math.max(1, logos.length * (settings.logoW + settings.gap));
+  }
+
+  function groupCount() {
+    var viewW = (wrapEl && wrapEl.clientWidth) || window.innerWidth;
+    /* 화면을 채우는 세트 + 이동 중 뒤따라올 1세트 */
+    return Math.max(2, Math.ceil(viewW / setWidth()) + 1);
+  }
+
   /* ── Build widget HTML ── */
   function buildWidgetHTML() {
-    var titleColor = hexToRgba(content.titleHex, content.titleOpacity) || content.titleHex;
-    var descColor  = hexToRgba(content.descHex,  content.descOpacity)  || content.descHex;
-    var bgColor    = hexToRgba(settings.bgHex,   settings.bgOpacity)   || settings.bgHex;
-
     var pauseHoverVal = settings.pauseHover ? 'on' : 'off';
 
     /* Header */
@@ -128,8 +140,8 @@
       descHtml = '<p class="lm-desc lm-ph" style="opacity:0.35">우리와 함께하는 비즈니스 파트너</p>';
     }
 
-    /* Logos (original + clone for seamless loop) */
-    var logoItems = logos.map(function (logo) {
+    /* 로고 한 세트 */
+    var itemsHtml = logos.map(function (logo) {
       var inner = logo.imgUrl
         ? '<img src="' + escAttr(logo.imgUrl) + '" alt="' + escAttr(logo.alt) + '">'
         : '<span>LOGO</span>';
@@ -137,13 +149,16 @@
       return '<div class="lm-item' + phClass + '">' + inner + '</div>';
     }).join('');
 
-    var cloneItems = logos.map(function (logo) {
-      var inner = logo.imgUrl
-        ? '<img src="' + escAttr(logo.imgUrl) + '" alt="' + escAttr(logo.alt) + '">'
-        : '<span>LOGO</span>';
-      var phClass = logo.imgUrl ? '' : ' lm-item--ph';
-      return '<div class="lm-item' + phClass + '" aria-hidden="true">' + inner + '</div>';
-    }).join('');
+    /* 화면 폭에 맞춰 세트를 필요한 만큼 반복 (첫 세트만 스크린리더에 노출) */
+    var count = groupCount();
+    renderedGroups = count;
+    var groupsHtml = '';
+    for (var i = 0; i < count; i++) {
+      groupsHtml +=
+        '<div class="lm-group"' + (i > 0 ? ' aria-hidden="true"' : '') + '>' +
+          itemsHtml +
+        '</div>';
+    }
 
     return (
       '<div class="lm-root"' +
@@ -157,8 +172,7 @@
         '</div>' +
         '<div class="lm-marquee">' +
           '<div class="lm-track">' +
-            logoItems +
-            cloneItems +
+            groupsHtml +
           '</div>' +
         '</div>' +
       '</div>'
@@ -182,6 +196,7 @@
     rootEl.style.setProperty('--lm-logo-h',      settings.logoH     + 'px');
     rootEl.style.setProperty('--lm-gap',         settings.gap       + 'px');
     rootEl.style.setProperty('--lm-speed',       settings.speed     + 's');
+    rootEl.style.setProperty('--lm-shift',       setWidth()         + 'px');
 
     /* Sync swatches */
     var titleSwatch = document.getElementById('lmTitleSwatch');
@@ -569,6 +584,17 @@
   detailEl = createDetailPanel();
   renderWidget();
   renderInspectorItems();
+
+  /* 화면 폭이 바뀌어 필요한 세트 수가 달라지면 다시 그려 빈틈을 막음 */
+  if (window.ResizeObserver && wrapEl) {
+    new ResizeObserver(function () {
+      if (groupCount() !== renderedGroups) renderWidget();
+    }).observe(wrapEl);
+  } else {
+    window.addEventListener('resize', function () {
+      if (groupCount() !== renderedGroups) renderWidget();
+    });
+  }
 
   /* Sync initial form values */
   var titleTextEl = document.getElementById('lmTitleText');
