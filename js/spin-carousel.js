@@ -15,12 +15,25 @@
     return [1, 2, 3, 4, 5, 6].map(function (i) { return { id: i, src: '', alt: '' }; });
   }
 
+  var DEFAULT_HEADER = {
+    title:        '성장은 멈추지 않는다',
+    titleSize:    42,
+    titleHex:     '#212529',
+    titleOpacity: 100,
+    desc:         '끊임없이 나아가는 우리의 이야기',
+    descSize:     18,
+    descHex:      '#6b7280',
+    descOpacity:  100,
+    align:        'center'
+  };
+
   var state = {
     cards:     makeCards(),
     speed:     12,
     direction: 'left',
     ratio:     'portrait',
-    nextId:    7
+    nextId:    7,
+    header:    JSON.parse(JSON.stringify(DEFAULT_HEADER))
   };
 
   var detailEl          = null;
@@ -30,6 +43,21 @@
   /* ── Helpers ── */
   function clamp(v, mn, mx) { return Math.min(Math.max(v, mn), mx); }
   function escAttr(str) { return String(str).replace(/"/g, '&quot;'); }
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;');
+  }
+  function hexToRgba(hex, opacity) {
+    var h = hex.replace('#', '');
+    if (!/^[0-9a-fA-F]{6}$/.test(h)) return null;
+    return 'rgba(' +
+      parseInt(h.slice(0, 2), 16) + ',' +
+      parseInt(h.slice(2, 4), 16) + ',' +
+      parseInt(h.slice(4, 6), 16) + ',' +
+      (opacity / 100) + ')';
+  }
 
   /* ── Build widget HTML ── */
   function buildWidgetHTML() {
@@ -40,6 +68,7 @@
     var dim = RATIOS[state.ratio];
     var radius      = Math.max(160, Math.round(N * (dim.w + 50) / (2 * Math.PI)));
     var perspective = Math.round(radius * 3.5);
+    var h = state.header;
 
     var cardsHTML = state.cards.map(function (card, i) {
       var angle = (360 / N) * i;
@@ -49,10 +78,24 @@
       return '<div class="' + cls + '" style="transform:' + t + '">' + inner + '</div>';
     }).join('');
 
+    var titleHtml = h.title
+      ? '<h2 class="sc-title">' + esc(h.title) + '</h2>'
+      : '<h2 class="sc-title sc-ph" style="opacity:0.35">' + esc(DEFAULT_HEADER.title) + '</h2>';
+
+    var descHtml = h.desc
+      ? '<p class="sc-desc">' + esc(h.desc) + '</p>'
+      : '<p class="sc-desc sc-ph" style="opacity:0.35">' + esc(DEFAULT_HEADER.desc) + '</p>';
+
     wrap.innerHTML =
-      '<div class="sc-root" id="scRoot">' +
-        '<div class="sc-stage" id="scStage" style="perspective:' + perspective + 'px">' +
-          '<div class="sc-scene" id="scScene">' + cardsHTML + '</div>' +
+      '<div class="sc-wrapper" id="scWrapper" data-align="' + escAttr(h.align) + '">' +
+        '<div class="sc-header">' +
+          titleHtml +
+          descHtml +
+        '</div>' +
+        '<div class="sc-root" id="scRoot">' +
+          '<div class="sc-stage" id="scStage" style="perspective:' + perspective + 'px">' +
+            '<div class="sc-scene" id="scScene">' + cardsHTML + '</div>' +
+          '</div>' +
         '</div>' +
       '</div>';
 
@@ -61,13 +104,31 @@
 
   /* ── Apply CSS vars & attributes ── */
   function applyVars() {
-    var root = document.getElementById('scRoot');
+    var root    = document.getElementById('scRoot');
+    var wrapper = document.getElementById('scWrapper');
     if (!root) return;
     var dim = RATIOS[state.ratio];
     root.style.setProperty('--sc-speed',  state.speed + 's');
     root.style.setProperty('--sc-card-w', dim.w + 'px');
     root.style.setProperty('--sc-card-h', dim.h + 'px');
     root.setAttribute('data-direction', state.direction);
+    if (wrapper) applyHeaderVars(wrapper);
+  }
+
+  function applyHeaderVars(wrapper) {
+    var h = state.header;
+    var titleColor = hexToRgba(h.titleHex, h.titleOpacity) || h.titleHex;
+    var descColor  = hexToRgba(h.descHex,  h.descOpacity)  || h.descHex;
+    wrapper.style.setProperty('--sc-title-size',  h.titleSize + 'px');
+    wrapper.style.setProperty('--sc-title-color', titleColor);
+    wrapper.style.setProperty('--sc-desc-size',   h.descSize  + 'px');
+    wrapper.style.setProperty('--sc-desc-color',  descColor);
+    wrapper.setAttribute('data-align', h.align);
+    /* sync swatches */
+    var titleSwatch = document.getElementById('scTitleSwatch');
+    var descSwatch  = document.getElementById('scDescSwatch');
+    if (titleSwatch) titleSwatch.style.background = titleColor;
+    if (descSwatch)  descSwatch.style.background  = descColor;
   }
 
   /* ── Restart CSS animation (direction change) ── */
@@ -307,6 +368,41 @@
     });
   }
 
+  /* ── Color bind helper ── */
+  function bindColor(pickerId, hexId, opacityId, swatchId, key) {
+    var picker = document.getElementById(pickerId);
+    var hexEl  = document.getElementById(hexId);
+    var opEl   = opacityId ? document.getElementById(opacityId) : null;
+    if (!picker || !hexEl) return;
+
+    function applyColor() {
+      var wrapper = document.getElementById('scWrapper');
+      if (wrapper) applyHeaderVars(wrapper);
+    }
+
+    picker.addEventListener('input', function () {
+      var val = picker.value.toUpperCase();
+      state.header[key] = val;
+      hexEl.value = val;
+      applyColor();
+    });
+    hexEl.addEventListener('input', function () {
+      var v = hexEl.value;
+      if (/^#[0-9a-fA-F]{6}$/.test(v)) {
+        state.header[key] = v.toUpperCase();
+        picker.value = v;
+        applyColor();
+      }
+    });
+    if (opEl) {
+      var opKey = key.replace('Hex', 'Opacity');
+      opEl.addEventListener('input', function () {
+        state.header[opKey] = clamp(parseFloat(opEl.value) || 0, 0, 100);
+        applyColor();
+      });
+    }
+  }
+
   /* ── Inspector bindings ── */
   function bindInspector() {
     var inspector = document.getElementById('spinCarouselInspector');
@@ -319,6 +415,65 @@
         });
       });
     }
+
+    /* ── Header: title text ── */
+    var scTitleText = document.getElementById('scTitleText');
+    if (scTitleText) {
+      scTitleText.value = state.header.title;
+      scTitleText.addEventListener('input', function () {
+        state.header.title = scTitleText.value;
+        buildWidgetHTML();
+      });
+    }
+
+    /* ── Header: desc text ── */
+    var scDescText = document.getElementById('scDescText');
+    if (scDescText) {
+      scDescText.value = state.header.desc;
+      scDescText.addEventListener('input', function () {
+        state.header.desc = scDescText.value;
+        buildWidgetHTML();
+      });
+    }
+
+    /* ── Header: title size ── */
+    var scTitleSize = document.getElementById('scTitleSize');
+    if (scTitleSize) {
+      scTitleSize.value = state.header.titleSize;
+      scTitleSize.addEventListener('input', function () {
+        var v = parseFloat(scTitleSize.value);
+        if (!isNaN(v)) {
+          state.header.titleSize = clamp(v, 12, 120);
+          var wrapper = document.getElementById('scWrapper');
+          if (wrapper) wrapper.style.setProperty('--sc-title-size', state.header.titleSize + 'px');
+        }
+      });
+    }
+
+    /* ── Header: desc size ── */
+    var scDescSize = document.getElementById('scDescSize');
+    if (scDescSize) {
+      scDescSize.value = state.header.descSize;
+      scDescSize.addEventListener('input', function () {
+        var v = parseFloat(scDescSize.value);
+        if (!isNaN(v)) {
+          state.header.descSize = clamp(v, 8, 60);
+          var wrapper = document.getElementById('scWrapper');
+          if (wrapper) wrapper.style.setProperty('--sc-desc-size', state.header.descSize + 'px');
+        }
+      });
+    }
+
+    /* ── Header: color pickers ── */
+    bindColor('scTitlePicker', 'scTitleHex', 'scTitleOpacity', 'scTitleSwatch', 'titleHex');
+    bindColor('scDescPicker',  'scDescHex',  'scDescOpacity',  'scDescSwatch',  'descHex');
+
+    /* ── Header: align segment ── */
+    bindSegment('scAlignSegment', function (val) {
+      state.header.align = val;
+      var wrapper = document.getElementById('scWrapper');
+      if (wrapper) wrapper.setAttribute('data-align', val);
+    });
 
     /* Add card */
     var addBtn = document.getElementById('scAddCard');
@@ -377,6 +532,7 @@
     state.direction = 'left';
     state.ratio     = 'portrait';
     state.nextId    = 7;
+    state.header    = JSON.parse(JSON.stringify(DEFAULT_HEADER));
 
     if (detailEl) detailEl.classList.remove('open');
     currentDetailCard = null;
@@ -384,6 +540,25 @@
     buildWidgetHTML();
     renderCardList();
 
+    /* Sync header inputs */
+    var el;
+    el = document.getElementById('scTitleText');    if (el) el.value = state.header.title;
+    el = document.getElementById('scDescText');     if (el) el.value = state.header.desc;
+    el = document.getElementById('scTitleSize');    if (el) el.value = state.header.titleSize;
+    el = document.getElementById('scDescSize');     if (el) el.value = state.header.descSize;
+    el = document.getElementById('scTitlePicker');  if (el) el.value = state.header.titleHex;
+    el = document.getElementById('scTitleHex');     if (el) el.value = state.header.titleHex;
+    el = document.getElementById('scTitleOpacity'); if (el) el.value = state.header.titleOpacity;
+    el = document.getElementById('scDescPicker');   if (el) el.value = state.header.descHex;
+    el = document.getElementById('scDescHex');      if (el) el.value = state.header.descHex;
+    el = document.getElementById('scDescOpacity');  if (el) el.value = state.header.descOpacity;
+
+    var alignSeg = document.getElementById('scAlignSegment');
+    if (alignSeg) alignSeg.querySelectorAll('.inspector__layout-btn').forEach(function (b) {
+      b.classList.toggle('active', b.dataset.value === state.header.align);
+    });
+
+    /* Sync carousel inputs */
     var scSpeed = document.getElementById('scSpeed');
     if (scSpeed) scSpeed.value = 12;
 

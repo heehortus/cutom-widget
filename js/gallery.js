@@ -10,6 +10,7 @@
     { id: 'faq',                                            name: 'FAQ',                  category: 'faq',     catLabel: 'FAQ',     desc: '아코디언 FAQ' },
     { id: 'dynamic-card',                                   name: '다이나믹 카드',         category: 'card',    catLabel: '카드',    desc: '역동적인 애니메이션의 카드' },
     { id: 'timeline',                                       name: '연혁 타임라인',          category: 'history', catLabel: '히스토리', desc: '스크롤 애니메이션 연혁 타임라인' },
+    { id: 'tab-history',                                    name: '탭 연혁',                category: 'history', catLabel: '히스토리', desc: '탭 전환형 연혁 위젯' },
     { id: 'horizon-scroll-card',                            name: '가로 스크롤 카드',      category: 'card',    catLabel: '카드',    desc: '가로 스크롤 카드' },
     { id: 'focus-card',                                     name: '포커스 카드',           category: 'card',    catLabel: '카드',    desc: '이미지 포커스 카드' },
     { id: 'focus-card-2',                                   name: '포커스 카드 2',         category: 'card',    catLabel: '카드',    desc: '확장형 포커스 카드' },
@@ -65,7 +66,10 @@
   const IFRAME_REF_W = 1200;
   const PREVIEW_CSS =
     'aside{display:none!important}' +
+    'html,body{overflow:hidden!important;scrollbar-width:none!important}' +
+    'html::-webkit-scrollbar,body::-webkit-scrollbar{display:none!important}' +
     '.app>main{flex:1!important;height:100vh!important;display:flex!important;align-items:center!important;background-image:none!important;overflow:hidden!important}' +
+    '.sc-wrapper{padding-top:8px!important;padding-bottom:8px!important}.sc-header{margin-bottom:12px!important}' +
     '*,*::before,*::after{animation:none!important;transition:none!important}';
 
   function initIframeThumbs() {

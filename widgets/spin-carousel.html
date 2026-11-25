@@ -21,6 +21,68 @@
     </div>
     <div class="inspector__body">
 
+      <!-- 헤더 텍스트 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>헤더 텍스트</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">타이틀 텍스트</label>
+            <input type="text" class="inspector__card-name-input" id="scTitleText" placeholder="타이틀을 입력하세요">
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">타이틀 크기</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="scTitleSize" value="42" min="12" max="120">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">타이틀 컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="scTitleSwatch" style="background:#212529">
+                <input type="color" class="inspector__color-native" id="scTitlePicker" value="#212529">
+              </span>
+              <input type="text" class="inspector__hex-input" id="scTitleHex" value="#212529" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="scTitleOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">설명 텍스트</label>
+            <input type="text" class="inspector__card-name-input" id="scDescText" placeholder="설명을 입력하세요">
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">설명 크기</label>
+            <div class="inspector__num-row">
+              <input class="inspector__num-input" type="number" id="scDescSize" value="18" min="8" max="60">
+              <span class="inspector__unit">px</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">설명 컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="scDescSwatch" style="background:#6b7280">
+                <input type="color" class="inspector__color-native" id="scDescPicker" value="#6b7280">
+              </span>
+              <input type="text" class="inspector__hex-input" id="scDescHex" value="#6b7280" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="scDescOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">텍스트 정렬</label>
+            <div class="inspector__layout-toggle" id="scAlignSegment">
+              <button class="inspector__layout-btn" type="button" data-value="left">왼쪽</button>
+              <button class="inspector__layout-btn active" type="button" data-value="center">가운데</button>
+              <button class="inspector__layout-btn" type="button" data-value="right">오른쪽</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- 카드 목록 -->
       <div class="inspector__section collapsed">
         <button class="inspector__sec-toggle" type="button">

@@ -1,0 +1,314 @@
+/* =====================================
+   Tab History Widget
+   ===================================== */
+
+/* ── Canvas ── */
+.editor__canvas--tab-history {
+  align-items: stretch;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.editor__canvas--tab-history .vp-frame {
+  align-items: flex-start;
+  height: 100%;
+}
+
+/* ── Wrap ── */
+#tabHistoryWrap {
+  width: 100%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: safe center;
+}
+
+/* ── Root ── */
+.th-root {
+  --th-accent: var(--clr-dark);
+  --th-strong: var(--clr-900);
+
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 60px 60px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  flex-shrink: 0;
+}
+
+/* ── Title ── */
+.th-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  text-align: center;
+}
+
+.th-eyebrow {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--th-accent);
+  letter-spacing: 0.04em;
+  line-height: 1.2;
+}
+
+.th-heading {
+  font-size: 44px;
+  font-weight: 700;
+  color: var(--clr-dark);
+  letter-spacing: -0.06em;
+  line-height: 1;
+  margin: 0;
+  word-break: keep-all;
+}
+
+/* ── Body: tabs + panels ── */
+.th-body {
+  display: flex;
+  gap: 56px;
+  align-items: flex-start;
+}
+
+/* ── Tab list (sticky) ── */
+.th-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 40px;
+  align-self: flex-start;
+}
+
+/* ── Tab button ── */
+.th-tab {
+  display: block;
+  min-width: 200px;
+  padding: 14px 22px;
+  border-radius: 999px;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  text-align: left;
+  cursor: pointer;
+  border: 1.5px solid var(--clr-300);
+  background: transparent;
+  color: var(--clr-400);
+}
+
+.th-tab.active {
+  background: var(--th-accent);
+  border-color: var(--th-accent);
+  color: var(--clr-white);
+}
+
+/* ── Panels ── */
+.th-panels {
+  flex: 1;
+  min-width: 0;
+}
+
+.th-panel {
+  display: none;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.th-panel.active {
+  display: flex;
+}
+
+/* ── Decade heading ── */
+.th-decade {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--th-strong);
+  letter-spacing: -0.06em;
+  line-height: 1.3;
+  margin: 0 0 4px;
+}
+
+/* ── Year group ── */
+.th-year-group {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.th-year {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--clr-900);
+  letter-spacing: -0.04em;
+  line-height: 1.6;
+  flex-shrink: 0;
+  min-width: 48px;
+}
+
+.th-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+}
+
+.th-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--clr-900);
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+}
+
+.th-bullet {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--clr-900);
+  flex-shrink: 0;
+}
+
+/* ── Empty panel state ── */
+.th-panel-empty {
+  padding: 40px 0;
+  font-size: 14px;
+  color: var(--clr-500);
+  letter-spacing: -0.01em;
+}
+
+/* ── Mobile ── */
+@container (max-width: 768px) {
+  .th-root {
+    padding: 0 24px 60px;
+    gap: 40px;
+    margin: 40px auto;
+  }
+
+  .th-heading {
+    font-size: 32px;
+  }
+
+  .th-body {
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .th-tabs {
+    flex-direction: row;
+    flex-wrap: wrap;
+    position: static;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .th-tab {
+    min-width: unset;
+    padding: 10px 18px;
+    font-size: 15px;
+  }
+
+  .th-panels {
+    width: 100%;
+  }
+}
+
+/* ── Inspector: year block ── */
+.th-year-block {
+  border: 1px solid var(--clr-200);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.th-year-block-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+
+.th-year-num-input {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid var(--clr-200);
+  border-radius: 4px;
+  padding: 5px 8px;
+  background: transparent;
+  color: var(--clr-900);
+  letter-spacing: -0.02em;
+  outline: none;
+}
+
+.th-year-num-input:focus {
+  border-color: var(--clr-500);
+}
+
+.th-delete-btn {
+  width: 22px;
+  height: 22px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--clr-500);
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  flex-shrink: 0;
+  padding: 0;
+}
+
+.th-delete-btn:hover {
+  background: var(--clr-100);
+  color: var(--clr-danger);
+}
+
+.th-item-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.th-item-input {
+  flex: 1;
+  font-size: 12px;
+  border: 1px solid var(--clr-200);
+  border-radius: 4px;
+  padding: 5px 8px;
+  background: transparent;
+  color: var(--clr-900);
+  outline: none;
+}
+
+.th-item-input:focus {
+  border-color: var(--clr-500);
+}
+
+.th-add-item-btn {
+  font-size: 11px;
+  color: var(--clr-600);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 0;
+  text-align: left;
+  letter-spacing: -0.01em;
+}
+
+.th-add-item-btn:hover {
+  color: var(--clr-900);
+}

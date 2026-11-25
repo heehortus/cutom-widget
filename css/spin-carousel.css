@@ -9,6 +9,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+}
+
+/* Wrapper — header + carousel stacked */
+.sc-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 28px 40px;
+}
+
+/* Header */
+.sc-header {
+  width: 740px;
+  margin-bottom: 28px;
+}
+
+.sc-wrapper[data-align="left"]   .sc-header { text-align: left; }
+.sc-wrapper[data-align="center"] .sc-header { text-align: center; }
+.sc-wrapper[data-align="right"]  .sc-header { text-align: right; }
+
+.sc-title {
+  font-size: var(--sc-title-size, 42px);
+  font-weight: 700;
+  color: var(--sc-title-color, #212529);
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  word-break: keep-all;
+}
+
+.sc-desc {
+  margin-top: 12px;
+  font-size: var(--sc-desc-size, 18px);
+  font-weight: 400;
+  color: var(--sc-desc-color, #6b7280);
+  line-height: 1.6;
+  word-break: keep-all;
 }
 
 /* Root */

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>탭 연혁 위젯</title>
+  <link rel="stylesheet" href="../css/app.css">
+  <link rel="stylesheet" href="../css/tab-history.css">
+</head>
+<body>
+<div class="app">
+
+  <main class="editor__canvas editor__canvas--tab-history">
+    <div id="tabHistoryWrap"></div>
+  </main>
+
+  <aside class="inspector" id="tabHistoryInspector">
+    <div class="inspector__head">
+      <span class="inspector__title">탭 연혁</span>
+      <button class="inspector__close" id="thInspectorClose" aria-label="닫기">&#x2715;</button>
+    </div>
+    <div class="inspector__body">
+
+      <!-- 헤더 텍스트 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>헤더 텍스트</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">아이레이블</label>
+            <input type="text" class="inspector__card-name-input" id="thEyebrow" placeholder="예: HISTORY">
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">제목</label>
+            <input type="text" class="inspector__card-name-input" id="thHeading" placeholder="제목을 입력하세요">
+          </div>
+        </div>
+      </div>
+
+      <!-- 탭 목록 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>탭 목록</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <button class="inspector__sec-add" id="thAddTab" type="button">+ 탭 추가</button>
+          <div id="thTabList"></div>
+        </div>
+      </div>
+
+      <!-- 색상 -->
+      <div class="inspector__section collapsed">
+        <button class="inspector__sec-toggle" type="button">
+          <span>색상</span>
+          <svg class="inspector__chevron" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="4,10 8,6 12,10"/></svg>
+        </button>
+        <div class="inspector__sec-body">
+          <div class="inspector__field">
+            <label class="inspector__field-label">강조 컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="thAccentSwatch">
+                <input type="color" class="inspector__color-native" id="thAccentPicker" value="#1a1a1a">
+              </span>
+              <input type="text" class="inspector__hex-input" id="thAccentHex" value="#1a1a1a" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="thAccentOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+          <div class="inspector__field">
+            <label class="inspector__field-label">연혁 타이틀 컬러</label>
+            <div class="inspector__color-row">
+              <span class="inspector__swatch" id="thStrongSwatch">
+                <input type="color" class="inspector__color-native" id="thStrongPicker" value="#212529">
+              </span>
+              <input type="text" class="inspector__hex-input" id="thStrongHex" value="#212529" maxlength="7" spellcheck="false">
+              <input type="number" class="inspector__opacity-input" id="thStrongOpacity" value="100" min="0" max="100">
+              <span class="inspector__pct">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="inspector__footer">
+      <div class="inspector__footer-actions">
+        <button class="inspector__footer-btn" id="thReset" type="button">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" width="14" height="14">
+            <path d="M2.5 8a5.5 5.5 0 1 0 1.1-3.3"/>
+            <polyline points="2.5,2 2.5,5.5 6,5.5"/>
+          </svg>
+          초기화
+        </button>
+      </div>
+    </div>
+  </aside>
+
+</div>
+<script src="../js/tab-history.js"></script>
+</body>
+</html>

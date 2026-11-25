@@ -23,7 +23,8 @@
     { id: 'logo-marquee',        file: 'widgets/logo-marquee.html',        js: 'js/logo-marquee.js',         css: 'css/logo-marquee.css' },
     { id: 'word-shade',          file: 'widgets/word-shade.html',          js: 'js/word-shade.js',           css: 'css/word-shade.css' },
     { id: 'spin-carousel',       file: 'widgets/spin-carousel.html',       js: 'js/spin-carousel.js',        css: 'css/spin-carousel.css' },
-    { id: 'hover-image-reveal',  file: 'widgets/hover-image-reveal.html',  js: 'js/hover-image-reveal.js',   css: 'css/hover-image-reveal.css' }
+    { id: 'hover-image-reveal',  file: 'widgets/hover-image-reveal.html',  js: 'js/hover-image-reveal.js',   css: 'css/hover-image-reveal.css' },
+    { id: 'tab-history',         file: 'widgets/tab-history.html',         js: 'js/tab-history.js',          css: 'css/tab-history.css' }
   ];
 
   /* ── CSS loader ─────────────────────── */
