@@ -557,13 +557,84 @@
     document.getElementById('imgFaqInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('imgFaqDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      wrap.remove();
-      document.getElementById('imgFaqInspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId       = 3;
+    nextDetailId = 10;
+    imgUrl       = '';
+    items = [
+      { id: 1, title: 'Title', details: [ { id: 1, dTitle: 'Sub Title', dBody: 'Description.' } ] },
+      { id: 2, title: 'Title', details: [ { id: 2, dTitle: 'Sub Title', dBody: 'Description.' } ] }
+    ];
+    style = {
+      gap:           24,
+      itemGap:       16,
+      imgRadius:     16,
+      imgBgHex:      '#CED4DA',
+      imgBgOpacity:  100,
+      itemRadius:    16,
+      borderHex:     '#E1E1E1',
+      borderOpacity: 100,
+      itemBgHex:     '#FFFFFF',
+      itemBgOpacity: 100,
+      headPy:        28,
+      headPx:        32,
+      titleSize:     24,
+      titleHex:      '#222222',
+      titleOpacity:  100,
+      dTitleSize:    20,
+      dTitleHex:     '#555555',
+      dTitleOpacity: 100,
+      dBodySize:     16,
+      dBodyHex:      '#5E5E5E',
+      dBodyOpacity:  100
+    };
+
+    /* 이미지 업로드 UI 초기화 */
+    var imfThumb  = document.getElementById('imfImgThumb');
+    var imfUpload = document.getElementById('imfImgUploadWrap');
+    if (imfThumb)  { imfThumb.innerHTML = UPLOAD_SVG; imfThumb.classList.remove('inspector__img-thumb--filled'); }
+    if (imfUpload) imfUpload.classList.remove('inspector__img-upload--filled');
+    document.getElementById('imfImgUrl').value = '';
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('imfGap').value            = 24;
+    document.getElementById('imfItemGap').value        = 16;
+    document.getElementById('imfImgRadius').value      = 16;
+    document.getElementById('imfImgBgPicker').value    = '#ced4da';
+    document.getElementById('imfImgBgHex').value       = '#CED4DA';
+    document.getElementById('imfImgBgOpacity').value   = 100;
+    document.getElementById('imfItemRadius').value     = 16;
+    document.getElementById('imfBorderPicker').value   = '#e1e1e1';
+    document.getElementById('imfBorderHex').value      = '#E1E1E1';
+    document.getElementById('imfBorderOpacity').value  = 100;
+    document.getElementById('imfItemBgPicker').value   = '#ffffff';
+    document.getElementById('imfItemBgHex').value      = '#FFFFFF';
+    document.getElementById('imfItemBgOpacity').value  = 100;
+    document.getElementById('imfHeadPy').value         = 28;
+    document.getElementById('imfHeadPx').value         = 32;
+    document.getElementById('imfTitleSize').value      = 24;
+    document.getElementById('imfTitlePicker').value    = '#222222';
+    document.getElementById('imfTitleHex').value       = '#222222';
+    document.getElementById('imfTitleOpacity').value   = 100;
+    document.getElementById('imfDTitleSize').value     = 20;
+    document.getElementById('imfDTitlePicker').value   = '#555555';
+    document.getElementById('imfDTitleHex').value      = '#555555';
+    document.getElementById('imfDTitleOpacity').value  = 100;
+    document.getElementById('imfDBodySize').value      = 16;
+    document.getElementById('imfDBodyPicker').value    = '#5e5e5e';
+    document.getElementById('imfDBodyHex').value       = '#5E5E5E';
+    document.getElementById('imfDBodyOpacity').value   = 100;
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('imgFaqReset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   detailEl = createDetailPanel();

@@ -408,14 +408,72 @@
     document.getElementById('cardInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ───────────────────── */
+  /* ── Reset ───────────────────────────── */
 
-  document.getElementById('cardDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      cardListEl.remove();
-      document.getElementById('cardInspector').style.display = 'none';
-    }
-  });
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 5;
+    cards  = [
+      { id: 1, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' },
+      { id: 2, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' },
+      { id: 3, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' },
+      { id: 4, name: 'TITLE', role: 'DESCRIPTION', imgSrc: '' }
+    ];
+    layout   = 'row';
+    gridCols = 3;
+    gridRows = 2;
+    hoverStyle = {
+      startHex:     '#555555',
+      startOpacity: 100,
+      endHex:       '#222222',
+      endOpacity:   100
+    };
+    textStyle = {
+      nameSize:    24,
+      nameHex:     '#F9F9F9',
+      nameOpacity: 100,
+      roleSize:    16,
+      roleHex:     '#F9F9F9',
+      roleOpacity: 100
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('cardWidth').value         = 240;
+    document.getElementById('cardHeight').value        = 320;
+    document.getElementById('gridCols').value          = 3;
+    document.getElementById('gridRows').value          = 2;
+
+    /* 레이아웃 버튼 토글 */
+    document.querySelectorAll('#cardInspector .inspector__layout-btn[data-layout]').forEach(function (btn) {
+      btn.classList.toggle('active', btn.getAttribute('data-layout') === 'row');
+    });
+
+    document.getElementById('hoverStartPicker').value  = '#555555';
+    document.getElementById('hoverStartHex').value     = '#555555';
+    document.getElementById('hoverStartOpacity').value = 100;
+    document.getElementById('hoverEndPicker').value    = '#222222';
+    document.getElementById('hoverEndHex').value       = '#222222';
+    document.getElementById('hoverEndOpacity').value   = 100;
+    document.getElementById('nameFontSize').value      = 24;
+    document.getElementById('nameColorPicker').value   = '#F9F9F9';
+    document.getElementById('nameColorHex').value      = '#F9F9F9';
+    document.getElementById('nameColorOpacity').value  = 100;
+    document.getElementById('roleFontSize').value      = 16;
+    document.getElementById('roleColorPicker').value   = '#F9F9F9';
+    document.getElementById('roleColorHex').value      = '#F9F9F9';
+    document.getElementById('roleColorOpacity').value  = 100;
+
+    /* cardList 클래스 복원 */
+    cardListEl.className = 'card-list layout-row';
+
+    renderCards();
+    renderItems();
+    applyTextStyle();
+  }
+
+  document.getElementById('cardReset').addEventListener('click', resetAll);
 
   /* ── Text style controls ─────────────── */
 

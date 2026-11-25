@@ -497,13 +497,78 @@
     document.getElementById('focusCardInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('focusCardDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      wrap.remove();
-      document.getElementById('focusCardInspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 4;
+    items = [
+      { id: 1, title: 'Please Enter Card Title', subtitle: 'Please Enter Card Sub-Title.', btnLabel: 'View More', bgColor: BG_COLORS[0], imgSrc: '' },
+      { id: 2, title: 'Please Enter Card Title', subtitle: 'Please Enter Card Sub-Title.', btnLabel: 'View More', bgColor: BG_COLORS[1], imgSrc: '' },
+      { id: 3, title: 'Please Enter Card Title', subtitle: 'Please Enter Card Sub-Title.', btnLabel: 'View More', bgColor: BG_COLORS[2], imgSrc: '' }
+    ];
+    style = {
+      btnOnOff:              true,
+      titleSize:             24,
+      subtitleSize:          16,
+      titleGap:              4,
+      cardRadius:            8,
+      cardHeight:            480,
+      titleHex:              '#ffffff',
+      titleOpacity:          100,
+      subtitleHex:           '#ffffff',
+      subtitleOpacity:       100,
+      dimHex:                '#000000',
+      dimOpacity:            40,
+      btnBgHex:              '#ffffff',
+      btnBgOpacity:          100,
+      btnLabelSize:          14,
+      btnLabelWeight:        600,
+      btnLabelColorHex:      '#111111',
+      btnLabelColorOpacity:  100,
+      btnLabelSpacing:       0,
+      btnGap:                8,
+      hoverShadowHex:        '#000000',
+      hoverShadowOpacity:    30
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('fcBtnOnOff').checked        = true;
+    document.getElementById('fcCardHeight').value        = 480;
+    document.getElementById('fcCardRadius').value        = 8;
+    document.getElementById('fcTitleSize').value         = 24;
+    document.getElementById('fcTitlePicker').value       = '#ffffff';
+    document.getElementById('fcTitleHex').value          = '#FFFFFF';
+    document.getElementById('fcTitleOpacity').value      = 100;
+    document.getElementById('fcSubtitleSize').value      = 16;
+    document.getElementById('fcSubtitlePicker').value    = '#ffffff';
+    document.getElementById('fcSubtitleHex').value       = '#FFFFFF';
+    document.getElementById('fcSubtitleOpacity').value   = 100;
+    document.getElementById('fcTitleGap').value          = 4;
+    document.getElementById('fcBtnBgPicker').value       = '#ffffff';
+    document.getElementById('fcBtnBgHex').value          = '#FFFFFF';
+    document.getElementById('fcBtnBgOpacity').value      = 100;
+    document.getElementById('fcBtnLabelSize').value      = 14;
+    document.getElementById('fcBtnLabelWeight').value    = 600;
+    document.getElementById('fcBtnLabelSpacing').value   = 0;
+    document.getElementById('fcBtnLabelColorPicker').value = '#111111';
+    document.getElementById('fcBtnLabelColorHex').value  = '#111111';
+    document.getElementById('fcBtnLabelColorOpacity').value = 100;
+    document.getElementById('fcBtnGap').value            = 8;
+    document.getElementById('fcDimPicker').value         = '#000000';
+    document.getElementById('fcDimHex').value            = '#000000';
+    document.getElementById('fcDimOpacity').value        = 40;
+    document.getElementById('fcHoverShadowPicker').value = '#000000';
+    document.getElementById('fcHoverShadowHex').value    = '#000000';
+    document.getElementById('fcHoverShadowOpacity').value = 30;
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('focusCardReset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   detailEl = createDetailPanel();

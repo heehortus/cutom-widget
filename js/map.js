@@ -373,10 +373,46 @@
       if (state.provider === 'google' && state.address) renderWidget();
     });
 
-    /* 위젯 삭제 */
-    document.getElementById('mapDelete').addEventListener('click', function () {
+    /* 위젯 초기화 */
+    document.getElementById('mapReset').addEventListener('click', function () {
+      state = {
+        provider:  'google',
+        address:   '서울특별시청',
+        width:     600,
+        height:    450,
+        zoomLevel: 3,
+        kakaoTs:   '',
+        kakaoKey:  ''
+      };
+      style = {
+        borderRadius: 10,
+        shadow:        true,
+        shadowBlur:    16,
+        shadowY:        2,
+        shadowOpacity: 12
+      };
+
+      /* 인스펙터 inputs 동기화 */
+      updateProviderUI();
+      document.getElementById('mapAddressInput').value  = '서울특별시청';
+      document.getElementById('mapKakaoCode').value     = '';
+      var kakaoStatus = document.getElementById('mapKakaoStatus');
+      if (kakaoStatus) kakaoStatus.textContent = '';
+      document.getElementById('mapWidth').value         = 600;
+      document.getElementById('mapHeight').value        = 450;
+      document.getElementById('mapZoomLevel').value     = 3;
+      document.getElementById('mapBorderRadius').value  = 10;
+      document.getElementById('mapShadowBlur').value    = 16;
+      document.getElementById('mapShadowY').value       = 2;
+      document.getElementById('mapShadowOpacity').value = 12;
+      var shadowToggle  = document.getElementById('mapShadowToggle');
+      var shadowOptions = document.getElementById('mapShadowOptions');
+      shadowToggle.classList.add('active');
+      shadowOptions.style.display = '';
+
       var el = document.getElementById('mapWidget');
       if (el) el.innerHTML = '';
+      renderWidget();
     });
 
     /* 모서리 둥글기 */

@@ -397,13 +397,47 @@
     document.getElementById('faqInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('faqDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      faqWidget.remove();
-      document.getElementById('faqInspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 4;
+    items = [
+      { id: 1, q: 'Power Absorption', a: 'Korean yarn is split evenly and stably, so it has higher bulkiness and better absorbency.\nYou can expect about 150% functional superiority compared to Chinese products.', open: true },
+      { id: 2, q: 'Lint free', a: 'Our fabric is designed to minimize lint and fiber shedding, keeping your environment clean.', open: false },
+      { id: 3, q: 'Long lasting', a: 'Built with premium materials that maintain quality and appearance through extended use.', open: false }
+    ];
+    textStyle = { qSize: 18, qHex: '#1a1a1a', qOpacity: 100, aSize: 14, aHex: '#6b7280', aOpacity: 100 };
+    maxWidth   = 760;
+    bgEnabled  = false;
+    bgHex      = '#F5F5F5';
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('faqMaxWidth').value      = 760;
+    document.getElementById('faqQSize').value         = 18;
+    document.getElementById('faqQColorPicker').value  = '#1a1a1a';
+    document.getElementById('faqQColorHex').value     = '#1A1A1A';
+    document.getElementById('faqQColorOpacity').value = 100;
+    document.getElementById('faqASize').value         = 14;
+    document.getElementById('faqAColorPicker').value  = '#6b7280';
+    document.getElementById('faqAColorHex').value     = '#6B7280';
+    document.getElementById('faqAColorOpacity').value = 100;
+
+    var bgToggle = document.getElementById('faqBgToggle');
+    var bgWrap   = document.getElementById('faqBgColorWrap');
+    bgToggle.classList.remove('active');
+    bgToggle.setAttribute('aria-pressed', 'false');
+    bgWrap.style.display = 'none';
+    document.getElementById('faqBgColorPicker').value = '#f5f5f5';
+    document.getElementById('faqBgColorHex').value    = '#F5F5F5';
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('faqReset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   detailEl = createDetailPanel();

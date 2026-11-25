@@ -682,13 +682,86 @@
     document.getElementById('horizonScrollCardInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('horizonScrollCardDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      root.remove();
-      document.getElementById('horizonScrollCardInspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 4;
+    items = [
+      { id: 1, title: 'Title', desc: 'Description', imgSrc: '' },
+      { id: 2, title: 'Title', desc: 'Description', imgSrc: '' },
+      { id: 3, title: 'Title', desc: 'Description', imgSrc: '' }
+    ];
+    style = {
+      autoplay:            true,
+      interval:            4000,
+      slideSpeed:          500,
+      hoverZoom:           true,
+      ratio:               '4-3',
+      cardRadius:          12,
+      titleSize:           32,
+      titleLetter:         -6,
+      titleLine:           1.1,
+      titleWeight:         700,
+      titleHex:            '#ffffff',
+      titleOpacity:        100,
+      descSize:            16,
+      descLetter:          -2,
+      descLine:            1.55,
+      descWeight:          500,
+      descHex:             '#ffffff',
+      descOpacity:         100,
+      overlayHex:          '#000000',
+      overlayColorOpacity: 100,
+      overlayOpacity:      60,
+      dotHex:              '#e1e1e1',
+      dotOpacity:          100,
+      dotActiveHex:        '#555555',
+      dotActiveOpacity:    100,
+      cardBgHex:           '#ced4da'
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('hscAutoplay').checked       = true;
+    document.getElementById('hscInterval').value         = 4000;
+    document.getElementById('hscSlideSpeed').value       = 500;
+    document.getElementById('hscHoverZoom').checked      = true;
+    document.getElementById('hscRatio').value            = '4-3';
+    document.getElementById('hscCardRadius').value       = 12;
+    document.getElementById('hscCardBgPicker').value     = '#ced4da';
+    document.getElementById('hscCardBgHex').value        = '#CED4DA';
+    document.getElementById('hscTitleSize').value        = 32;
+    document.getElementById('hscTitleLetter').value      = -6;
+    document.getElementById('hscTitleLine').value        = 1.1;
+    document.getElementById('hscTitleWeight').value      = 700;
+    document.getElementById('hscTitlePicker').value      = '#ffffff';
+    document.getElementById('hscTitleHex').value         = '#FFFFFF';
+    document.getElementById('hscTitleOpacity').value     = 100;
+    document.getElementById('hscDescSize').value         = 16;
+    document.getElementById('hscDescLetter').value       = -2;
+    document.getElementById('hscDescLine').value         = 1.55;
+    document.getElementById('hscDescWeight').value       = 500;
+    document.getElementById('hscDescPicker').value       = '#ffffff';
+    document.getElementById('hscDescHex').value          = '#FFFFFF';
+    document.getElementById('hscDescOpacity').value      = 100;
+    document.getElementById('hscOverlayPicker').value    = '#000000';
+    document.getElementById('hscOverlayHex').value       = '#000000';
+    document.getElementById('hscOverlayColorOpacity').value = 100;
+    document.getElementById('hscOverlayOpacity').value   = 60;
+    document.getElementById('hscDotPicker').value        = '#e1e1e1';
+    document.getElementById('hscDotHex').value           = '#E1E1E1';
+    document.getElementById('hscDotOpacity').value       = 100;
+    document.getElementById('hscDotActivePicker').value  = '#555555';
+    document.getElementById('hscDotActiveHex').value     = '#555555';
+    document.getElementById('hscDotActiveOpacity').value = 100;
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('horizonScrollCardReset').addEventListener('click', resetAll);
 
   /* ── 드래그 document 핸들러 (한 번만 등록) ── */
   document.addEventListener('mousemove', function (e) {

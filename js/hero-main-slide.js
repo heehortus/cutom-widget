@@ -691,13 +691,58 @@
     inspectorEl.style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('hmsDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      wrap.remove();
-      inspectorEl.style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailSlide = null;
+
+    nextId = 4;
+    slides = [
+      { id: 1, imgSrc: '', imgAlt: '', overlayHex: '#1A1A1A', overlayOpacity: 100, title: 'Title', desc: 'Description' },
+      { id: 2, imgSrc: '', imgAlt: '', overlayHex: '#1A1A1A', overlayOpacity: 100, title: 'Title', desc: 'Description' },
+      { id: 3, imgSrc: '', imgAlt: '', overlayHex: '#1A1A1A', overlayOpacity: 100, title: 'Title', desc: 'Description' }
+    ];
+    settings = {
+      autoplay:            true,
+      delay:               5,
+      effect:              'slide',
+      headerHeight:        0,
+      headerHeightMobile:  0,
+      textHex:             '#FFFFFF',
+      textOpacity:         100,
+      lineHex:             '#FFFFFF',
+      lineOpacity:         100,
+      overlayStrength:     100,
+      titleSize:           72,
+      descSize:            20
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    var autoBtn = document.getElementById('hmsAutoplay');
+    if (autoBtn) { autoBtn.classList.add('active'); }
+    document.getElementById('hmsDelay').value           = 5;
+    var slideBtn = document.getElementById('hmsEffectSlide');
+    var fadeBtn  = document.getElementById('hmsEffectFade');
+    if (slideBtn) { slideBtn.classList.add('active'); }
+    if (fadeBtn)  { fadeBtn.classList.remove('active'); }
+    document.getElementById('hmsHeaderH').value         = 0;
+    document.getElementById('hmsHeaderHM').value        = 0;
+    document.getElementById('hmsTextPicker').value      = '#ffffff';
+    document.getElementById('hmsTextHex').value         = '#FFFFFF';
+    document.getElementById('hmsTextOpacity').value     = 100;
+    document.getElementById('hmsLinePicker').value      = '#ffffff';
+    document.getElementById('hmsLineHex').value         = '#FFFFFF';
+    document.getElementById('hmsLineOpacity').value     = 100;
+    document.getElementById('hmsOverlayStrength').value = 100;
+    document.getElementById('hmsTitleSize').value       = 72;
+    document.getElementById('hmsDescSize').value        = 20;
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('hmsReset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   detailEl = createDetailPanel();

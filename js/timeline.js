@@ -618,13 +618,118 @@
     document.getElementById('timelineInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('timelineDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      widget.remove();
-      document.getElementById('timelineInspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (itemDetailEl) itemDetailEl.classList.remove('open');
+
+    nextGroupId = 6;
+    nextItemId  = 20;
+    groups = [
+      {
+        id: 1,
+        era: '2000 - 현재',
+        heading: '일상을 작은 변화로\n한 걸음씩, 더 단단하게',
+        expanded: false,
+        items: [
+          { id: 1, year: '2025', text: '지역 거점 통합 운영센터 개관 및 신규 복합문화공간 3개소 위탁 운영 시작' },
+          { id: 2, year: '2024', text: '스마트 돌봄 플랫폼 정식 출범 및 전국 단위 협력 네트워크 구축' },
+          { id: 3, year: '2023', text: '제2 연구개발센터 준공' },
+          { id: 4, year: '2022', text: '누적 이용자 100만 명 돌파 및 우수 운영기관 인증 획득' }
+        ]
+      },
+      {
+        id: 2,
+        era: '1990년대',
+        heading: '작은 시작,\n큰 가능성을 향해',
+        expanded: false,
+        items: [
+          { id: 5, year: '1998', text: '창립 기념 통합 브랜드 리뉴얼' },
+          { id: 6, year: '1995', text: '복지서비스 전국 네트워크 출범' }
+        ]
+      },
+      {
+        id: 3,
+        era: '1980년대',
+        heading: '뿌리를 내리다,\n첫 걸음의 시작',
+        expanded: false,
+        items: [
+          { id: 7, year: '1988', text: '지역사회 복지 프로그램 첫 운영 개시' },
+          { id: 8, year: '1985', text: '비영리 법인 설립 및 초대 이사회 구성' },
+          { id: 9, year: '1982', text: '창립' }
+        ]
+      },
+      {
+        id: 4,
+        era: '1970년대',
+        heading: '씨앗을 심다,\n공동체의 꿈',
+        expanded: false,
+        items: [
+          { id: 10, year: '1978', text: '지역 주민 자치 모임 공식 결성' },
+          { id: 11, year: '1975', text: '공동체 활동 거점 공간 마련' },
+          { id: 12, year: '1971', text: '자원봉사 그룹 첫 활동 시작' }
+        ]
+      },
+      {
+        id: 5,
+        era: '1960년대',
+        heading: '처음 마음,\n변화를 꿈꾸다',
+        expanded: false,
+        items: [
+          { id: 13, year: '1969', text: '창립 준비위원회 발족' },
+          { id: 14, year: '1965', text: '지역 복지 필요성 연구 및 기초 조사' },
+          { id: 15, year: '1961', text: '설립 발기인 모임 첫 개최' }
+        ]
+      }
+    ];
+    style = {
+      trackInactive:  '#e0e0e0',
+      trackActive:    '#555555',
+      bulletSize:     10,
+      eraSize:        14,
+      eraHex:         '#555555',
+      eraOpacity:     100,
+      headingSize:    32,
+      headingHex:     '#1a1a1a',
+      headingOpacity: 100,
+      yearSize:       18,
+      yearHex:        '#1a1a1a',
+      yearOpacity:    100,
+      textSize:       16,
+      textHex:        '#6b7280',
+      textOpacity:    100,
+      groupGap:       60
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('tlEraSize').value             = 14;
+    document.getElementById('tlEraPicker').value           = '#555555';
+    document.getElementById('tlEraHex').value              = '#555555';
+    document.getElementById('tlEraOpacity').value          = 100;
+    document.getElementById('tlHeadingSize').value         = 32;
+    document.getElementById('tlHeadingPicker').value       = '#1a1a1a';
+    document.getElementById('tlHeadingHex').value          = '#1A1A1A';
+    document.getElementById('tlHeadingOpacity').value      = 100;
+    document.getElementById('tlYearSize').value            = 18;
+    document.getElementById('tlYearPicker').value          = '#1a1a1a';
+    document.getElementById('tlYearHex').value             = '#1A1A1A';
+    document.getElementById('tlYearOpacity').value         = 100;
+    document.getElementById('tlTextSize').value            = 16;
+    document.getElementById('tlTextPicker').value          = '#6b7280';
+    document.getElementById('tlTextHex').value             = '#6B7280';
+    document.getElementById('tlTextOpacity').value         = 100;
+    document.getElementById('tlTrackInactivePicker').value = '#e0e0e0';
+    document.getElementById('tlTrackInactiveHex').value    = '#E0E0E0';
+    document.getElementById('tlTrackActivePicker').value   = '#555555';
+    document.getElementById('tlTrackActiveHex').value      = '#555555';
+    document.getElementById('tlBulletSize').value          = 10;
+    document.getElementById('tlGroupGap').value            = 60;
+
+    renderWidget();
+    renderInspectorGroups();
+  }
+
+  document.getElementById('timelineReset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   itemDetailEl = createItemDetailPanel();

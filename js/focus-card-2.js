@@ -466,13 +466,55 @@
     document.getElementById('fc2Inspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('fc2Delete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      wrap.remove();
-      document.getElementById('fc2Inspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 5;
+    items = [
+      { id: 1, title: 'Title', body: 'Description', bgColor: BG_COLORS[0], imgSrc: '' },
+      { id: 2, title: 'Title', body: 'Description', bgColor: BG_COLORS[1], imgSrc: '' },
+      { id: 3, title: 'Title', body: 'Description', bgColor: BG_COLORS[2], imgSrc: '' },
+      { id: 4, title: 'Title', body: 'Description', bgColor: BG_COLORS[3], imgSrc: '' }
+    ];
+    style = {
+      cardRadius:   8,
+      cardGap:      24,
+      zigzag:       48,
+      padding:      36,
+      titleSize:    32,
+      titleHex:     '#F7F7F7',
+      titleOpacity: 100,
+      bodySize:     20,
+      bodyHex:      '#F7F7F7',
+      bodyOpacity:  100,
+      dimBase:      15,
+      dimHover:     70
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('fc2CardRadius').value     = 8;
+    document.getElementById('fc2CardGap').value        = 24;
+    document.getElementById('fc2Zigzag').value         = 48;
+    document.getElementById('fc2Padding').value        = 36;
+    document.getElementById('fc2TitleSize').value      = 32;
+    document.getElementById('fc2TitlePicker').value    = '#f7f7f7';
+    document.getElementById('fc2TitleHex').value       = '#F7F7F7';
+    document.getElementById('fc2TitleOpacity').value   = 100;
+    document.getElementById('fc2BodySize').value       = 20;
+    document.getElementById('fc2BodyPicker').value     = '#f7f7f7';
+    document.getElementById('fc2BodyHex').value        = '#F7F7F7';
+    document.getElementById('fc2BodyOpacity').value    = 100;
+    document.getElementById('fc2DimBase').value        = 15;
+    document.getElementById('fc2DimHover').value       = 70;
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('fc2Reset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   detailEl = createDetailPanel();

@@ -645,14 +645,82 @@
     document.getElementById('bannerInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ───────────────────── */
+  /* ── Reset ───────────────────────────── */
 
-  document.getElementById('bannerDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      document.getElementById('bannerWidget').remove();
-      document.getElementById('bannerInspector').style.display = 'none';
-    }
-  });
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 3;
+    items = [
+      { id: 1, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION', expanded: false, imgSrc: '' },
+      { id: 2, title: 'ITEM TITLE', desc: 'ITEM DESCRIPTION', expanded: false, imgSrc: '' }
+    ];
+    ITEM_WIDTH = 280;
+    GAP        = 16;
+    bannerImgSrc = '';
+    textStyle = {
+      titleSize:         24,
+      titleHex:          '#262626',
+      titleOpacity:      100,
+      descSize:          16,
+      descHex:           '#767676',
+      descOpacity:       100,
+      viewmoreSize:      14,
+      viewmoreHex:       '#1A1A1A',
+      viewmoreOpacity:   100,
+      viewmoreIconSize:  18,
+      indicatorTrackHex: '#ADB5BD',
+      indicatorThumbHex: '#1A1A1A'
+    };
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('bannerTitleInput').value  = 'BANNER TITLE';
+    document.getElementById('bannerDescInput').value   = 'BANNER DESCRIPTION';
+    document.getElementById('sectionTitleInput').value = 'SECTION TITLE';
+    document.getElementById('viewMoreInput').value     = 'View More';
+    document.getElementById('itemWidth').value         = 280;
+    document.getElementById('itemGap').value           = 16;
+    document.getElementById('itemTitleSize').value     = 24;
+    document.getElementById('itemTitleColorPicker').value = '#262626';
+    document.getElementById('itemTitleColorHex').value    = '#262626';
+    document.getElementById('itemTitleColorOpacity').value = 100;
+    document.getElementById('itemDescSize').value      = 16;
+    document.getElementById('itemDescColorPicker').value  = '#767676';
+    document.getElementById('itemDescColorHex').value     = '#767676';
+    document.getElementById('itemDescColorOpacity').value = 100;
+    document.getElementById('viewmoreSizeInput').value    = 14;
+    document.getElementById('viewmoreColorPicker').value  = '#1a1a1a';
+    document.getElementById('viewmoreColorHex').value     = '#1A1A1A';
+    document.getElementById('viewmoreColorOpacity').value = 100;
+    document.getElementById('viewmoreIconSizeInput').value = 18;
+    document.getElementById('indicatorTrackPicker').value = '#adb5bd';
+    document.getElementById('indicatorTrackHex').value    = '#ADB5BD';
+    document.getElementById('indicatorThumbPicker').value = '#1a1a1a';
+    document.getElementById('indicatorThumbHex').value    = '#1A1A1A';
+
+    /* 배너 텍스트 DOM 동기화 */
+    document.getElementById('bannerTitleEl').textContent  = 'BANNER TITLE';
+    document.getElementById('bannerDescEl').textContent   = 'BANNER DESCRIPTION';
+    document.getElementById('sectionTitleEl').textContent = 'SECTION TITLE';
+    document.getElementById('viewMoreTextEl').textContent = 'View More';
+
+    /* 배너 이미지 초기화 */
+    var panelImg   = document.getElementById('bannerPanelImg');
+    var bannerThumb = document.getElementById('bannerImgThumb');
+    var bannerUpload = document.getElementById('bannerImgUpload');
+    if (panelImg) panelImg.innerHTML = '';
+    if (bannerThumb) { bannerThumb.innerHTML = UPLOAD_SVG; bannerThumb.classList.remove('inspector__img-thumb--filled'); }
+    if (bannerUpload) bannerUpload.classList.remove('inspector__img-upload--filled');
+
+    renderTrack(null);
+    applyGap();
+    renderIndicators();
+    renderInspectorItems();
+    applyTextStyle();
+  }
+
+  document.getElementById('bannerReset').addEventListener('click', resetAll);
 
   /* ── Init ────────────────────────────── */
 

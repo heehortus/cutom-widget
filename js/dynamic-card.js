@@ -678,14 +678,72 @@
     document.getElementById('dynamicCardInspector').style.display = 'none';
   });
 
-  /* ── Widget delete ── */
-  document.getElementById('dynamicCardDelete').addEventListener('click', function () {
-    if (confirm('위젯을 삭제하시겠습니까?')) {
-      if (currentRO) { currentRO.disconnect(); currentRO = null; }
-      container.innerHTML = '';
-      document.getElementById('dynamicCardInspector').style.display = 'none';
-    }
-  });
+  /* ── Reset ── */
+
+  function resetAll() {
+    if (detailEl) detailEl.classList.remove('open');
+    currentDetailItem = null;
+
+    nextId = 7;
+    items = [
+      { id: 1, image: '', title: '카드 제목' },
+      { id: 2, image: '', title: '카드 제목' },
+      { id: 3, image: '', title: '카드 제목' },
+      { id: 4, image: '', title: '카드 제목' },
+      { id: 5, image: '', title: '카드 제목' },
+      { id: 6, image: '', title: '카드 제목' }
+    ];
+    style = {
+      cardWidth:        260,
+      cardHeight:       340,
+      gap:              24,
+      rotateMax:        6,
+      repeat:           true,
+      cardBg:           '#CED4DA',
+      cardBgOpacity:    100,
+      titleColor:       '#FFFFFF',
+      titleColorOpacity:100,
+      arrowColor:       '#1A1A1A',
+      arrowColorOpacity:100,
+      arrowBg:          '#E8E8E8',
+      arrowBgOpacity:   100,
+      radius:           16,
+      duration:         700,
+      titleSize:        16,
+      titleWeight:      600,
+      dimHeight:        55
+    };
+    isFirstRender = true;
+
+    /* 인스펙터 inputs 동기화 */
+    document.getElementById('dcCardWidth').value       = 260;
+    document.getElementById('dcCardHeight').value      = 340;
+    document.getElementById('dcGap').value             = 24;
+    document.getElementById('dcRotateMax').value       = 6;
+    document.getElementById('dcRadius').value          = 16;
+    document.getElementById('dcDuration').value        = 700;
+    document.getElementById('dcTitleSize').value       = 16;
+    document.getElementById('dcTitleWeight').value     = '600';
+    document.getElementById('dcDimHeight').value       = 55;
+    document.getElementById('dcRepeat').checked        = true;
+    document.getElementById('dcCardBgPicker').value    = '#ced4da';
+    document.getElementById('dcCardBgHex').value       = '#CED4DA';
+    document.getElementById('dcCardBgOpacity').value   = 100;
+    document.getElementById('dcTitleColorPicker').value = '#ffffff';
+    document.getElementById('dcTitleColorHex').value    = '#FFFFFF';
+    document.getElementById('dcTitleColorOpacity').value = 100;
+    document.getElementById('dcArrowColorPicker').value = '#1a1a1a';
+    document.getElementById('dcArrowColorHex').value    = '#1A1A1A';
+    document.getElementById('dcArrowColorOpacity').value = 100;
+    document.getElementById('dcArrowBgPicker').value   = '#e8e8e8';
+    document.getElementById('dcArrowBgHex').value      = '#E8E8E8';
+    document.getElementById('dcArrowBgOpacity').value  = 100;
+
+    renderWidget();
+    renderInspectorItems();
+  }
+
+  document.getElementById('dynamicCardReset').addEventListener('click', resetAll);
 
   /* ── Init ── */
   detailEl = createDetailPanel();
